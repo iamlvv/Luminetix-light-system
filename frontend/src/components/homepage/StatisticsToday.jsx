@@ -6,7 +6,6 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  CartesianGrid,
 } from "recharts";
 
 const data = [
@@ -47,12 +46,6 @@ const data = [
     humidity: 61,
   },
 ];
-const styles = {
-    size: {
-        width: "100%",
-        height: "100%"
-    }
-}
 export default function StatisticsToday() {
   return (
     <div className="bg-white rounded-2xl shadow-sm p-10 text-gray-500 font-bold">

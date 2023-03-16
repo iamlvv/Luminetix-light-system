@@ -54,7 +54,7 @@ const NavBar = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/users"
+          to="/userdetail"
           className={({ isActive }) =>
             isActive ? setisActiveUsers(true) : setisActiveUsers(false)
           }
@@ -98,8 +98,10 @@ const NavBar = () => {
           </div>
         </NavLink>
       </div>
+      <div className="h-24">
+      </div>
       <NavLink>
-        <div className="mt-28">
+        <div className="">
           <img src={exiticon} alt="statistics" />
         </div>
       </NavLink>
