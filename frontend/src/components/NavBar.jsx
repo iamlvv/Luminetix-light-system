@@ -26,7 +26,7 @@ const NavBar = () => {
       </div>
       <div className="flex-col gap-9 flex mt-36">
         <NavLink
-          to="/"
+          to="/homepage"
           className={({ isActive }) =>
             isActive ? setisActiveHome(true) : setisActiveHome(false)
           }
@@ -40,7 +40,7 @@ const NavBar = () => {
           </div>
         </NavLink>
         <NavLink
-          to="/manualcontrol"
+          to="/contextsetup"
           className={({ isActive }) =>
             isActive ? setisActiveControl(true) : setisActiveControl(false)
           }

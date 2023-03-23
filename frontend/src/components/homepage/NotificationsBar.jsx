@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import listOfNoti from "../../mockdata/Notifications";
 
 const itemsNoti = (list) => {

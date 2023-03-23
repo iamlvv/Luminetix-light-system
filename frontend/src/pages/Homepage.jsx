@@ -55,17 +55,13 @@ const HomePage = () => {
   }
   today = mm + ", " + dd + ", " + yyyy;
 
-  
-  
-
-  
   return (
     <div className="">
       <div className="">
         <NavBar />
       </div>
       <div className="grid grid-cols-4 ml-28 mb-5">
-        <div className="col-span-3 bg-gray-100 rounded-2xl mt-5 p-8">
+        <div className="col-span-3 bg-violet-100 rounded-2xl mt-5 p-8">
           <div className="grid grid-cols-2 gap-9">
             <div className="bg-white rounded-2xl shadow-sm">
               <div className="grid grid-cols-2">
