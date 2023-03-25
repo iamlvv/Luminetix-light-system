@@ -13,31 +13,29 @@ const listofscenes = [
         day: "everyday",
         starttime: '00:00',
         endtime: '23:59',
-        appliedroom: {
-            room1: true,
-            room2: true,
-            room3: false
-        }
+        lightstate: true,
+        lightcolor: 'yellow',
+        fanstate: false,
+        fanlevel: 5
     },
     {
         id: 2,
         name: "Hallway on weekend",
         content: "Only 2 lights turn on",
         contextstate: false,
-        tempstate: false,
+        tempstate: true,
         humidstate: false,
-        tempstat: 34,
-        humidstat: 50,
-        detectstate: false,
+        tempstat: 23,
+        humidstat: 70,
+        detectstate: true,
         lighttimelimit: 1,
         day: "weekend",
         starttime: '00:00',
         endtime: '23:59',
-        appliedroom: {
-            room1: true,
-            room2: false,
-            room3: false
-        }
+        lightstate: false,
+        lightcolor: 'yellow',
+        fanstate: true,
+        fanlevel: 5
     }
 ]
 

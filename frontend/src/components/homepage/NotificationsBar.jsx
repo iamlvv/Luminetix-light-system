@@ -1,5 +1,6 @@
-import React from "react";
-import listOfNoti from "../../mockdata/Notifications";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { notificationList, notiList } from "../../redux/actions/notificationActions";
 
 const itemsNoti = (list) => {
   return list.map((index) => (
@@ -15,16 +16,23 @@ const itemsNoti = (list) => {
   ));
 };
 export default function NotificationsBar() {
-  const [filteredList, setFilteredList] = React.useState(listOfNoti);
+  const dispatch = useDispatch();
+  const notiList = useSelector((state) => state.notiList);
+  const { loading, error, notificationlist } = notiList;
+  useEffect(() => {
+    dispatch(notificationList());
+  }, [dispatch]);
+
+  const [filteredList, setFilteredList] = React.useState(notificationlist);
 
   const handleFilterAlerts = () => {
-    setFilteredList(listOfNoti.filter((item) => item.type === "Alerts"));
+    setFilteredList(notificationlist.filter((item) => item.type === "Alerts"));
   };
   const handleFilterContext = () => {
-    setFilteredList(listOfNoti.filter((item) => item.type === "Context"));
+    setFilteredList(notificationlist.filter((item) => item.type === "Context"));
   };
   const handleShowAll = () => {
-    setFilteredList(listOfNoti);
+    setFilteredList(notificationlist);
   };
   const handleDeleteAll = () => {
     setFilteredList([]);

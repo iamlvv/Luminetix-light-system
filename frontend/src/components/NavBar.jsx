@@ -22,7 +22,7 @@ const NavBar = () => {
   return (
     <div className="flex-col gap-9 flex w-28 float-left items-center z-40 fixed">
       <div className="mt-10">
-        <h1>J</h1>
+        
       </div>
       <div className="flex-col gap-9 flex mt-36">
         <NavLink
@@ -35,7 +35,7 @@ const NavBar = () => {
             {isActiveHome ? (
               <img src={home_enable_icon} alt="home" />
             ) : (
-              <img src={home_icon} alt="home" />
+              <img src={home_icon} alt="home"/>
             )}
           </div>
         </NavLink>
