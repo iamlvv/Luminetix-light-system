@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Statistics from './pages/Statistics';
 import UserDetail from './pages/UserDetail';
+import ManualControl from './pages/ManualControl';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
             <Route path="/" element={<Login/>} />
             <Route path="/contextsetup" element = {<ContextSetup />} />
             <Route path='/login' element={<Login/>} />
-            <Route path='manualcontrol' element={<h1>ManualControl</h1>} />
+            <Route path='manualcontrol' element={<ManualControl/>} />
             <Route path='/statistics' element={<Statistics/>} />
             <Route path='/userdetail' element={<UserDetail/>} />
             <Route path='signup' element={<Signup/>} />
