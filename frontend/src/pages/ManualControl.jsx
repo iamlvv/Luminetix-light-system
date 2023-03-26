@@ -8,8 +8,7 @@ import bluelighticon from '../images/greenlighticon.png';
 import shutdown from '../images/shutdown.png';
 import arrow from '../images/straight-arrow.png';
 import DeviceList from '../components/manualcontrol/DeviceList';
-import TimePicker from 'react-time-picker';
-// import dayjs from 'dayjs';
+// import TimePicker from 'react-time-picker';
 
 function ManualControl() {
     const [isRedLight, setisRedLight] = React.useState(true);
@@ -17,8 +16,8 @@ function ManualControl() {
     const [isYellowLight, setisYellowLight] = React.useState(false);
     const [isLightOn, setisLightOn] = React.useState(true);
     const [isSchedule, setisSchedule] = React.useState(false);
-    const [startTime, setstartTime] = React.useState('10:00');
-    const [endTime, setendTime] = React.useState('02:00');
+    // const [startTime, setstartTime] = React.useState('10:00');
+    // const [endTime, setendTime] = React.useState('02:00');
 
     const handleRedLight = () => {
         setisRedLight(true);
@@ -101,13 +100,13 @@ function ManualControl() {
                                     <div className='grid grid-rows-3'>
                                         <div className='row-span-1 grid grid-cols-2'>
                                             <p className='col-span-1 text-xl font-bold'>Schedule</p>
-                                            <button className='w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule()}><span className='text-red-500 font-bold text-mono'>DELETE</span></button>
+                                            <button className='w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule}><span className='text-red-500 font-bold text-mono'>DELETE</span></button>
                                         </div>
                                         <div className='row-span-2 grid grid-cols-4'>
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>Start time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    {startTime}
+                                                <input type="startTime" className='w-24' defaultValue={"10:00 AM"}/>
                                                 </div>
                                             </div>
                                             <div className='col-span-2'>
@@ -116,7 +115,7 @@ function ManualControl() {
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>End time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    {endTime}
+                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,11 +132,7 @@ function ManualControl() {
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>Start time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    <TimePicker 
-                                                        step={60} 
-                                                        onChange={setstartTime} 
-                                                        value={startTime}
-                                                    />
+                                                    <input type="startTime" className='w-24' defaultValue={"10:00 AM"}/>
                                                 </div>
                                             </div>
                                             <div className='col-span-2'>
@@ -146,11 +141,7 @@ function ManualControl() {
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>End time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    <TimePicker 
-                                                        step={60} 
-                                                        onChange={setendTime}
-                                                        value={endTime}
-                                                    />
+                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,7 +149,6 @@ function ManualControl() {
                                 </div>
                             )
                         }
-                        
 
                         <div className='row-span-1 grid grid-cols-4'>
                             <div className='col-span-3 grid grid-cols-3 bg-purple-50 m-10 rounded-full'>
