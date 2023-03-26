@@ -6,6 +6,9 @@ import Switch from 'react-switch';
 import lighticon2 from '../../images/lighticon2.png'
 import fanicon2 from '../../images/fanicon2.png'
 function ContextNextPageCreate() {
+    const [toggleButton1, setToggleButton1] = React.useState(false);
+    const [toggleButton2, setToggleButton2] = React.useState(false);
+    const [toggleButton3, setToggleButton3] = React.useState(false);
     return (
         <div>
             <NavBar />
@@ -24,8 +27,8 @@ function ContextNextPageCreate() {
                                 <div className='grid grid-cols-2'>
                                     <div><img src={lighticon2} alt='light' className='mx-auto' /></div>
                                     <Switch
-                                        //onChange={() => setToggleButton1(!toggleButton1)}
-                                        checked={false}
+                                        onChange={() => setToggleButton1(!toggleButton1)}
+                                        checked={toggleButton1}
                                         onColor="#593EFF"
                                         height={24}
                                         width={48}
@@ -46,28 +49,28 @@ function ContextNextPageCreate() {
                                 <div className='grid grid-cols-2'>
                                     <div><img src={fanicon2} alt='light' className='mx-auto' /></div>
                                     <Switch
-                                        //onChange={() => setToggleButton1(!toggleButton1)}
-                                        checked={false}
+                                        onChange={() => setToggleButton2(!toggleButton2)}
+                                        checked={toggleButton2}
                                         onColor="#593EFF"
                                         height={24}
                                         width={48}
                                         className="react-switch"
                                     />
                                 </div>
-                                <h1 className='font-bold'>Light</h1>
+                                <h1 className='font-bold'>Fan</h1>
                                 <div>
                                     <select>
-                                        <option>Yellow</option>
-                                        <option>Red</option>
-                                        <option>Blue</option>
+                                        <option>Level 1</option>
+                                        <option>Level 2</option>
+                                        <option>Level 3</option>
                                     </select>
                                 </div>
                             </div>
                             <div className='bg-white shadow-sm rounded-2xl p-5'>
                                 <h1 className='font-bold mb-10'>Turn off the whole system</h1>
                                 <Switch
-                                    //onChange={() => setToggleButton1(!toggleButton1)}
-                                    checked={false}
+                                    onChange={() => setToggleButton3(!toggleButton3)}
+                                    checked={toggleButton3}
                                     onColor="#593EFF"
                                     height={24}
                                     width={48}

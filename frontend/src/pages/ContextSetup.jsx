@@ -1,13 +1,19 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import NavBar from '../components/NavBar'
 import contextsetupicon from '../images/contextsetupicon.png'
-
 import Header from '../components/Header';
 import ContextSideBar from '../components/context/ContextSideBar';
 import { NavLink } from 'react-router-dom';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { listOfContexts } from '../redux/actions/contextActions';
 
 const ContextHomeScreen = () => {
+  const dispatch = useDispatch();
+  const contextList = useSelector((state) => state.contextList);
+  const { loading, error, contextlist } = contextList;
+  useEffect(() => {
+    dispatch(listOfContexts());
+  }, [dispatch]);
   return (
     <div className='bg-violet-100 rounded-2xl p-5'>
       <Header />
@@ -41,10 +47,15 @@ const ContextHomeScreen = () => {
             <h1 className='font-bold'>Name of your new scene</h1>
             <div>
               <div className='mt-5 mb-5'>
-                <input type="text" name="name" className='border-black border py-1 px-2 rounded-2xl' />
+                <input type="text" name="name" className='border-black border py-1 px-2 rounded-2xl' id='nameofnewscene'/>
               </div>
 
-              <NavLink to='/contextsetup/createnew'><button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '>Create</button></NavLink>
+              <NavLink to='/contextsetup/createnew'><button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '
+              onClick={() => {
+                const name = document.getElementById('nameofnewscene').value;
+                localStorage.setItem('name', name);
+              }}
+              >Create</button></NavLink>
             </div>
           </div>
         </div>
@@ -54,17 +65,21 @@ const ContextHomeScreen = () => {
           </div>
           <div className='col-span-3'>
             <h1 className='font-bold'>Choose a scene to modify</h1>
-            <form>
+            <div>
               <div className='mb-7 mt-5'>
-                <select>
-                  <option value="scene1">Scene 1</option>
-                  <option value="scene2">Scene 2</option>
-                  <option value="scene3">Scene 3</option>
+                <select id='contextlistoptions'>
+                  {contextlist.map((context) => (
+                    <option value={context.id}>{context.name}</option>
+                  ))}
                 </select>
               </div>
-
-              <button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '>Select</button>
-            </form>
+              <button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '
+              onClick={() => {
+                const contextId = document.getElementById('contextlistoptions').value;
+                window.location.href = `/contextsetup/${contextId}`;
+              }}
+              >Select</button>
+            </div>
           </div>
         </div>
       </div>

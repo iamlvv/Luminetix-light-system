@@ -89,7 +89,7 @@ export default function StatisticsSum({typeofstats}) {
         <Line
           type="monotone"
           dataKey="humidity"
-          stroke="#8884d8"
+          stroke="#00B4D3"
           activeDot={{ r: 8 }}
         />
       </LineChart>

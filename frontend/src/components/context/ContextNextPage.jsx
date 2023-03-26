@@ -10,6 +10,7 @@ import fanicon2 from '../../images/fanicon2.png'
 
 
 function ContextNextPage() {
+    //Get context detail
     const dispatch = useDispatch();
     const contextdetail = useSelector(state => state.contextDetail);
     const { loading, error, context } = contextdetail;
@@ -17,7 +18,9 @@ function ContextNextPage() {
     useEffect(() => {
         dispatch(contextDetail(Number(id)));
     }, [dispatch, id])
-
+    // const [toggleButton1, setToggleButton1] = React.useState(false);
+    // const [toggleButton2, setToggleButton2] = React.useState(false);
+    // const [toggleButton3, setToggleButton3] = React.useState(false);
     return (
         <div>
             <NavBar />

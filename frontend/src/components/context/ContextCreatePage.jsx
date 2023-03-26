@@ -7,6 +7,10 @@ import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
 
 function ContextCreatePage() {
+  var contextname = localStorage.getItem('name');
+  const [toggleButton1, setToggleButton1] = React.useState(false);
+  const [toggleButton2, setToggleButton2] = React.useState(false);
+  const [toggleButton3, setToggleButton3] = React.useState(false);
   return (
     <div>
       <div>
@@ -14,7 +18,7 @@ function ContextCreatePage() {
         <div className='ml-28 grid grid-cols-4 gap-9' >
           <div className='bg-violet-100 rounded-2xl col-span-3 p-5 mt-5'>
             <div className=''>
-              <input type='text' name='content' placeholder="Context Name" className='w-full p-3 rounded-2xl border border-black' />
+              <input type='text' name='content' placeholder={contextname ? contextname : 'Context name'} className='w-full p-3 rounded-2xl border border-black' />
             </div>
             <div className='mt-5'>
               <input type='text' name='content' placeholder="Context content" className='w-full p-3 rounded-2xl border border-black' />
@@ -31,8 +35,8 @@ function ContextCreatePage() {
                   <div className='grid grid-cols-2 leading-9'>
                     <h1 className='font-bold'>Temperature</h1>
                     <Switch
-                      //onChange={() => setToggleButton1(!toggleButton1)}
-                      checked={false}
+                      onChange={() => setToggleButton1(!toggleButton1)}
+                      checked={toggleButton1}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -57,8 +61,8 @@ function ContextCreatePage() {
                   <div className='grid grid-cols-2  mt-5 leading-9'>
                     <h1 className='font-bold'>Humidity</h1>
                     <Switch
-                      //onChange={() => setToggleButton2(!toggleButton2)}
-                      checked={false}
+                      onChange={() => setToggleButton2(!toggleButton2)}
+                      checked={toggleButton2}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -78,8 +82,8 @@ function ContextCreatePage() {
                     <div className='bg-white shadow-sm rounded-2xl p-2 grid grid-cols-2 text-center leading-9'>
                       <h1 className='font-bold'>Detecting people</h1>
                       <Switch
-                        //onChange={() => setToggleButton3(!toggleButton3)}
-                        checked={false}
+                        onChange={() => setToggleButton3(!toggleButton3)}
+                        checked={toggleButton3}
                         onColor="#593EFF"
                         height={24}
                         width={48}
