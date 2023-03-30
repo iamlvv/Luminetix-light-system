@@ -11,6 +11,8 @@ import statistics_icon from "../images/Statistics-icon.png";
 import statistics_enable_icon from "../images/Statistics-enable-icon.png";
 import exiticon from "../images/exit.png";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/actions/userActions";
 
 const NavBar = () => {
   const [isActiveHome, setisActiveHome] = React.useState(false);
@@ -19,6 +21,10 @@ const NavBar = () => {
   const [isActiveManual, setisActiveManual] = React.useState(false);
   const [isActiveStatistics, setisActiveStatistics] = React.useState(false);
 
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(logout());
+  }
   return (
     <div className="flex-col gap-9 flex w-28 float-left items-center z-40 fixed">
       <div className="mt-10">
@@ -102,7 +108,7 @@ const NavBar = () => {
       </div>
       <NavLink>
         <div className="">
-          <img src={exiticon} alt="statistics" />
+          <img src={exiticon} alt="statistics" onClick={handleLogOut}/>
         </div>
       </NavLink>
     </div>

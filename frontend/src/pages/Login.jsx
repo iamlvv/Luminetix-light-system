@@ -1,18 +1,56 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import footerlogin from "../images/footer-login.png";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/actions/userActions";
+import Swal from 'sweetalert2';
+
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/homepage");
+    }
+  }, [userInfo]);
+
+  const handleSubmit = (e) => {
+    if (userInfo && loading) {
+      console.log(userInfo.fullname);
+    }
+    else if (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+      });
+      console.log(error);
+    }
+    e.preventDefault();
+    dispatch(login(email, password));
+  }
   return (
     <div className="">
-      <form className="text-center w-80 mx-auto mt-40">
+      <form className="text-center w-80 mx-auto mt-40"
+        onSubmit={handleSubmit}
+      >
         <h1 className="text-6xl text-violet-500 font-bold ">Login</h1>
         <h2 className="mt-5 mb-5">Let's start our journey!</h2>
         <div>
           <div>
             <input
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               className="py-2 px-3 rounded-xl w-80 bg-gray-200 shadow-lg"
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="mt-5">
@@ -20,6 +58,8 @@ export default function Login() {
               type="password"
               placeholder="Password"
               className="py-2 px-3 rounded-xl w-80 bg-gray-200 shadow-lg"
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <div className="grid grid-cols-2 gap-9 mt-5 mb-5">
@@ -41,10 +81,9 @@ export default function Login() {
           </div>
           <div>
             <button
-              type="submit"
               className="py-2 px-3 bg-violet-500 rounded-2xl text-white hover:bg-violet-600 transition ease-in font-bold w-80"
             >
-              <NavLink to="/homepage">Login</NavLink>
+              Login
             </button>
           </div>
         </div>

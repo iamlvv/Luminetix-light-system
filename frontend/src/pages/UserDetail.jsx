@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from "../redux/actions/userActions";
 
 export default function UserDetail() {
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+  const dispatch2 = useDispatch();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getUserDetails("profile"));
+    }
+  }, []);
+  useEffect(() => {
+    if (user) {
+      setFullName(user.fullname);
+      setEmail(user.email);
+      setPhone(user.phone);
+      setUserName(user.username);
+    }
+  }, [dispatch2, user]);
   return (
     <div>
       <NavBar />
@@ -9,29 +34,26 @@ export default function UserDetail() {
         <h1 className="uppercase text-2xl font-bold pt-5">My Profile</h1>
         <div className="bg-violet-100 mr-10 rounded-2xl mt-5 p-5">
           <div>
-            <h1 className="font-bold text-2xl mb-5">John</h1>
+            <h1 className="font-bold text-2xl mb-5 uppercase">{fullName}</h1>
             <div>{/*Location*/}</div>
             <div className="grid grid-cols-3">
               <fieldset className="col-span-2">
                 <legend className="text-center text-gray-600 font-bold">PERSONAL INFORMATION</legend>
                 <div>
                   <div className="grid grid-cols-2 gap-9 uppercase text-gray-500">
-                    <label className="ml-3">First Name</label>
-                    <label className="ml-3">Last Name</label>
+                    <label className="ml-3">Fullname</label>
+                    
                   </div>
                   <div className="grid grid-cols-2 gap-9">
                     <input
                       type="text"
-                      name="firstname"
+                      name="fullname"
                       placeholder="John"
                       className="py-2 px-3 rounded-xl mt-5"
+                      value={fullName || ""}
+                      onChange={(e) => setFullName(e.target.value)}
                     />
-                    <input
-                      type="text"
-                      name="lastname"
-                      placeholder="Doe"
-                      className="py-2 px-3 rounded-xl mt-5"
-                    />
+                    
                   </div>
                 </div>
                 <div className="mt-5 uppercase text-gray-500">
@@ -42,6 +64,8 @@ export default function UserDetail() {
                       name="username"
                       placeholder="JohnDoe"
                       className="py-2 px-3 rounded-xl mt-5"
+                      value={userName || ""}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
                 </div>
@@ -59,6 +83,8 @@ export default function UserDetail() {
                         name="email"
                         placeholder="johdoe@gmail.com"
                         className="w-full py-2 px-3 rounded-xl mt-5"
+                        value={email || ""}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
                   </div>
@@ -71,6 +97,8 @@ export default function UserDetail() {
                           name="phone"
                           placeholder="123456789"
                           className="py-2 px-3 rounded-xl mt-5"
+                          value={phone || ""}
+                          onChange={(e) => setPhone(e.target.value)}
                         />
                       </div>
                       <div></div>

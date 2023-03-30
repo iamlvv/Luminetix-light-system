@@ -22,7 +22,7 @@ export default function NotificationsBar() {
   useEffect(() => {
     dispatch(notificationList());
   }, [dispatch]);
-
+  
   const [filteredList, setFilteredList] = React.useState(notificationlist);
 
   const handleFilterAlerts = () => {

@@ -1,15 +1,24 @@
-require("dotenv").config();
 const express = require("express");
+const color = require("colors");
+const { errorHandler } = require("./middleware/errorMiddleware");
+const dotenv = require("dotenv").config();
+const connectDB = require("./config/db");
+const port = process.env.PORT || 5000;
+
+connectDB();
+
+const cors = require("cors");
+
 const app = express();
-var cors = require('cors');
+
 app.use(cors());
-const PORT = process.env.PORT || 3001;
 
-const bodyParser = require("body-parser");
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/api/users", require("./routes/userRoutes"));
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(errorHandler);
 
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
-  });
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});

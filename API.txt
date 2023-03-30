@@ -1,0 +1,5 @@
+LED: https://io.adafruit.com/api/v2/Tori0802/feeds/w-led
+FAN: https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan
+HUMI: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi
+LIGHT: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-light
+TEMP: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp

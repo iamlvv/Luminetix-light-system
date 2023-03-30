@@ -66,6 +66,20 @@ export default function Statistics() {
   const handleChooseTime = () => {
     setDatatypes('time');
   }
+
+  const handleExportData = () => {
+    const getData = async () => {
+      const response = await fetch('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    }
+    getData();
+  }
   return (
     <div>
       <div>
@@ -121,8 +135,9 @@ export default function Statistics() {
                 <StatisticsSum typeofstats={datatypes}/>
             </div>
             <div className="text-center">
-                <button className="text-violet-500 font-bold hover:bg-violet-100 transition ease-in px-3 py-2 rounded-2xl">Export chart</button>
-                
+                <button className="text-violet-500 font-bold hover:bg-violet-100 transition ease-in px-3 py-2 rounded-2xl"
+                  onClick={() => handleExportData()}
+                >Export chart</button>
             </div>
           </div>
         </div>
