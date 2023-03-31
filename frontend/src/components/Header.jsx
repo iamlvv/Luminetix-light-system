@@ -1,12 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Clock from "react-live-clock";
 import fan from "../images/Fan.png";
 import feedback from "../images/feedback-line.png";
 import moon1 from "../images/moon1.png";
 import avatar from "../images/avatardefault.png";
 import lamp from "../images/Lamp_light.png";
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserDetails } from "../redux/actions/userActions";
+
 export default function Header() {
-    var today = new Date();
+  const [name, setName] = React.useState("");
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+  const dispatch2 = useDispatch();
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getUserDetails("profile"));
+    }
+  }, [userInfo, dispatch]);
+  useEffect(() => {
+    if (user) {
+      setName(user.fullname);
+    }
+  }, [dispatch2, user]);
+
+
+  var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
   var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
   var yyyy = today.getFullYear();
@@ -51,32 +73,32 @@ export default function Header() {
       mm = "Jan";
   }
   today = mm + ", " + dd + ", " + yyyy;
-    return (
-        <div className="grid grid-cols-3 gap-9">
-            <div className="grid grid-cols-2 bg-white rounded-2xl shadow-sm">
-              <img src={avatar} alt="avatar" className="w-1/2 mx-auto" />
-              <h1 className="mt-10 text-2xl font-bold">Hello, John!</h1>
-            </div>
-            <div className="grid grid-cols-4 bg-white rounded-2xl p-5">
-              <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
-                <img src={lamp} alt="lamp" className="mx-auto mt-5" />
-              </div>
-              <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
-                <img src={fan} alt="fan" className="mx-auto mt-5" />
-              </div>
-              <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
-                <img src={feedback} alt="feedback" className="mx-auto mt-5" />
-              </div>
-              <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
-                <img src={moon1} alt="moon1" className="mx-auto mt-5" />
-              </div>
-            </div>
-            <div className="text-center bg-white rounded-2xl pt-8 font-bold text-xl text-violet-500">
-              <h1 className="">{today}</h1>
-              <div>
-                <Clock format={"HH:mm"} ticking={true} />
-              </div>
-            </div>
-          </div>
-            )
+  return (
+    <div className="grid grid-cols-3 gap-9">
+      <div className="grid grid-cols-2 bg-white rounded-2xl shadow-sm">
+        <img src={avatar} alt="avatar" className="w-1/2 mx-auto" />
+        <h1 className="mt-10 text-2xl font-bold">Hello, {name}!</h1>
+      </div>
+      <div className="grid grid-cols-4 bg-white rounded-2xl p-5">
+        <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
+          <img src={lamp} alt="lamp" className="mx-auto mt-5" />
+        </div>
+        <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
+          <img src={fan} alt="fan" className="mx-auto mt-5" />
+        </div>
+        <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
+          <img src={feedback} alt="feedback" className="mx-auto mt-5" />
+        </div>
+        <div className="hover:bg-violet-50 transition ease-in rounded-2xl">
+          <img src={moon1} alt="moon1" className="mx-auto mt-5" />
+        </div>
+      </div>
+      <div className="text-center bg-white rounded-2xl pt-8 font-bold text-xl text-violet-500">
+        <h1 className="">{today}</h1>
+        <div>
+          <Clock format={"HH:mm"} ticking={true} />
+        </div>
+      </div>
+    </div>
+  )
 }

@@ -6,8 +6,10 @@ import { NavLink } from 'react-router-dom'
 import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
 
+import { ProgressBar } from "react-step-progress-bar";
+import "react-step-progress-bar/styles.css";
+
 function ContextCreatePage() {
-  var contextname = localStorage.getItem('name');
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
   const [toggleButton3, setToggleButton3] = React.useState(false);
@@ -18,13 +20,17 @@ function ContextCreatePage() {
         <div className='ml-28 grid grid-cols-4 gap-9' >
           <div className='bg-violet-100 rounded-2xl col-span-3 p-5 mt-5'>
             <div className=''>
-              <input type='text' name='content' placeholder={contextname ? contextname : 'Context name'} className='w-full p-3 rounded-2xl border border-black' />
+              <input type='text' name='content' placeholder="Context name" className='w-full p-3 rounded-2xl border border-black' />
             </div>
             <div className='mt-5'>
               <input type='text' name='content' placeholder="Context content" className='w-full p-3 rounded-2xl border border-black' />
             </div>
-            <div>
-              {/* Progress Bar */}
+            <div className='mt-5'>
+              <ProgressBar
+                percent={33}
+                filledBackground="linear-gradient(to right, #593EFF, #593EFF)"
+                height = {20}
+              />
             </div>
             <h1 className='font-bold text-2xl mt-10 mb-2'>Input</h1>
             <h2 className='text-gray-500 mb-5'>Choose condition that will start the routine</h2>

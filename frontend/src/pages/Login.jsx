@@ -17,11 +17,12 @@ export default function Login() {
   const navigate = useNavigate();
   useEffect(() => {
     if (userInfo) {
-      navigate("/homepage");
+      navigate('/homepage');
     }
-  }, [userInfo]);
+  }, [userInfo, dispatch, navigate]);
 
   const handleSubmit = (e) => {
+    
     if (userInfo && loading) {
       console.log(userInfo.fullname);
     }

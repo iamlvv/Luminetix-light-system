@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
 import avatar from "../images/avatardefault.png";
 import Clock from "react-live-clock";
@@ -7,8 +7,30 @@ import StatisticsToday from "../components/homepage/StatisticsToday";
 import { NavLink } from "react-router-dom";
 import NotificationsBar from "../components/homepage/NotificationsBar";
 import FrequentlyUsedDevices from "../components/homepage/FrequentlyUsedDevices";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from "../redux/actions/userActions";
 
 const HomePage = () => {
+  //Get user Info
+  const [name, setName] = React.useState("");
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+  const dispatch2 = useDispatch();
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getUserDetails("profile"));
+    }
+  }, [userInfo, dispatch]);
+  useEffect(() => {
+    if (user) {
+      setName(user.fullname);
+    }
+  }, [dispatch2, user]);
+
+  // Get current date
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
   var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -67,7 +89,7 @@ const HomePage = () => {
               <div className="grid grid-cols-2">
                 <img src={avatar} alt="profile" className="w-1/2 mx-auto" />
                 <div className="mt-10">
-                  <h1 className="font-bold text-2xl">Hi John !</h1>
+                  <h1 className="font-bold text-2xl">Hi {name} !</h1>
                   <h2 className="text-gray-500 text-xs">
                     Control your device from here
                   </h2>

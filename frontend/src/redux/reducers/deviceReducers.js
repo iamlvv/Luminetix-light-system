@@ -130,5 +130,111 @@ export const lightStatReducer = (state = { lightStat: "0" }, action) => {
     }
 }
 
+export const turnOnTemperatureReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.TEMPERATURE_TURN_ON:
+            return { loading: true };
+        case deviceConstants.TEMPERATURE_TURN_ON_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.TEMPERATURE_TURN_ON_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOffTemperatureReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.TEMPERATURE_TURN_OFF:
+            return { loading: true };
+        case deviceConstants.TEMPERATURE_TURN_OFF_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.TEMPERATURE_TURN_OFF_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOnHumidityReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.HUMIDITY_TURN_ON:
+            return { loading: true };
+        case deviceConstants.HUMIDITY_TURN_ON_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.HUMIDITY_TURN_ON_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOffHumidityReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.HUMIDITY_TURN_OFF:
+            return { loading: true };
+        case deviceConstants.HUMIDITY_TURN_OFF_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.HUMIDITY_TURN_OFF_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOnFanReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.FAN_TURN_ON:
+            return { loading: true };
+        case deviceConstants.FAN_TURN_ON_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.FAN_TURN_ON_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOffFanReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.FAN_TURN_OFF:
+            return { loading: true };
+        case deviceConstants.FAN_TURN_OFF_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.FAN_TURN_OFF_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOnLightReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.LIGHT_TURN_ON:
+            return { loading: true };
+        case deviceConstants.LIGHT_TURN_ON_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.LIGHT_TURN_ON_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const turnOffLightReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.LIGHT_TURN_OFF:
+            return { loading: true };
+        case deviceConstants.LIGHT_TURN_OFF_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.LIGHT_TURN_OFF_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+
+
 
 

@@ -1,5 +1,11 @@
-LED: https://io.adafruit.com/api/v2/Tori0802/feeds/w-led
-FAN: https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan
-HUMI: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi
-LIGHT: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-light
-TEMP: 	https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp
+LED:    	https://io.adafruit.com/api/v2/Tori0802/feeds/w-led
+FAN:    	https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan
+HUMI: 		https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi
+LIGHT: 		https://io.adafruit.com/api/v2/Tori0802/feeds/w-light
+TEMP: 		https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp
+HUMAN:  	https://io.adafruit.com/api/v2/Tori0802/feeds/w-human
+SENSOR_TEMP:   	https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp
+SENSOR_HUMI:	https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi
+SENSOR_LIGHT:	https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light
+
+Link Dashboard: https://io.adafruit.com/Tori0802/dashboards/wednesday-dashboard

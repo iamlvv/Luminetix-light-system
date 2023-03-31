@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import contextsetupicon from '../images/contextsetupicon.png'
 import Header from '../components/Header';
@@ -8,12 +8,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { listOfContexts } from '../redux/actions/contextActions';
 
 const ContextHomeScreen = () => {
+
+
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
   const { loading, error, contextlist } = contextList;
   useEffect(() => {
     dispatch(listOfContexts());
   }, [dispatch]);
+
   return (
     <div className='bg-violet-100 rounded-2xl p-5'>
       <Header />
@@ -39,23 +42,18 @@ const ContextHomeScreen = () => {
         </div>
       </div>
       <div className='grid grid-cols-2 gap-9'>
-        <div className='bg-white rounded-2xl grid grid-cols-4 p-5'>
+        <div className='bg-white rounded-2xl grid grid-cols-4 p-5 pt-20 text-center'>
           <div className='text-center mx-auto'>
             <img src={contextsetupicon} alt="contextsetupicon" />
           </div>
           <div className='col-span-3'>
-            <h1 className='font-bold'>Name of your new scene</h1>
+            {/* <h1 className='font-bold'>Name of your new scene</h1> */}
             <div>
-              <div className='mt-5 mb-5'>
+              {/* <div className='mt-5 mb-5'>
                 <input type="text" name="name" className='border-black border py-1 px-2 rounded-2xl' id='nameofnewscene'/>
-              </div>
-
+              </div> */}
               <NavLink to='/contextsetup/createnew'><button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '
-              onClick={() => {
-                const name = document.getElementById('nameofnewscene').value;
-                localStorage.setItem('name', name);
-              }}
-              >Create</button></NavLink>
+              >Create new scene</button></NavLink>
             </div>
           </div>
         </div>
@@ -74,10 +72,10 @@ const ContextHomeScreen = () => {
                 </select>
               </div>
               <button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '
-              onClick={() => {
-                const contextId = document.getElementById('contextlistoptions').value;
-                window.location.href = `/contextsetup/${contextId}`;
-              }}
+                onClick={() => {
+                  const contextId = document.getElementById('contextlistoptions').value;
+                  window.location.href = `/contextsetup/${contextId}`;
+                }}
               >Select</button>
             </div>
           </div>
@@ -87,7 +85,7 @@ const ContextHomeScreen = () => {
   )
 }
 export default function ContextSetup() {
-  
+
   return (
     <div>
       <div>

@@ -22,8 +22,9 @@ function ContextSideBar() {
             className={({ isActive }) =>
               isActive ? 'bg-violet-200' : 'bg-white'
             }
+            key={scene.id}
           >
-            <div key={scene.id}
+            <div 
 
               className='mt-5 grid grid-cols-4 gap-5 shadow-xl rounded-2xl p-3 hover:cursor-pointer hover:bg-gray-200 transition ease-in'
             >

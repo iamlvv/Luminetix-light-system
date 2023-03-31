@@ -4,15 +4,13 @@ import Switch from "react-switch";
 import Slider from "@mui/material/Slider";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getFanState, getHumidityStat, getLightStat, getTemperatureStat } from '../../redux/actions/deviceActions';
-import axios from 'axios';
+import { getFanState, getHumidityStat, getLightStat, getTemperatureStat, getTemperatureState, turnOffTemperature, turnOnTemperature } from '../../redux/actions/deviceActions';
+
 export default function FrequentlyUsedDevices() {
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
   const [toggleButton3, setToggleButton3] = React.useState(false);
   const [toggleButton4, setToggleButton4] = React.useState(false);
-  const [tempData, setTempData] = React.useState("");
-  const [humidData, setHumidData] = React.useState("");
   // const getTempStat = async () => {
   //   try {
   //     const config = {
@@ -52,6 +50,8 @@ export default function FrequentlyUsedDevices() {
   const TempStat = useSelector((state) => state.temperatureStat);
   const HumidStat = useSelector((state) => state.humidityStat);
   const LightStat = useSelector((state) => state.lightStat);
+  const TempState = useSelector((state) => state.temperatureState);
+  const { loading4, error4, temperatureState } = TempState;
   const { loading1, error1, temperatureStat } = TempStat;
   const { loading2, error2, humidityStat } = HumidStat;
   const { loading3, error3, lightStat } = LightStat;
@@ -60,18 +60,19 @@ export default function FrequentlyUsedDevices() {
       dispatch(getTemperatureStat());
       dispatch(getHumidityStat());
       dispatch(getLightStat());
+      dispatch(getTemperatureState());
   }, []);
-
   useEffect(() => {
     
     setInterval(() => {
       dispatch(getTemperatureStat());
       dispatch(getHumidityStat());
       dispatch(getLightStat());
+      dispatch(getTemperatureState());
+      setToggleButton3(temperatureState);
     },20000);
     //clearInterval(loadHandle.current);
   }, [dispatch]);
-
   const mark = [
     {
       value: 0,
@@ -82,6 +83,14 @@ export default function FrequentlyUsedDevices() {
       label: "10",
     },
   ];
+  //Handle change States
+  const handleChangeTempState = async () => {
+    if (temperatureState && temperatureState === "T_ON") {
+      dispatch(turnOffTemperature());
+    } else {
+      dispatch(turnOnTemperature());
+    }
+  }
   return (
     <div>
       <div className="grid grid-cols-2 mb-10">
@@ -94,7 +103,7 @@ export default function FrequentlyUsedDevices() {
           </div>
         </NavLink>
       </div>
-      <div className="grid grid-cols-4 gap-9">
+      <div className="grid grid-cols-4 gap-9 text-center">
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
@@ -112,13 +121,7 @@ export default function FrequentlyUsedDevices() {
             </div>
           </div>
           <h1 className="font-bold text-lg mb-5">Humidity</h1>
-          <div>
-            <select>
-              <option>Device 1</option>
-              <option>Device 2</option>
-              <option>Device 3</option>
-            </select>
-          </div>
+          
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
@@ -137,13 +140,7 @@ export default function FrequentlyUsedDevices() {
             </div>
           </div>
           <h1 className="font-bold text-lg mt-5 mb-5">Light</h1>
-          <div>
-            <select>
-              <option>Device 1</option>
-              <option>Device 2</option>
-              <option>Device 3</option>
-            </select>
-          </div>
+          
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
@@ -152,8 +149,8 @@ export default function FrequentlyUsedDevices() {
             </button>
             <div className="text-right">
               <Switch
-                onChange={() => setToggleButton3(!toggleButton3)}
-                checked={toggleButton3}
+                onChange={handleChangeTempState}
+                checked={temperatureState ? temperatureState === "T_ON" ? true: false : false}
                 onColor="#593EFF"
                 height={24}
                 width={48}
@@ -162,13 +159,7 @@ export default function FrequentlyUsedDevices() {
             </div>
           </div>
           <h1 className="font-bold text-lg mt-5 mb-5">Temperature</h1>
-          <div>
-            <select>
-              <option>Device 1</option>
-              <option>Device 2</option>
-              <option>Device 3</option>
-            </select>
-          </div>
+          
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2">
@@ -197,13 +188,7 @@ export default function FrequentlyUsedDevices() {
             />
           </div>
           <h1 className="font-bold text-lg mb-5">Fan</h1>
-          <div>
-            <select>
-              <option>Device 1</option>
-              <option>Device 2</option>
-              <option>Device 3</option>
-            </select>
-          </div>
+          
         </div>
       </div></div>
   )
