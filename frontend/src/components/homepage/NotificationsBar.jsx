@@ -4,7 +4,7 @@ import { notificationList, notiList } from "../../redux/actions/notificationActi
 
 const itemsNoti = (list) => {
   return list.map((index) => (
-    <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3">
+    <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3" key={index}>
       <div className="col-span-3">
         <h1 className="font-bold text-lg">{index.type}</h1>
         <h2 className="text-gray-500 text-sm">{index.content}</h2>

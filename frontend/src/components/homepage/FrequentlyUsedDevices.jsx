@@ -4,13 +4,10 @@ import Switch from "react-switch";
 import Slider from "@mui/material/Slider";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getFanState, getHumidityStat, getLightStat, getTemperatureStat, getTemperatureState, turnOffTemperature, turnOnTemperature } from '../../redux/actions/deviceActions';
+import { getFanState, getHumidityStat, getHumidityState, getLightStat, getLightState, getTemperatureStat, getTemperatureState, turnOffHumidity, turnOffLight, turnOffTemperature, turnOnHumidity, turnOnLight, turnOnTemperature } from '../../redux/actions/deviceActions';
 
 export default function FrequentlyUsedDevices() {
-  const [toggleButton1, setToggleButton1] = React.useState(false);
-  const [toggleButton2, setToggleButton2] = React.useState(false);
-  const [toggleButton3, setToggleButton3] = React.useState(false);
-  const [toggleButton4, setToggleButton4] = React.useState(false);
+  
   // const getTempStat = async () => {
   //   try {
   //     const config = {
@@ -47,21 +44,43 @@ export default function FrequentlyUsedDevices() {
   //   getHumidStat();
   // }, [tempData, humidData]);
   const dispatch = useDispatch();
+  //get data from sensors through redux
   const TempStat = useSelector((state) => state.temperatureStat);
   const HumidStat = useSelector((state) => state.humidityStat);
   const LightStat = useSelector((state) => state.lightStat);
-  const TempState = useSelector((state) => state.temperatureState);
-  const { loading4, error4, temperatureState } = TempState;
+
   const { loading1, error1, temperatureStat } = TempStat;
   const { loading2, error2, humidityStat } = HumidStat;
   const { loading3, error3, lightStat } = LightStat;
+  //get data from state of devices through redux
+  const TempState = useSelector((state) => state.temperatureState);
+  const HumidityState = useSelector((state) => state.humidityState);
+  const LightState = useSelector((state) => state.lightState);
+  const FanState = useSelector((state) => state.fanState);
+  
+  const { loading4, error4, temperatureState } = TempState;
+  const { loading5, error5, humidityState } = HumidityState;
+  const { loading6, error6, lightState } = LightState;
+  const { loading7, error7, fanState } = FanState;
+  
+  const [toggleButton1, setToggleButton1] = React.useState(false);
+  const [toggleButton2, setToggleButton2] = React.useState(false);
+  const [toggleButton3, setToggleButton3] = React.useState(false);
+  const [toggleButton4, setToggleButton4] = React.useState(false);
+  //Lấy dữ liệu mới nhất khi component render lần đầu
   useEffect(() => {
    
       dispatch(getTemperatureStat());
       dispatch(getHumidityStat());
       dispatch(getLightStat());
       dispatch(getTemperatureState());
+      dispatch(getHumidityState());
+      dispatch(getLightState());
+      setToggleButton3(temperatureState);
+      setToggleButton1(humidityState);
+      setToggleButton2(lightState);
   }, []);
+  //Lấy dữ liệu mới nhất sau mỗi 20s
   useEffect(() => {
     
     setInterval(() => {
@@ -69,7 +88,9 @@ export default function FrequentlyUsedDevices() {
       dispatch(getHumidityStat());
       dispatch(getLightStat());
       dispatch(getTemperatureState());
-      setToggleButton3(temperatureState);
+      dispatch(getHumidityState());
+      dispatch(getLightState());
+      //setToggleButton3(temperatureState);
     },20000);
     //clearInterval(loadHandle.current);
   }, [dispatch]);
@@ -84,13 +105,41 @@ export default function FrequentlyUsedDevices() {
     },
   ];
   //Handle change States
-  const handleChangeTempState = async () => {
-    if (temperatureState && temperatureState === "T_ON") {
+  const handleChangeTempState = () => {
+    //Nếu true thì tắt đèn đi (true == sáng)
+    if (toggleButton3 === true) {
       dispatch(turnOffTemperature());
-    } else {
+      setToggleButton3(false);
+      
+    } else if (toggleButton3 === false){
       dispatch(turnOnTemperature());
+      setToggleButton3(true);
     }
   }
+  const handleChangeHumidState = () => {
+    //Nếu true thì tắt cảm biến độ ẩm đi (true == đang bật)
+    if (toggleButton1 === true) {
+      
+      dispatch(turnOffHumidity());
+      setToggleButton1(false);
+    } else if (toggleButton1 === false){
+      
+      dispatch(turnOnHumidity());
+      setToggleButton1(true);
+    }
+  }
+
+  const handleChangeLightState = () => {
+    //Nếu true thì tắt cảm biến ánh sáng đi (true == đang bật)
+    if (toggleButton2 === true) {
+      dispatch(turnOffLight());
+      setToggleButton2(false);
+    } else if (toggleButton2 === false){
+      dispatch(turnOnLight());
+      setToggleButton2(true);
+    }
+  }
+
   return (
     <div>
       <div className="grid grid-cols-2 mb-10">
@@ -109,14 +158,15 @@ export default function FrequentlyUsedDevices() {
             <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
               {humidityStat ? humidityStat : "0"}
             </button>
-            <div className="text-right">
+            <div className="text-right" key = {toggleButton1}>
               <Switch
-                onChange={() => setToggleButton1(!toggleButton1)}
+                onChange={handleChangeHumidState}
                 checked={toggleButton1}
                 onColor="#593EFF"
                 height={24}
                 width={48}
                 className="react-switch"
+                
               />
             </div>
           </div>
@@ -128,14 +178,15 @@ export default function FrequentlyUsedDevices() {
             <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
               {lightStat ? lightStat : "0"}
             </button>
-            <div className="text-right">
+            <div className="text-right" key={toggleButton2}>
               <Switch
-                onChange={() => setToggleButton2(!toggleButton2)}
+                onChange={handleChangeLightState}
                 checked={toggleButton2}
                 onColor="#593EFF"
                 height={24}
                 width={48}
                 className="react-switch"
+                
               />
             </div>
           </div>
@@ -147,14 +198,15 @@ export default function FrequentlyUsedDevices() {
             <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
               {temperatureStat ? temperatureStat : "0"}
             </button>
-            <div className="text-right">
+            <div className="text-right" key={toggleButton3}>
               <Switch
                 onChange={handleChangeTempState}
-                checked={temperatureState ? temperatureState === "T_ON" ? true: false : false}
+                checked={toggleButton3}
                 onColor="#593EFF"
                 height={24}
                 width={48}
                 className="react-switch"
+               
               />
             </div>
           </div>

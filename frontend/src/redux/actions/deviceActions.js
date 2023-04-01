@@ -7,7 +7,7 @@ import {
     HUMIDITY_STATE_REQUEST,
     LIGHT_STATE_REQUEST,
     HUMAN_FOUND_STATE_REQUEST,
-    
+
     LED_STATE_VALID,
     FAN_STATE_VALID,
     TEMPERATURE_STATE_VALID,
@@ -78,9 +78,9 @@ import {
 } from '../../constants/deviceConstants';
 
 const headers = {
-      'Content-Type': 'application/json',
-      'X-AIO-Key': "aio_BdmL03GnFRb5Y1f8xQ4eOcdwpjm6",
-  };
+    'Content-Type': 'application/json',
+    'X-AIO-Key': "aio_BdmL03GnFRb5Y1f8xQ4eOcdwpjm6",
+};
 
 
 export const getLedState = () => async (dispatch) => {
@@ -109,8 +109,10 @@ export const getTemperatureState = () => async (dispatch) => {
         dispatch({ type: TEMPERATURE_STATE_REQUEST });
         const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data', headers);
         const { value } = data[0];
-        
-        dispatch({ type: TEMPERATURE_STATE_VALID, payload: value });
+        if (value === "T_ON") {
+            dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
+        }
+        else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
     } catch (error) {
         dispatch({ type: TEMPERATURE_STATE_INVALID, payload: error.message });
     }
@@ -119,8 +121,12 @@ export const getTemperatureState = () => async (dispatch) => {
 export const getHumidityState = () => async (dispatch) => {
     try {
         dispatch({ type: HUMIDITY_STATE_REQUEST });
-        const { data } = await axios.get('/api/devices/humidity');
-        dispatch({ type: HUMIDITY_STATE_VALID, payload: data });
+        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data', headers);
+        const { value } = data[0];
+        if (value === "H_ON") {
+            dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
+        }
+        else dispatch({ type: HUMIDITY_STATE_VALID, payload: false });
     } catch (error) {
         dispatch({ type: HUMIDITY_STATE_INVALID, payload: error.message });
     }
@@ -129,8 +135,12 @@ export const getHumidityState = () => async (dispatch) => {
 export const getLightState = () => async (dispatch) => {
     try {
         dispatch({ type: LIGHT_STATE_REQUEST });
-        const { data } = await axios.get('/api/devices/light');
-        dispatch({ type: LIGHT_STATE_VALID, payload: data });
+        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data', headers);
+        const { value } = data[0];
+        if (value === "L_ON") {
+            dispatch({ type: LIGHT_STATE_VALID, payload: true });
+        }
+        else dispatch({ type: LIGHT_STATE_VALID, payload: false });
     } catch (error) {
         dispatch({ type: LIGHT_STATE_INVALID, payload: error.message });
     }
@@ -189,22 +199,22 @@ export const turnOffFan = () => async (dispatch) => {
 export const turnOnTemperature = () => async (dispatch) => {
     dispatch({ type: TEMPERATURE_TURN_ON });
     axios({
-      method: "POST",
-      url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data",
-      headers: {
-        'Content-Type': 'application/json',
-        'X-AIO-Key': "aio_BdmL03GnFRb5Y1f8xQ4eOcdwpjm6",
-      },
-      data: {
-        value: "T_ON"
-      },
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "T_ON"
+        },
     })
-    .then(res => {
-        dispatch({ type: TEMPERATURE_TURN_ON_SUCCESS, payload: res.data });
-    })
-    .catch(err => {
-        dispatch({ type: TEMPERATURE_TURN_ON_FAIL, payload: err.message });
-    });
+        .then(res => {
+            dispatch({ type: TEMPERATURE_TURN_ON_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: TEMPERATURE_TURN_ON_FAIL, payload: err.message });
+        });
 }
 
 export const turnOffTemperature = () => async (dispatch) => {
@@ -213,59 +223,105 @@ export const turnOffTemperature = () => async (dispatch) => {
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data",
         headers: {
-          'Content-Type': 'application/json',
-          'X-AIO-Key': "aio_BdmL03GnFRb5Y1f8xQ4eOcdwpjm6",
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
         },
         data: {
-          value: "T_OFF"
+            value: "T_OFF"
         },
-      })
-      .then(res => {
-          dispatch({ type: TEMPERATURE_TURN_ON_SUCCESS, payload: res.data });
-      })
-      .catch(err => {
-          dispatch({ type: TEMPERATURE_TURN_ON_FAIL, payload: err.message });
-      });
+    })
+        .then(res => {
+            dispatch({ type: TEMPERATURE_TURN_OFF_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: TEMPERATURE_TURN_OFF_FAIL, payload: err.message });
+        });
 }
 
 export const turnOnHumidity = () => async (dispatch) => {
-    try {
-        dispatch({ type: HUMIDITY_TURN_ON });
-        const { data } = await axios.put('/api/devices/humidity/on');
-        dispatch({ type: HUMIDITY_TURN_ON_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: HUMIDITY_TURN_ON_FAIL, payload: error.message });
-    }
+
+    dispatch({ type: HUMIDITY_TURN_ON });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "H_ON"
+        },
+    })
+        .then(res => {
+            dispatch({ type: HUMIDITY_TURN_ON_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: HUMIDITY_TURN_ON_FAIL, payload: err.message });
+        });
+
 }
 
 export const turnOffHumidity = () => async (dispatch) => {
-    try {
-        dispatch({ type: HUMIDITY_TURN_OFF });
-        const { data } = await axios.put('/api/devices/humidity/off');
-        dispatch({ type: HUMIDITY_TURN_OFF_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: HUMIDITY_TURN_OFF_FAIL, payload: error.message });
-    }
+    dispatch({ type: HUMIDITY_TURN_OFF });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "H_OFF"
+        },
+    })
+        .then(res => {
+            dispatch({ type: HUMIDITY_TURN_OFF_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: HUMIDITY_TURN_OFF_FAIL, payload: err.message });
+        });
 }
 
 export const turnOnLight = () => async (dispatch) => {
-    try {
-        dispatch({ type: LIGHT_TURN_ON });
-        const { data } = await axios.put('/api/devices/light/on');
-        dispatch({ type: LIGHT_TURN_ON_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: LIGHT_TURN_ON_FAIL, payload: error.message });
-    }
+    dispatch({ type: LIGHT_TURN_ON });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "L_ON"
+        },
+    })
+        .then(res => {
+            dispatch({ type: LIGHT_TURN_ON_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: LIGHT_TURN_ON_FAIL, payload: err.message });
+        });
 }
 
 export const turnOffLight = () => async (dispatch) => {
-    try {
-        dispatch({ type: LIGHT_TURN_OFF });
-        const { data } = await axios.put('/api/devices/light/off');
-        dispatch({ type: LIGHT_TURN_OFF_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: LIGHT_TURN_OFF_FAIL, payload: error.message });
-    }
+    dispatch({ type: LIGHT_TURN_OFF });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "L_OFF"
+        },
+    })
+        .then(res => {
+            dispatch({ type: LIGHT_TURN_OFF_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: LIGHT_TURN_OFF_FAIL, payload: err.message });
+        });
 }
 
 export const turnOnHumanFound = () => async (dispatch) => {
@@ -291,8 +347,8 @@ export const turnOffHumanFound = () => async (dispatch) => {
 export const getTemperatureStat = () => async (dispatch) => {
     try {
         dispatch({ type: TEMPERATURE_STAT_REQUEST });
-          const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data', headers);
-          const { value } = data[0];
+        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data', headers);
+        const { value } = data[0];
 
         dispatch({ type: TEMPERATURE_STAT_VALID, payload: value });
     } catch (error) {
