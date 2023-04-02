@@ -107,8 +107,8 @@ export const getFanState = () => async (dispatch) => {
 export const getTemperatureState = () => async (dispatch) => {
     try {
         dispatch({ type: TEMPERATURE_STATE_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data', headers);
-        const { value } = data[0];
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
         if (value === "T_ON") {
             dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
         }
@@ -121,8 +121,8 @@ export const getTemperatureState = () => async (dispatch) => {
 export const getHumidityState = () => async (dispatch) => {
     try {
         dispatch({ type: HUMIDITY_STATE_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data', headers);
-        const { value } = data[0];
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
         if (value === "H_ON") {
             dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
         }
@@ -135,8 +135,8 @@ export const getHumidityState = () => async (dispatch) => {
 export const getLightState = () => async (dispatch) => {
     try {
         dispatch({ type: LIGHT_STATE_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data', headers);
-        const { value } = data[0];
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
         if (value === "L_ON") {
             dispatch({ type: LIGHT_STATE_VALID, payload: true });
         }
@@ -347,8 +347,8 @@ export const turnOffHumanFound = () => async (dispatch) => {
 export const getTemperatureStat = () => async (dispatch) => {
     try {
         dispatch({ type: TEMPERATURE_STAT_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data', headers);
-        const { value } = data[0];
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
 
         dispatch({ type: TEMPERATURE_STAT_VALID, payload: value });
     } catch (error) {
@@ -359,8 +359,8 @@ export const getTemperatureStat = () => async (dispatch) => {
 export const getHumidityStat = () => async (dispatch) => {
     try {
         dispatch({ type: HUMIDITY_STAT_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data', headers);
-        const { value } = data[0];
+       const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
         dispatch({ type: HUMIDITY_STAT_VALID, payload: value });
     } catch (error) {
         dispatch({ type: HUMIDITY_STAT_INVALID, payload: error.message });
@@ -370,8 +370,8 @@ export const getHumidityStat = () => async (dispatch) => {
 export const getLightStat = () => async (dispatch) => {
     try {
         dispatch({ type: LIGHT_STAT_REQUEST });
-        const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data', headers);
-        const { value } = data[0];
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
         dispatch({ type: LIGHT_STAT_VALID, payload: value });
     } catch (error) {
         dispatch({ type: LIGHT_STAT_INVALID, payload: error.message });

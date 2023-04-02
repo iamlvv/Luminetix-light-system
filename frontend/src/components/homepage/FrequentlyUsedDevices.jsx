@@ -68,7 +68,7 @@ export default function FrequentlyUsedDevices() {
   const [toggleButton3, setToggleButton3] = React.useState(false);
   const [toggleButton4, setToggleButton4] = React.useState(false);
   //Lấy dữ liệu mới nhất khi component render lần đầu
-  
+
   useEffect(() => {
 
     dispatch(getTemperatureStat());
@@ -79,7 +79,7 @@ export default function FrequentlyUsedDevices() {
     dispatch(getLightState());
 
   }, []);
-  
+
   useEffect(() => {
     if (temperatureState) {
       setToggleButton3(temperatureState);
@@ -101,11 +101,11 @@ export default function FrequentlyUsedDevices() {
       dispatch(getTemperatureState());
       dispatch(getHumidityState());
       dispatch(getLightState());
-      
+
       //setToggleButton3(temperatureState);
-    //   setToggleButton3(temperatureState);
-    // setToggleButton1(humidityState);
-    // setToggleButton2(lightState);
+      //   setToggleButton3(temperatureState);
+      // setToggleButton1(humidityState);
+      // setToggleButton2(lightState);
     }, 20000);
     //clearInterval(loadHandle.current);
   }, [dispatch]);
@@ -115,8 +115,8 @@ export default function FrequentlyUsedDevices() {
       label: "0",
     },
     {
-      value: 10,
-      label: "10",
+      value: 100,
+      label: "100",
     },
   ];
   //Handle change States
@@ -170,7 +170,7 @@ export default function FrequentlyUsedDevices() {
       <div className="grid grid-cols-4 gap-9 text-center">
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
-            <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
+            <button className="bg-sky-700 text-white w-14 h-14 rounded-full">
               {humidityStat ? humidityStat : ""}
             </button>
             <div className="text-right" key={toggleButton1}>
@@ -190,7 +190,7 @@ export default function FrequentlyUsedDevices() {
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
-            <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
+            <button className="bg-yellow-700 text-white w-14 h-14 rounded-full">
               {lightStat ? lightStat : ""}
             </button>
             <div className="text-right" key={toggleButton2}>
@@ -210,7 +210,7 @@ export default function FrequentlyUsedDevices() {
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
-            <button className="bg-violet-700 text-white w-14 h-14 rounded-full">
+            <button className="bg-red-700 text-white w-14 h-14 rounded-full">
               {temperatureStat ? temperatureStat : ""}
             </button>
             <div className="text-right" key={toggleButton3}>
