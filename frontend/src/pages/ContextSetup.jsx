@@ -12,30 +12,14 @@ const ContextHomeScreen = () => {
 
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
-  const { loading, error, contextlist } = contextList;
+  const { contextlist } = contextList;
   useEffect(() => {
     dispatch(listOfContexts());
   }, [dispatch]);
 
-  const handleTest = async () => {
-    // fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data')}`)
-    //   .then(response => {
-    //     if (response.ok) {
-    //       return response.json()
-    //     }
-    //     throw new Error('Network response was not ok.')
-    //   })
-    //   .then(data => console.log(JSON.parse(data.contents)[0]));
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data')}`);
-    const { value } = JSON.parse(data.contents)[0];
-    console.log(value);
-  }
   return (
     <div className='bg-violet-100 rounded-2xl p-5'>
       <Header />
-      <div>
-        <button onClick={handleTest}>Test cors</button>
-      </div>
       <div className='grid grid-cols-2 gap-9 mt-10 mb-10'>
         <div className='bg-white rounded-2xl p-5'>
           <h1 className='font-bold mb-5'>Tutorial</h1>

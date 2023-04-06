@@ -104,6 +104,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       fullname: updatedUser.fullname,
       username: updatedUser.username,
       email: updatedUser.email,
+      phone: updatedUser.phone,
       token: generateToken(updatedUser._id),
     });
   } else {
@@ -112,6 +113,21 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserPassword = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user && (await user.matchPassword(req.body.currentpassword))) {
+
+    user.password = req.body.newpassword;
+    const updatedUser = await user.save();
+    
+    res.json({
+      result: "success"
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid current password");
+  }
+});
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
@@ -183,5 +199,6 @@ module.exports = {
   getUsers,
   deleteUser,
   getUserById,
+  updateUserPassword
   //updateUser,
 };

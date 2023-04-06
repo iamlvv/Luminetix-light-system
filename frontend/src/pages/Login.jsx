@@ -2,8 +2,7 @@ import React, {useEffect, useState} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import footerlogin from "../images/footer-login.png";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/actions/userActions";
-import Swal from 'sweetalert2';
+import { login }  from "../redux/actions/userActions";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ export default function Login() {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const { userInfo } = userLogin;
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -22,18 +21,6 @@ export default function Login() {
   }, [userInfo, dispatch, navigate]);
 
   const handleSubmit = (e) => {
-    
-    if (userInfo && loading) {
-      console.log(userInfo.fullname);
-    }
-    else if (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error,
-      });
-      console.log(error);
-    }
     e.preventDefault();
     dispatch(login(email, password));
   }

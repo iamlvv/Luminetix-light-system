@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
     USER_DETAILS_FAIL,
     USER_DETAILS_REQUEST,
@@ -14,7 +15,9 @@ import {
     USER_UPDATE_PROFILE_REQUEST,
     USER_UPDATE_PROFILE_SUCCESS,
     USER_DETAILS_RESET,
-    USER_LIST_RESET,
+    USER_UPDATE_PASSWORD_REQUEST,
+    USER_UPDATE_PASSWORD_SUCCESS,
+    USER_UPDATE_PASSWORD_FAIL,
 
 } from "../../constants/userConstants";
 
@@ -43,6 +46,11 @@ export const login = (email, password) => async (dispatch) => {
 
         localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Email or password is incorrect!',
+          });
         dispatch({
             type: USER_LOGIN_FAIL,
             payload:
@@ -57,9 +65,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem("userInfo");
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
-    // dispatch({ type: ORDER_LIST_MY_RESET });
-    dispatch({ type: USER_LIST_RESET });
-    document.location.href = "/login";
+    document.location.href = "/";
 };
 
 export const register =
@@ -157,7 +163,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://localhost:5000/api/users/profile`, user, config);
+        const { data } = await axios.put(`http://localhost:5000/api/users/profile/password`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -182,3 +188,47 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
         });
     }
 };
+
+export const updateUserPassword = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        const { data } = await axios.put(`http://localhost:5000/api/users/password`, user, config);
+        Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Password changed successfully!",
+        })
+        dispatch({
+            type: USER_UPDATE_PASSWORD_SUCCESS,
+            payload: true,
+        });
+    }
+    catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Current password is incorrect!",
+        });
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: USER_UPDATE_PASSWORD_FAIL,
+            payload: message,
+        });
+    }
+}

@@ -41,7 +41,7 @@ const reducer = combineReducers({
     userRegister: userReducers.userRegisterReducer,
     userDetails: userReducers.userDetailsReducer,
     userUpdateProfile: userReducers.userUpdateProfileReducer,
-
+    userUpdatePassword: userReducers.userUpdatePasswordReducer,
 })
 const store = configureStore({
     reducer,

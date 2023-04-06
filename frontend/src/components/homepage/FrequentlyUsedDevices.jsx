@@ -68,7 +68,7 @@ export default function FrequentlyUsedDevices() {
   const [toggleButton3, setToggleButton3] = React.useState(false);
   const [toggleButton4, setToggleButton4] = React.useState(false);
   //Lấy dữ liệu mới nhất khi component render lần đầu
-
+  
   useEffect(() => {
 
     dispatch(getTemperatureStat());

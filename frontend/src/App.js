@@ -22,7 +22,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Login/>} />
             <Route path="/contextsetup" element = {<ContextSetup />} />
-            <Route path='/login' element={<Login/>} />
             <Route path='manualcontrol' element={<ManualControl/>} />
             <Route path='/statistics' element={<Statistics/>} />
             <Route path='/userdetail' element={<UserDetail/>} />

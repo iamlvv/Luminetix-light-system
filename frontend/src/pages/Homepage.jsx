@@ -97,15 +97,13 @@ const HomePage = () => {
               </div>
               <div className="flex flex-col text-left font-bold ml-10 mt-5 mb-5">
                 <div>
+                  <NavLink to='/userdetail'>
                   <button className="bg-violet-300 rounded-2xl py-1 w-48 hover:bg-violet-400 transition ease-in">
-                    Change your password
+                    Edit your profile
                   </button>
+                  </NavLink>
                 </div>
-                <div className="mt-3">
-                  <button className="bg-violet-300 rounded-2xl py-1 px-4 w-48 hover:bg-violet-400 transition ease-in">
-                    Change your email
-                  </button>
-                </div>
+                
               </div>
             </div>
             <div className="bg-white rounded-2xl shadow-sm">
