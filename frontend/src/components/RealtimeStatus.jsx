@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Clock from "react-live-clock";
 import viewicon from "../images/viewicon.png";
 import lighticon from "../images/lighticon.png";
 import humidityicon from "../images/humidityicon.png";
 import temperatureicon from "../images/temperatureicon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { getHumanFoundState, getHumidityStat, getLightStat, getTemperatureStat } from '../redux/actions/deviceActions';
 export default function RealtimeStatus() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -50,6 +52,34 @@ export default function RealtimeStatus() {
             mm = "Jan";
     }
     today = mm + ", " + dd + ", " + yyyy;
+    const dispatch = useDispatch();
+    //get data from sensors through redux
+    const TempStat = useSelector((state) => state.temperatureStat);
+    const HumidStat = useSelector((state) => state.humidityStat);
+    const LightStat = useSelector((state) => state.lightStat);
+    const HumanFoundStat = useSelector((state) => state.humanDetectionState);
+
+    const { temperatureStat } = TempStat;
+    const { humidityStat } = HumidStat;
+    const { lightStat } = LightStat;
+    const { humanFoundState } = HumanFoundStat;
+
+    useEffect(() => {
+
+        dispatch(getTemperatureStat());
+        dispatch(getHumidityStat());
+        dispatch(getLightStat());
+        dispatch(getHumanFoundState())
+
+    }, []);
+    useEffect(() => {
+        setInterval(() => {
+            dispatch(getTemperatureStat());
+            dispatch(getHumidityStat());
+            dispatch(getLightStat());
+            dispatch(getHumanFoundState())
+        }, 20000);
+    }, [dispatch]);
     return (
         <div>
             <h1 className="text-center mt-10 font-bold text-2xl text-violet-500">
@@ -65,7 +95,7 @@ export default function RealtimeStatus() {
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-red-500 font-bold italic">31.2</h1>
+                        <h1 className="text-2xl text-red-500 font-bold italic">{temperatureStat}</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
@@ -77,7 +107,7 @@ export default function RealtimeStatus() {
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-blue-500 font-bold italic">75.27%</h1>
+                        <h1 className="text-2xl text-blue-500 font-bold italic">{humidityStat}%</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
@@ -89,7 +119,7 @@ export default function RealtimeStatus() {
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-yellow-500 font-bold italic">52.46%</h1>
+                        <h1 className="text-2xl text-yellow-500 font-bold italic">{lightStat}%</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
@@ -101,7 +131,7 @@ export default function RealtimeStatus() {
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-violet-500 font-bold italic">No</h1>
+                        <h1 className="text-2xl text-violet-500 font-bold italic">{humanFoundState === "0" ? "No" : "Yes"}</h1>
                     </div>
                 </div>
             </div>

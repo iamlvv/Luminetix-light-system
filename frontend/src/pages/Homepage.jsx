@@ -114,19 +114,6 @@ const HomePage = () => {
                 <h1>{today}</h1>
               </div>
               <div className="">
-                <h1 className="font-bold text-xl w-1/2 mx-auto mb-5">
-                  Your home
-                </h1>
-                <div className="w-1/2 mx-auto text-gray-500">
-                  <div className="grid grid-cols-2">
-                    <h2>1</h2>
-                    <h2>10</h2>
-                  </div>
-                  <div className="grid grid-cols-2">
-                    <h2>In actived</h2>
-                    <h2>Devices</h2>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

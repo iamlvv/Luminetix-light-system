@@ -7,61 +7,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { getFanState, getHumidityStat, getHumidityState, getLightStat, getLightState, getTemperatureStat, getTemperatureState, turnOffHumidity, turnOffLight, turnOffTemperature, turnOnHumidity, turnOnLight, turnOnTemperature } from '../../redux/actions/deviceActions';
 
 export default function FrequentlyUsedDevices() {
-
-  // const getTempStat = async () => {
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'X-AIO-Key': process.env.ADAFRUIT_KEY,
-  //       }
-  //     };
-  //     const { data } = await axios.get('https://io.adafruit.com/api/v2/iamlvv/feeds/light/data', config);
-  //     //console.log(data[0]);
-  //     setTempData(data[0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-  // const getHumidStat = async () => {
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'X-AIO-Key': process.env.ADAFRUIT_KEY,
-  //       }
-  //     };
-  //     const { data } = await axios.get('https://io.adafruit.com/api/v2/iamlvv/feeds/humidity/data', config);
-  //     //console.log(data[0]);
-  //     setHumidData(data[0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getTempStat();
-  //   getHumidStat();
-  // }, [tempData, humidData]);
   const dispatch = useDispatch();
   //get data from sensors through redux
   const TempStat = useSelector((state) => state.temperatureStat);
   const HumidStat = useSelector((state) => state.humidityStat);
   const LightStat = useSelector((state) => state.lightStat);
 
-  const { loading1, error1, temperatureStat } = TempStat;
-  const { loading2, error2, humidityStat } = HumidStat;
-  const { loading3, error3, lightStat } = LightStat;
+  const { temperatureStat } = TempStat;
+  const { humidityStat } = HumidStat;
+  const { lightStat } = LightStat;
   //get data from state of devices through redux
   const TempState = useSelector((state) => state.temperatureState);
   const HumidityState = useSelector((state) => state.humidityState);
   const LightState = useSelector((state) => state.lightState);
   const FanState = useSelector((state) => state.fanState);
 
-  const { loading4, error4, temperatureState } = TempState;
-  const { loading5, error5, humidityState } = HumidityState;
-  const { loading6, error6, lightState } = LightState;
-  const { loading7, error7, fanState } = FanState;
+  const { temperatureState } = TempState;
+  const { humidityState } = HumidityState;
+  const { lightState } = LightState;
+  const { fanState } = FanState;
 
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
@@ -101,13 +65,7 @@ export default function FrequentlyUsedDevices() {
       dispatch(getTemperatureState());
       dispatch(getHumidityState());
       dispatch(getLightState());
-
-      //setToggleButton3(temperatureState);
-      //   setToggleButton3(temperatureState);
-      // setToggleButton1(humidityState);
-      // setToggleButton2(lightState);
     }, 20000);
-    //clearInterval(loadHandle.current);
   }, [dispatch]);
   const mark = [
     {

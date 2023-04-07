@@ -96,8 +96,11 @@ export const getLedState = () => async (dispatch) => {
 export const getFanState = () => async (dispatch) => {
     try {
         dispatch({ type: FAN_STATE_REQUEST });
-        const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data/last", headers);
-        const { value } = data;
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
+        if (value === "0") {
+            dispatch({ type: FAN_STATE_VALID, payload: false });
+        }
         dispatch({ type: FAN_STATE_VALID, payload: value });
     } catch (error) {
         dispatch({ type: FAN_STATE_INVALID, payload: error.message });
@@ -149,8 +152,9 @@ export const getLightState = () => async (dispatch) => {
 export const getHumanFoundState = () => async (dispatch) => {
     try {
         dispatch({ type: HUMAN_FOUND_STATE_REQUEST });
-        const { data } = await axios.get('/api/devices/humanfound');
-        dispatch({ type: HUMAN_FOUND_STATE_VALID, payload: data });
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-human/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
+        dispatch({ type: HUMAN_FOUND_STATE_VALID, payload: value });
     } catch (error) {
         dispatch({ type: HUMAN_FOUND_STATE_INVALID, payload: error.message });
     }
@@ -177,23 +181,48 @@ export const turnOffLed = () => async (dispatch) => {
 }
 
 export const turnOnFan = () => async (dispatch) => {
-    try {
-        dispatch({ type: FAN_TURN_ON });
-        const { data } = await axios.put('/api/devices/fan/on');
-        dispatch({ type: FAN_TURN_ON_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: FAN_TURN_ON_FAIL, payload: error.message });
-    }
+
+
+    dispatch({ type: FAN_TURN_ON });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "100"
+        },
+    })
+        .then(res => {
+            dispatch({ type: FAN_TURN_ON_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: FAN_TURN_ON_FAIL, payload: err.message });
+        });
 }
 
 export const turnOffFan = () => async (dispatch) => {
-    try {
-        dispatch({ type: FAN_TURN_OFF });
-        const { data } = await axios.put('/api/devices/fan/off');
-        dispatch({ type: FAN_TURN_OFF_SUCCESS, payload: data });
-    } catch (error) {
-        dispatch({ type: FAN_TURN_OFF_FAIL, payload: error.message });
-    }
+
+    dispatch({ type: FAN_TURN_OFF });
+    axios({
+        method: "POST",
+        url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
+        },
+        data: {
+            value: "0"
+        },
+    })
+        .then(res => {
+            dispatch({ type: FAN_TURN_OFF_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            dispatch({ type: FAN_TURN_OFF_FAIL, payload: err.message });
+        });
 }
 
 export const turnOnTemperature = () => async (dispatch) => {
@@ -359,7 +388,7 @@ export const getTemperatureStat = () => async (dispatch) => {
 export const getHumidityStat = () => async (dispatch) => {
     try {
         dispatch({ type: HUMIDITY_STAT_REQUEST });
-       const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data')}`, headers);
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data')}`, headers);
         const { value } = JSON.parse(data.contents)[0];
         dispatch({ type: HUMIDITY_STAT_VALID, payload: value });
     } catch (error) {

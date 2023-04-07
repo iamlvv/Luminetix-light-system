@@ -1,6 +1,8 @@
 import { Slider } from '@mui/material';
 import Switch from 'react-switch';
 import React from 'react'
+import TimePicker from "rc-time-picker";
+import 'rc-time-picker/assets/index.css';
 
 import { NavLink } from 'react-router-dom'
 import NavBar from '../NavBar';
@@ -13,6 +15,8 @@ function ContextCreatePage() {
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
   const [toggleButton3, setToggleButton3] = React.useState(false);
+  const [starttime, setStartTime] = React.useState('');
+  const [endtime, setEndTime] = React.useState('');
   return (
     <div>
       <div>
@@ -26,11 +30,6 @@ function ContextCreatePage() {
               <input type='text' name='content' placeholder="Context content" className='w-full p-3 rounded-2xl border border-black' />
             </div>
             <div className='mt-5'>
-              <ProgressBar
-                percent={33}
-                filledBackground="linear-gradient(to right, #593EFF, #593EFF)"
-                height = {20}
-              />
             </div>
             <h1 className='font-bold text-2xl mt-10 mb-2'>Input</h1>
             <h2 className='text-gray-500 mb-5'>Choose condition that will start the routine</h2>
@@ -64,7 +63,7 @@ function ContextCreatePage() {
                   </div>
                 </div>
                 <div className='bg-white shadow-sm rounded-2xl text-center'>
-                  <div className='grid grid-cols-2  mt-5 leading-9'>
+                  <div className='grid grid-cols-2 mt-5 leading-9'>
                     <h1 className='font-bold'>Humidity</h1>
                     <Switch
                       onChange={() => setToggleButton2(!toggleButton2)}
@@ -75,12 +74,15 @@ function ContextCreatePage() {
                       className="react-switch"
                     />
                   </div>
-                  <div className='mt-5'>
-                    <select>
-                      <option>0-10</option>
-                      <option>10-20</option>
-                      <option>20-30</option>
-                    </select>
+                  <div className='mt-5 flex justify-between gap-9 p-5'>
+                    <div>
+                      <label>From</label>
+                      <input type='number' name='fromhumid' placeholder={"0%"} className='w-full p-2 rounded-2xl border' />
+                    </div>
+                    <div>
+                      <label>To</label>
+                      <input type='number' name='fromhumid' placeholder={"100%"} className='w-full p-2 rounded-2xl border' />
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -99,7 +101,7 @@ function ContextCreatePage() {
                     <div className='mt-5'>
                       <h1 className='font-bold mb-2'>Lighting time limit</h1>
                       <div>
-                        <input type='text' name='content' placeholder={"0 hour"} className='w-full p-2 rounded-2xl border' />
+                        <input type='number' name='content' placeholder={"0 hour"} className='w-full p-2 rounded-2xl border' />
                       </div>
                     </div>
                   </div>
@@ -109,16 +111,46 @@ function ContextCreatePage() {
                 <h1 className='font-bold mb-5'>Date and time</h1>
                 <div className='grid grid-cols-3 gap-9'>
                   <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>Day</label>
-                    <input type="text" name="day" />
+                    <label className='font-bold mb-3'>Day</label>
+                    <div>
+                      <select>
+                        <option>Today</option>
+                        <option>Every Monday</option>
+                        <option>Every Tuesday</option>
+                        <option>Every Wednesday</option>
+                        <option>Every Thursday</option>
+                        <option>Every Friday</option>
+                        <option>Every Saturday</option>
+                        <option>Every Sunday</option>
+                        <option>Everyday</option>
+                      </select>
+                    </div>
                   </div>
                   <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>Start time</label>
-                    <input type="text" name="starttime" />
+                    <label className='font-bold mb-3'>Start time</label>
+                    <div>
+                      <TimePicker
+                        placeholder="Select Start Time"
+                        use12Hours
+                        showSecond={false}
+                        focusOnOpen={true}
+                        format="hh:mm A"
+                        onChange={e => setStartTime(e.format('LT'))}
+                      />
+                    </div>
                   </div>
                   <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>End time</label>
-                    <input type="text" name="endtime" />
+                    <label className='font-bold mb-3'>End time</label>
+                    <div>
+                      <TimePicker
+                        placeholder="Select End Time"
+                        use12Hours
+                        showSecond={false}
+                        focusOnOpen={true}
+                        format="hh:mm A"
+                        onChange={e => setEndTime(e.format('LT'))}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
