@@ -6,8 +6,8 @@ import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
 import Switch from "react-switch";
 import lighticon2 from '../../images/lighticon2.png'
-import fanicon2 from '../../images/fanicon2.png'
-
+// import fanicon2 from '../../images/fanicon2.png'
+import fanicon2 from '../../images/fanicon1.jpg'
 
 function ContextNextPage() {
     //Get context detail
@@ -22,102 +22,119 @@ function ContextNextPage() {
     // const [toggleButton2, setToggleButton2] = React.useState(false);
     // const [toggleButton3, setToggleButton3] = React.useState(false);
     return (
-        <div>
+            <div>
             <NavBar />
             <div className='ml-28 grid grid-cols-4 gap-9'>
-                <div className='bg-violet-100 col-span-3 mt-5 rounded-2xl p-5'>
-                    <h1 className='font-bold text-2xl'>{context.name}</h1>
-                    <div>
-                        {/* Progress Bar */}
+                <div className='bg-violet-100 col-span-3 mt-5 rounded-xl p-5'>
+                    <div className='border bg-white p-5 rounded-xl'>
+                        <h1 className='font-bold text-2xl'>{context.name}</h1>
+                        <p className='text-sm text-gray-500 my-2'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat dolor, cumque enim voluptas unde asperiores illum labore culpa sequi corporis eaque similique, laudantium doloremque, soluta molestias error deleniti consectetur ea.</p>
                     </div>
-                    <h1 className='font-bold text-2xl mt-10 mb-2'>Then...</h1>
-                    <h2 className='text-gray-500 mb-5'>Choose what you want to happen</h2>
+                    <div>
+                    {/* Progress Bar */}
+                    </div>
+                        <h1 className='font-bold text-2xl mt-5 mb-2'>Then...</h1>
+                        <h2 className='text-gray-500 mb-5'>Choose what you want to happen with your devices.</h2>
                     <div >
                         <h1 className='font-bold'>Control devices</h1>
+                        {/* Control devices */}
                         <div className='grid grid-cols-3 gap-9 text-center mt-5'>
-                            <div className='bg-white shadow-sm rounded-2xl p-5'>
-                                <div className='grid grid-cols-2'>
-                                    <div><img src={lighticon2} alt='light' className='mx-auto' /></div>
+                            {/* Light */}
+                            <div className='bg-white shadow-sm rounded-xl p-5 grid grid-rows-2'>
+                                <div className='grid grid-cols-2 row-span-1'>
+                                    <div className='w-10 m-auto'>
+                                        <img src={lighticon2} alt='light' className='mx-auto' />
+                                    </div>
                                     <Switch
-                                        //onChange={() => setToggleButton1(!toggleButton1)}
+                                        // onChange={() => setToggleButton1(!toggleButton1)}
                                         checked={context.lightstate}
                                         onColor="#593EFF"
                                         height={24}
                                         width={48}
-                                        className="react-switch"
+                                        className="react-switch my-auto ml-auto"
                                     />
                                 </div>
-                                <h1 className='font-bold'>Light</h1>
-                                <div>
-                                    <select>
-                                        <option>{context.lightcolor}</option>
-                                        <option>Red</option>
-                                        <option>Blue</option>
-                                    </select>
+                                <div className='grid grid-cols-2 row-span-1'>
+                                    <h1 className='font-bold col-span-1 m-auto'>Light</h1>
+                                    <div className='my-auto ml-auto'>
+                                        <select className='border px-4 py-1 rounded'>
+                                            <option>{context.lightcolor}</option>
+                                            {/* <option>Red</option>
+                                            <option>Blue</option> */}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className='bg-white shadow-sm rounded-2xl p-5'>
-                                <div className='grid grid-cols-2'>
-                                    <div><img src={fanicon2} alt='light' className='mx-auto' /></div>
+                            {/* Fan */}
+                            <div className='bg-white shadow-sm rounded-xl p-5 grid grid-rows-2'>
+                                <div className='grid grid-cols-2 row-span-1'>
+                                    <div className='w-10 m-auto'>
+                                        <img src={fanicon2} alt='fan' className='mx-auto' />
+                                    </div>
                                     <Switch
-                                        //onChange={() => setToggleButton1(!toggleButton1)}
+                                        // onChange={() => setToggleButton2(!toggleButton2)}
                                         checked={context.fanstate}
                                         onColor="#593EFF"
                                         height={24}
                                         width={48}
-                                        className="react-switch"
+                                        className="react-switch my-auto ml-auto"
                                     />
                                 </div>
-                                <h1 className='font-bold'>Light</h1>
-                                <div>
-                                    <select>
-                                        <option>{context.fanlevel}</option>
-                                        <option>Red</option>
-                                        <option>Blue</option>
-                                    </select>
+                                <div className='grid grid-cols-2 row-span-1'>
+                                    <h1 className='font-bold col-span-1 m-auto'>Fan</h1>
+                                    <div className='my-auto ml-auto'>
+                                        <select className='border px-4 py-1 rounded'>
+                                            <option>{context.fanlevel}</option>
+                                            {/* <option>Level 2</option>
+                                            <option>Level 3</option> */}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='bg-white shadow-sm rounded-2xl p-5'>
-                                <h1 className='font-bold mb-10'>Turn off the whole system</h1>
+                            {/* System */}
+                            <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-4'>
+                                <h1 className='font-bold m-auto col-span-3'>Control the whole system</h1>
                                 <Switch
-                                    //onChange={() => setToggleButton1(!toggleButton1)}
+                                    // onChange={() => setToggleButton3(!toggleButton3)}
                                     checked={false}
                                     onColor="#593EFF"
                                     height={24}
                                     width={48}
-                                    className="react-switch"
+                                    className="react-switch my-auto ml-auto"
                                 />
                             </div>
                         </div>
-
                     </div>
-                    <div className='mt-10'>
+                    {/* Notification */}
+                    <div className='mt-5'>
                         <h1 className='font-bold'>Notifications</h1>
-                        <div className='grid grid-cols-2 gap-20 ml-20 mr-20 mt-5'>
-                            <div className='p-10 bg-white rounded-2xl shadow-sm'>
-                                <h1 className='font-bold'>Messages</h1>
-                                <div className='mt-5'>
-                                    <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5' />
+                        <div className='grid grid-cols-2 gap-10 ml-20 mr-20 mt-3'>
+                            <div className='p-3 bg-white rounded-xl shadow-sm'>
+                            {/* Message */}
+                                <div className='mx-3 my-1 col-span-2'>
+                                    <label className='font-bold text-gray-900 text-sm'>Message</label>
+                                    <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5 w-full' />
                                 </div>
-                                <h1 className='font-bold'>Email</h1>
-                                <div className='mt-5'>
-                                    <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5' />
+                                {/* Email */}
+                                <div className='mx-3 my-1 col-span-2'>
+                                    <label className='font-bold text-gray-900 text-sm'>Email</label>
+                                    <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5 w-full' />
                                 </div>
                             </div>
-                            <div className='p-10 bg-white rounded-2xl shadow-sm'>
-                                <h1 className='font-bold mb-10'>Include information</h1>
-                                <div className='flex flex-col gap-9'>
+                            {/* Include info */}
+                            <div className='py-5 px-10 bg-white rounded-xl shadow-sm'>
+                                <h1 className='font-bold mb-5'>Include information</h1>
+                                <div className='flex flex-col gap-5'>
                                     <div>
-                                        <input type='checkbox' />
+                                        <input type='checkbox' className='mr-3 mb-4'/>
                                         <label>Fan status</label>
                                     </div>
                                     <div>
-                                        <input type='checkbox' />
+                                        <input type='checkbox' className='mr-3 mb-4'/>
                                         <label>Light status</label>
                                     </div>
                                     <div>
-                                        <input type='checkbox' />
+                                        <input type='checkbox' className='mr-3 mb-4'/>
                                         <label>Date and time</label>
                                     </div>
                                 </div>
@@ -125,7 +142,7 @@ function ContextNextPage() {
 
                         </div>
                         <div className='text-right mt-5'>
-                            <NavLink to={`/contextsetup/${context.id}/3`}><button className='bg-violet-500 text-white font-bold rounded-2xl p-3 hover:bg-violet-600 transition ease-in'>Next</button></NavLink>
+                            <NavLink to={`/contextsetup/${context.id}/3`}><button className='bg-violet-500 text-white font-bold rounded-lg p-2 px-5 hover:bg-violet-600 transition ease-in'>Next</button></NavLink>
                         </div>
                     </div>
                 </div>

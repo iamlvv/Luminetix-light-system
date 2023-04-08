@@ -23,34 +23,40 @@ function ContextInfo() {
   const [toggleButton1, setToggleButton1] = React.useState(context.tempstate);
   const [toggleButton2, setToggleButton2] = React.useState(context.humidstate);
   const [toggleButton3, setToggleButton3] = React.useState(context.viewstate);
+  const [toggleButton4, setToggleButton4] = React.useState(true);
   return (
     <div>
       <div>
         <NavBar />
         <div className='ml-28 grid grid-cols-4 gap-9' >
-          <div className='bg-violet-100 rounded-2xl col-span-3 p-5 mt-5'>
+          <div className='bg-violet-100 rounded-xl col-span-3 p-5 mt-5'>
             <h1 className='font-bold text-2xl mb-5'>{context.name}</h1>
             <div>
-              <input type='text' name='content' placeholder={context.content} className='w-full p-3 rounded-2xl border border-black' />
+              <input type='text' name='content' placeholder={context.content} className='w-full p-3 rounded-xl border border-black' />
             </div>
+            {/* Body */}
             <div>
               {/* Progress Bar */}
             </div>
             <h1 className='font-bold text-2xl mt-10 mb-2'>Input</h1>
             <h2 className='text-gray-500 mb-5'>Choose condition that will start the routine</h2>
             <div>
-              <h1 className='font-bold mb-5'>Sensors and devices status</h1>
+              <h1 className='font-bold mb-5'>Sensors status</h1>
               <div className='grid grid-cols-3 gap-9'>
+              {/* Temperature */}
                 <div className='p-5 rounded-2xl shadow-sm bg-white text-center'>
                   <div className='grid grid-cols-2 leading-9'>
-                    <h1 className='font-bold'>Temperature</h1>
+                    <div className='grid grid-rows-2'>
+                      <h1 className='font-bold'>Temperature</h1>
+                      <p className=' text-xs text-gray-500'>Choose temperature that trigger context</p>
+                    </div>
                     <Switch
-                      onChange={() => setToggleButton1(!toggleButton1)}
+                      // onChange={() => setToggleButton1(!toggleButton1)}
                       checked={context.tempstate}
                       onColor="#593EFF"
                       height={24}
                       width={48}
-                      className="react-switch"
+                      className="react-switch my-auto ml-auto"
                     />
                   </div>
                   <div className='pt-10'>
@@ -67,68 +73,105 @@ function ContextInfo() {
                   />
                   </div>
                 </div>
-                <div className='bg-white shadow-sm rounded-2xl text-center'>
-                  <div className='grid grid-cols-2  mt-5 leading-9'>
-                    <h1 className='font-bold'>Humidity</h1>
+                {/* Humidity */}
+                <div className='bg-white shadow-sm rounded-xl text-center p-5'>
+                  <div className='grid grid-cols-2'>
+                    <div className='grid grid-rows-2'>
+                      <h1 className='font-bold'>Humidity</h1>
+                      <p className=' text-xs text-gray-500'>Choose humidity level that trigger context</p>
+                    </div>  
                     <Switch
-                      onChange={() => setToggleButton2(!toggleButton2)}
+                      // onChange={() => setToggleButton2(!toggleButton2)}
                       checked={context.humidstate}
                       onColor="#593EFF"
                       height={24}
                       width={48}
-                      className="react-switch"
+                      className="react-switch my-auto ml-auto"
                     />
                   </div>
-                  <div className='mt-5'>
+                  {/* <div className='mt-5'>
                     <select>
                       <option>{context.humidstat}</option>
                       <option>10-20</option>
                       <option>20-30</option>
                     </select>
+                  </div> */}
+                  <div className='flex justify-between gap-9 p-5 text-left'>
+                    <div>
+                      <label className='text-xs font-bold'>From</label>
+                      <input type='number' name='fromhumid' placeholder={"0%"} className='w-full p-2 rounded-lg border' />
+                    </div>
+                    <div>
+                      <label className='text-xs font-bold'>To</label>
+                      <input type='number' name='fromhumid' placeholder={context.humidstat + '%'} className='w-full p-2 rounded-lg border' />
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div>
-                    <div className='bg-white shadow-sm rounded-2xl p-2 grid grid-cols-2 text-center leading-9'>
-                      <h1 className='font-bold'>Detecting people</h1>
+                <div className='grid grid-rows-2'>
+                {/* Detecting people */}
+                  <div className='bg-white shadow-sm rounded-xl  py-2 px-5 grid grid-cols-4 text-center row-span-1 mb-3'>
+                    <div className='col-span-3 my-auto'>
+                      <h1 className='font-bold'>Detecting human</h1>
+                      <p className=' text-xs text-gray-500'>Human detection sensor</p>
+                    </div> 
+                    <Switch
+                      // onChange={() => setToggleButton3(!toggleButton3)}
+                      checked={context.viewstate}
+                      onColor="#593EFF"
+                      height={24}
+                      width={48}
+                      className="text-right my-auto ml-auto"
+                    />
+                  </div>
+                  {/* Lighting time limit */}
+                  {/* <div className='mt-5'>
+                    <h1 className='font-bold mb-2'>Lighting time limit</h1>
+                    <div>
+                      <input type='text' name='content' placeholder={context.lighttimelimit + " hour"} className='w-full p-2 rounded-2xl border' />
+                    </div>
+                  </div> */}
+                  <div className='bg-white shadow-sm rounded-xl py-5 px-5 grid grid-cols-4 text-center row-span-1 mt-3'>
+                      <div className='grid grid-rows-2 col-span-3'>
+                        <h1 className='font-bold'>Lighting time limit</h1>
+                        <input type='number' name='content' placeholder={context.lighttimelimit + " hour"} className=' text-center w-3/4 p-1 rounded-md border mx-auto' />
+                        {/* <p className=' text-xs text-gray-500 mt-2'>The light will turn off after this time</p> */}
+                      </div> 
                       <Switch
-                        onChange={() => setToggleButton3(!toggleButton3)}
-                        checked={context.viewstate}
+                        // onChange={() => setToggleButton4(!toggleButton4)}
+                        checked={toggleButton4}
                         onColor="#593EFF"
                         height={24}
                         width={48}
-                        className="text-right"
+                        className="text-right my-auto ml-auto"
                       />
                     </div>
-                    <div className='mt-5'>
-                      <h1 className='font-bold mb-2'>Lighting time limit</h1>
-                      <div>
-                        <input type='text' name='content' placeholder={context.lighttimelimit + " hour"} className='w-full p-2 rounded-2xl border' />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
+              {/* Date and time */}
               <div className='mt-5'>
                 <h1 className='font-bold mb-5'>Date and time</h1>
                 <div className='grid grid-cols-3 gap-9'>
-                  <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>Day</label>
-                    <input type="text" name="day" />
+                {/* Repeat */}
+                  <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
+                    <label className='font-bold col-span-1 my-auto mr-auto'>Repeat</label>
+                    <input type="text" name="day" className='m-auto col-span-2 border mx-3 rounded'/>
                   </div>
-                  <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>Start time</label>
-                    <input type="text" name="starttime" />
+                  {/* Start time */}
+                  <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
+                    <label className='font-bold col-span-1 my-auto mr-auto'>Start time</label>
+                    <input type="text" name="starttime" className='m-auto col-span-2 border mx-3 rounded'/>
                   </div>
-                  <div className='bg-white shadow-sm rounded-2xl p-5'>
-                    <label>End time</label>
-                    <input type="text" name="endtime" />
+                  {/* End time */}
+                  <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
+                    <label className='font-bold col-span-1 my-auto mr-auto'>End time</label>
+                    <input type="text" name="endtime" className='m-auto col-span-2 border mx-3 rounded'/>
                   </div>
                 </div>
               </div>
+
               <div className='flex flex-row justify-between mt-10'>
-                <NavLink to='/contextsetup'><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-3 rounded-2xl'>Back</button></NavLink>
-                <NavLink to={`/contextsetup/${context.id}/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-3 rounded-2xl'>Next</button></NavLink>
+                <NavLink to='/contextsetup'><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Back</button></NavLink>
+                <NavLink to={`/contextsetup/${context.id}/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Next</button></NavLink>
               </div>
             </div>
           </div>
