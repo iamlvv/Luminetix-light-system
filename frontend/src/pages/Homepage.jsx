@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
-import avatar from "../images/avatardefault.png";
+import avatar from "../images/avatardefault1.png";
 import Clock from "react-live-clock";
+import clockicon from "../images/clock.png";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import StatisticsToday from "../components/homepage/StatisticsToday";
 import { NavLink } from "react-router-dom";
@@ -84,41 +85,38 @@ const HomePage = () => {
       </div>
       <div className="grid grid-cols-4 ml-28 mb-5">
         <div className="col-span-3 bg-violet-100 rounded-2xl mt-5 p-8">
-          <div className="grid grid-cols-2 gap-9">
-            <div className="bg-white rounded-2xl shadow-sm">
-              <div className="grid grid-cols-2">
-                <img src={avatar} alt="profile" className="w-1/2 mx-auto" />
-                <div className="mt-10">
-                  <h1 className="font-bold text-2xl">Hi {name} !</h1>
-                  <h2 className="text-gray-500 text-xs">
+          <div className="grid grid-cols-2 gap-5">
+            {/* Avatar */}
+            <div className="bg-white rounded-2xl shadow-sm grid grid-cols-2 px-2 py-5">
+              <img src={avatar} alt="avatar" className="w-1/2 mx-auto my-auto h-auto col-span-1" />
+              <div className="grid grid-rows-2">
+                <div className="my-auto mr-auto">
+                  <h1 className="my-auto text-2xl font-bold">Hello, {name}!</h1>
+                  {/* <h2 className="text-gray-500 text-xs">
                     Control your device from here
-                  </h2>
+                  </h2> */}
                 </div>
-              </div>
-              <div className="flex flex-col text-left font-bold ml-10 mt-5 mb-5">
-                <div>
-                  <NavLink to='/userdetail'>
-                  <button className="bg-violet-300 rounded-2xl py-1 w-48 hover:bg-violet-400 transition ease-in">
+                <NavLink to='/userdetail'>
+                  <button className="bg-violet-300 rounded-2xl font-semibold py-2 w-48 hover:text-white hover:bg-violet-400 transition ease-in">
                     Edit your profile
                   </button>
-                  </NavLink>
-                </div>
-                
+                </NavLink>
               </div>
             </div>
-            <div className="bg-white rounded-2xl shadow-sm">
-              <div className="text-4xl w-1/2 mx-auto mt-10 mb-5 text-violet-700 font-bold">
-                <div className="mb-5 ">
-                  <Clock format={"HH:mm"} ticking={true} />
+            {/* Clock */}
+            <div className="bg-white rounded-2xl shadow-sm grid grid-cols-2 px-2 py-5">
+              <img src={clockicon} alt="clockicon" className="w-1/2 mx-auto my-auto h-auto col-span-1" />
+              <div className="grid grid-rows-2 text-violet-700 font-bold">
+                <div className="mb-3 text-4xl row-span-1 ">
+                  <Clock format={"HH:mm:ss"} ticking={true} />
                 </div>
-                <h1>{today}</h1>
-              </div>
-              <div className="">
+                <h1 className="text-xl">{today}</h1>
               </div>
             </div>
           </div>
+
           <div className="mt-10 mb-10">
-            <FrequentlyUsedDevices/>
+            <FrequentlyUsedDevices />
           </div>
           <div>
             <div className="grid grid-cols-2 mb-10">
@@ -137,7 +135,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="col-span-1 mt-10 p-5">
-          <NotificationsBar/>
+          <NotificationsBar />
         </div>
       </div>
     </div>

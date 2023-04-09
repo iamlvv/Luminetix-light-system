@@ -7,9 +7,10 @@ import avatar from "../images/avatardefault1.png";
 import lamp from "../images/Lamp_light.png";
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDetails } from "../redux/actions/userActions";
+import clockicon from "../images/clock.png";
 
 export default function Header() {
-  const [name, setName] = React.useState("Kem");
+  const [name, setName] = React.useState("");
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -93,10 +94,19 @@ export default function Header() {
           <img src={moon1} alt="moon1" className="mx-auto my-4" />
         </div>
       </div>
-      <div className="text-center bg-white rounded-2xl my-auto py-5 font-bold text-xl text-violet-500">
+      {/* <div className="text-center bg-white rounded-2xl my-auto py-5 font-bold text-xl text-violet-500">
         <h1 className="">{today}</h1>
         <div>
           <Clock format={"HH:mm"} ticking={true} />
+        </div>
+      </div> */}
+      <div className="bg-white rounded-2xl shadow-sm grid grid-cols-2 px-3 py-5">
+        <img src={clockicon} alt="clockicon" className="w-1/2 mx-auto my-auto h-auto col-span-1" />
+        <div className="grid grid-rows-2 text-violet-700 font-bold">
+          <div className="text-2xl row-span-1 ">
+            <Clock format={"HH:mm:ss"} ticking={true} />
+          </div>
+            <h1 className="text-sm">{today}</h1>
         </div>
       </div>
     </div>

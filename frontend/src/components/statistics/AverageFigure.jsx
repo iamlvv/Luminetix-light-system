@@ -124,24 +124,30 @@ function AverageFigure() {
     }, []);
     return (
         <div>
-            <h1 className="text-xl text-violet-500 font-bold mt-5">Average figures</h1>
-            <h2 className="text-gray-500 mt-5">{today}</h2>
-            <div className="grid grid-cols-2 gap-12 mt-5">
-                <div className="flex flex-row justify-between leading-8 ml-10 mr-10">
-                    <div><img src={temperatureicon} alt='tempicon' /></div>
-                    <h1>Temperature</h1>
-                    <h1 className="text-2xl text-red-500 font-bold italic">{tempAverage}</h1>
+            <h1 className="text-xl text-violet-500 font-bold">Average figures</h1>
+
+            <div className="grid grid-rows-3 gap-2 mt-5">
+                <div className="row-span-1 grid grid-cols-2">
+                    <div className='grid grid-cols-4'>
+                        <img src={temperatureicon} alt='tempicon' className='m-auto w-7 my-3'/>
+                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Temperature</h1>
+                    </div>
+                    <h1 className="text-2xl text-red-500 font-bold m-auto">{tempAverage}°C</h1>
                 </div>
-                <div className="flex flex-row justify-between leading-8 ml-10 mr-10">
-                    <div><img src={humidityicon} alt='humidicon' /></div>
-                    <h1>Humidity</h1>
-                    <h1 className="text-2xl text-blue-500 font-bold italic">{humidAverage}%</h1>
+                <div className="row-span-1 grid grid-cols-2">
+                    <div className='grid grid-cols-4'>
+                        <img src={humidityicon} alt='humidicon' className='m-auto w-7 my-3'/>
+                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Humidity</h1>
+                    </div>
+                    <h1 className="text-2xl text-blue-500 font-bold m-auto">{humidAverage}%</h1>
                 </div>
-            </div>
-            <div className="flex flex-row justify-between mt-5 leading-8 mr-40 ml-40">
-                <div><img src={lighticon} alt='lighticon' /></div>
-                <h1>Light</h1>
-                <h1 className="text-2xl text-yellow-500 font-bold italic">{lightAverage}%</h1>
+                <div className='frow-span-1 grid grid-cols-2'>
+                    <div className='grid grid-cols-4'>
+                        <img src={lighticon} alt='lighticon' className='m-auto w-7 my-3'/>
+                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Light</h1>
+                    </div>
+                    <h1 className="text-2xl text-yellow-500 font-bold m-auto">{lightAverage}%</h1>
+                </div>
             </div>
         </div>
     )

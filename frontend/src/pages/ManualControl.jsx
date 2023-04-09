@@ -48,16 +48,16 @@ function ManualControl() {
     // }
     return (
         <div>
-            <NavBar/>
+            <NavBar />
             <div className='grid grid-cols-4 ml-28'>
                 <div className='col-span-3 rounded-2xl grid grid-cols-3'>
-                    <div className='col-span-2 grid grid-rows-5 h-screen p-10 shadow-2xl'>
+                    <div className='col-span-2 grid grid-rows-5 h-screen p-10'>
                         <div className='row-span-3'>
                             <h1 className='text-3xl font-semibold'>Light</h1>
                             {
                                 (isLightOn && isRedLight) ? (
                                     <div className='bg-red-100 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
-                                        <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1'/> 
+                                        <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
                                         <div className='row-span-1 text-center text-indigo-500 font-semibold'>
                                             <p>Light on</p>
                                             <p>Red</p>
@@ -66,31 +66,31 @@ function ManualControl() {
                                 ) : (
                                     isLightOn && isBlueLight ? (
                                         <div className='bg-blue-100 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
-                                            <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1'/> 
+                                            <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
                                             <div className='row-span-1 text-center text-indigo-500 font-semibold'>
                                                 <p>Light on</p>
                                                 <p>Blue</p>
                                             </div>
                                         </div>
-                                    ) : 
-                                    (
-                                        isLightOn && isYellowLight ? (
-                                            <div className='bg-yellow-100 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
-                                                <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1'/> 
-                                                <div className='row-span-1 text-center text-indigo-500 font-semibold'>
-                                                    <p>Light on</p>
-                                                    <p>Yellow</p>
+                                    ) :
+                                        (
+                                            isLightOn && isYellowLight ? (
+                                                <div className='bg-yellow-100 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
+                                                    <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                                    <div className='row-span-1 text-center text-indigo-500 font-semibold'>
+                                                        <p>Light on</p>
+                                                        <p>Yellow</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ) : (
-                                            <div className='bg-gray-300 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
-                                                <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1'/> 
-                                                <div className='row-span-1 text-center text-black font-semibold'>
-                                                    <p>Light off</p>
+                                            ) : (
+                                                <div className='bg-gray-300 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
+                                                    <img src={lighticon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                                    <div className='row-span-1 text-center text-black font-semibold'>
+                                                        <p>Light off</p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )
                                         )
-                                    )
                                 )
                             }
                         </div>
@@ -106,16 +106,16 @@ function ManualControl() {
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>Start time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                <input type="startTime" className='w-24' defaultValue={"10:00 AM"}/>
+                                                    <input type="startTime" className='w-24' defaultValue={"10:00 AM"} />
                                                 </div>
                                             </div>
                                             <div className='col-span-2'>
-                                                <img src={arrow} alt="" className='pt-2 px-2'/>
+                                                <img src={arrow} alt="" className='pt-2 px-2' />
                                             </div>
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>End time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"}/>
+                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"} />
                                                 </div>
                                             </div>
                                         </div>
@@ -132,16 +132,16 @@ function ManualControl() {
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>Start time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    <input type="startTime" className='w-24' defaultValue={"10:00 AM"}/>
+                                                    <input type="startTime" className='w-24' defaultValue={"10:00 AM"} />
                                                 </div>
                                             </div>
                                             <div className='col-span-2'>
-                                                <img src={arrow} alt="" className='pt-2 px-2'/>
+                                                <img src={arrow} alt="" className='pt-2 px-2' />
                                             </div>
                                             <div className='col-span-1 m-1'>
                                                 <p className='text-sm font-bold text-gray-400'>End time</p>
                                                 <div className='border rounded-2xl text-center py-2'>
-                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"}/>
+                                                    <input type="endTime" className='w-24' defaultValue={"10:00 AM"} />
                                                 </div>
                                             </div>
                                         </div>
@@ -152,51 +152,51 @@ function ManualControl() {
 
                         <div className='row-span-1 grid grid-cols-4'>
                             <div className='col-span-3 grid grid-cols-3 bg-purple-50 m-10 rounded-full'>
-                                    {!isRedLight ? (
-                                        <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleRedLight}>
-                                            <img src={redlighticon} alt="" className='m-auto'/>
-                                        </button>
-                                    ) : (
-                                        <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleRedLight}>
-                                            <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
-                                                <img src={redlighticon} alt="" className='m-auto'/>
-                                            </div>
-                                        </button>
-                                    )}
-                                    {!isYellowLight ? (
-                                        <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleYellowLight}>
-                                            <img src={yellowlighticon} alt="" className='m-auto'/>
-                                        </button>
-                                    ) : (
-                                        <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleYellowLight}>
-                                            <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
-                                                <img src={yellowlighticon} alt="" className='m-auto'/>
-                                            </div>
-                                        </button>
-                                    )}
-                                    {!isBlueLight ? (
-                                        <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleBlueLight}>
-                                            <img src={bluelighticon} alt="" className='m-auto'/>
-                                        </button>
-                                    ) : (
-                                        <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleBlueLight}>
-                                            <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
-                                                <img src={bluelighticon} alt="" className='m-auto'/>
-                                            </div>
-                                        </button>
-                                    )}
+                                {!isRedLight ? (
+                                    <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleRedLight}>
+                                        <img src={redlighticon} alt="" className='m-auto' />
+                                    </button>
+                                ) : (
+                                    <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleRedLight}>
+                                        <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
+                                            <img src={redlighticon} alt="" className='m-auto' />
+                                        </div>
+                                    </button>
+                                )}
+                                {!isYellowLight ? (
+                                    <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleYellowLight}>
+                                        <img src={yellowlighticon} alt="" className='m-auto' />
+                                    </button>
+                                ) : (
+                                    <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleYellowLight}>
+                                        <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
+                                            <img src={yellowlighticon} alt="" className='m-auto' />
+                                        </div>
+                                    </button>
+                                )}
+                                {!isBlueLight ? (
+                                    <button className='rounded-full w-10 h-10 col-span-1 m-auto' onClick={handleBlueLight}>
+                                        <img src={bluelighticon} alt="" className='m-auto' />
+                                    </button>
+                                ) : (
+                                    <button className='w-14 h-14 bg-purple-200 col-span-1 m-auto rounded-full py-2' onClick={handleBlueLight}>
+                                        <div className='rounded-full w-10 h-10 m-auto border border-solid border-purple-300 bg-white'>
+                                            <img src={bluelighticon} alt="" className='m-auto' />
+                                        </div>
+                                    </button>
+                                )}
                             </div>
                             <div className='col-span-1 py-10'>
                                 <button className='w-16 h-16 m-auto bg-purple-50 rounded-full p-3 border' onClick={handleLightOn}>
-                                    <img src={shutdown} alt="control" className='h-10 w-10 bg-purple-50 rounded-full m-auto'/>
+                                    <img src={shutdown} alt="control" className='h-10 w-10 bg-purple-50 rounded-full m-auto' />
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <DeviceList/>
+                    <DeviceList />
                 </div>
                 <div className='col-span-1 mt-10 p-5'>
-                    <NotificationsBar/>
+                    <NotificationsBar />
                 </div>
             </div>
         </div>
