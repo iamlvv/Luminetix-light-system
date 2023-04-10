@@ -88,50 +88,50 @@ export default function RealtimeStatus() {
             <div className="text-gray-500 mt-10 leading-5 flex flex-col mr-9">
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
-                        <img src={temperatureicon} alt="tempicon" />
+                        <img src={temperatureicon} alt="tempicon" className='w-8 m-auto'/>
                     </div>
                     <div className="col-span-3">
                         <Clock format={"HH:mm"} ticking={true} />
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-red-500 font-bold italic">{temperatureStat}</h1>
+                        <h1 className="text-2xl text-red-500 font-bold">{temperatureStat}°C</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
-                        <img src={humidityicon} alt="humidicon" />
+                        <img src={humidityicon} alt="humidicon" className='w-8 m-auto'/>
                     </div>
                     <div className="col-span-3">
                         <Clock format={"HH:mm"} ticking={true} />
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-blue-500 font-bold italic">{humidityStat}%</h1>
+                        <h1 className="text-2xl text-blue-500 font-bold">{humidityStat}%</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
-                        <img src={lighticon} alt="lighticon" />
+                        <img src={lighticon} alt="lighticon" className='w-8 m-auto'/>
                     </div>
                     <div className="col-span-3">
                         <Clock format={"HH:mm"} ticking={true} />
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-yellow-500 font-bold italic">{lightStat}%</h1>
+                        <h1 className="text-2xl text-yellow-500 font-bold">{lightStat}%</h1>
                     </div>
                 </div>
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
-                        <img src={viewicon} alt="viewicon" />
+                        <img src={viewicon} alt="viewicon" className='w-10 m-auto'/>
                     </div>
                     <div className="col-span-3">
                         <Clock format={"HH:mm"} ticking={true} />
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-violet-500 font-bold italic">{humanFoundState === "0" ? "No" : "Yes"}</h1>
+                        <h1 className="text-2xl text-violet-500 font-bold">{humanFoundState === "0" ? "No" : "Yes"}</h1>
                     </div>
                 </div>
             </div>
