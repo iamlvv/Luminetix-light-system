@@ -67,17 +67,7 @@ export default function Statistics() {
   }
 
   const handleExportData = () => {
-    const getData = async () => {
-      const response = await fetch('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-    }
-    getData();
+    alert('Export data');
   }
   const dayActive = 'bg-violet-200 text-violet-500 rounded-2xl p-2';
   const dayInactive = 'bg-white text-violet-500 rounded-2xl p-2';
@@ -150,7 +140,9 @@ export default function Statistics() {
           <h2 className="text-gray-500">Please select the time before you export data</h2>
           <h2 className="text-gray-500">Downloaded data including parameters and chart</h2>
           <div className="text-center mt-10">
-            <button className="bg-violet-500 text-white py-2 w-full rounded-2xl font-bold hover:bg-violet-700">Export</button>
+            <button className="bg-violet-500 text-white py-2 w-full rounded-2xl font-bold hover:bg-violet-700"
+              onClick={() => handleExportData()}
+            >Export</button>
           </div>
           <RealtimeStatus />
         </div>

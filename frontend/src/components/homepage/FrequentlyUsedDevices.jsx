@@ -4,7 +4,7 @@ import Switch from "react-switch";
 import Slider from "@mui/material/Slider";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getFanState, getHumidityStat, getHumidityState, getLightStat, getLightState, getTemperatureStat, getTemperatureState, turnOffHumidity, turnOffLight, turnOffTemperature, turnOnHumidity, turnOnLight, turnOnTemperature } from '../../redux/actions/deviceActions';
+import { getFanStat, getFanState, getHumidityStat, getHumidityState, getLightStat, getLightState, getTemperatureStat, getTemperatureState, turnOffFan, turnOffHumidity, turnOffLight, turnOffTemperature, turnOnFan, turnOnHumidity, turnOnLight, turnOnTemperature } from '../../redux/actions/deviceActions';
 
 export default function FrequentlyUsedDevices() {
   const dispatch = useDispatch();
@@ -12,10 +12,12 @@ export default function FrequentlyUsedDevices() {
   const TempStat = useSelector((state) => state.temperatureStat);
   const HumidStat = useSelector((state) => state.humidityStat);
   const LightStat = useSelector((state) => state.lightStat);
+  const FanStat = useSelector((state) => state.fanStat);
 
   const { temperatureStat } = TempStat;
   const { humidityStat } = HumidStat;
   const { lightStat } = LightStat;
+  const { fanStat } = FanStat;
   //get data from state of devices through redux
   const TempState = useSelector((state) => state.temperatureState);
   const HumidityState = useSelector((state) => state.humidityState);
@@ -31,8 +33,9 @@ export default function FrequentlyUsedDevices() {
   const [toggleButton2, setToggleButton2] = React.useState(false);
   const [toggleButton3, setToggleButton3] = React.useState(false);
   const [toggleButton4, setToggleButton4] = React.useState(false);
+  const [valueFan, setValueFan] = React.useState(0);
   //Lấy dữ liệu mới nhất khi component render lần đầu
-  
+  console.log(fanState)
   useEffect(() => {
 
     dispatch(getTemperatureStat());
@@ -41,7 +44,8 @@ export default function FrequentlyUsedDevices() {
     dispatch(getTemperatureState());
     dispatch(getHumidityState());
     dispatch(getLightState());
-
+    dispatch(getFanState());
+    dispatch(getFanStat());
   }, []);
 
   useEffect(() => {
@@ -54,7 +58,10 @@ export default function FrequentlyUsedDevices() {
     if (lightState) {
       setToggleButton2(lightState);
     }
-  }, [temperatureState, humidityState, lightState]);
+    if (fanState) {
+      setToggleButton4(fanState);
+    }
+  }, [temperatureState, humidityState, lightState, fanState]);
   //Lấy dữ liệu mới nhất sau mỗi 20s
   useEffect(() => {
 
@@ -65,6 +72,8 @@ export default function FrequentlyUsedDevices() {
       dispatch(getTemperatureState());
       dispatch(getHumidityState());
       dispatch(getLightState());
+      dispatch(getFanState());
+      dispatch(getFanStat());
     }, 20000);
   }, [dispatch]);
   const mark = [
@@ -112,7 +121,17 @@ export default function FrequentlyUsedDevices() {
       setToggleButton2(true);
     }
   }
-
+  
+  const handleChangeFanState = () => {
+    //Nếu true thì tắt quạt đi (true == đang bật)
+    if (toggleButton4 === true) {
+      dispatch(turnOffFan());
+      setToggleButton4(false);
+    } else if (toggleButton4 === false) {
+      dispatch(turnOnFan());
+      setToggleButton4(true);
+    }
+  }
   return (
     <div>
       <div className="grid grid-cols-2 mb-10">
@@ -189,28 +208,40 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2">
             <div></div>
-            <div className="text-right">
-              <Switch
-                onChange={() => setToggleButton4(!toggleButton4)}
+            <div className="text-right" key={toggleButton4}>
+            <Switch
+                onChange={handleChangeFanState}
                 checked={toggleButton4}
                 onColor="#593EFF"
                 height={24}
                 width={48}
                 className="react-switch"
+
               />
             </div>
           </div>
-          <div className="mb-2">
-            <Slider
+          <div className="mb-2 mt-10">
+            {/* <Slider
               aria-label="Fan"
-              defaultValue={30}
+              value={fanStat ? parseInt(fanStat) : 0}
               step={1}
               min={0}
-              max={10}
+              max={100}
               valueLabelDisplay="on"
               marks={mark}
               color="secondary"
-            />
+            /> */}
+            <div>
+              <input type='range'
+                min={0}
+                max={100}
+                step={1}
+                onChange = {(e) => setValueFan(e.target.value)}
+                className="slider"
+                id="myRange"
+
+              />
+            </div>
           </div>
           <h1 className="font-bold text-lg mb-5">Fan</h1>
 

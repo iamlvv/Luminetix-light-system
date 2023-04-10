@@ -96,12 +96,12 @@ export const getLedState = () => async (dispatch) => {
 export const getFanState = () => async (dispatch) => {
     try {
         dispatch({ type: FAN_STATE_REQUEST });
-        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data')}`, headers);
-        const { value } = JSON.parse(data.contents)[0];
+        const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data", headers);
+        const { value } = data[0];
         if (value === "0") {
             dispatch({ type: FAN_STATE_VALID, payload: false });
         }
-        dispatch({ type: FAN_STATE_VALID, payload: value });
+        else dispatch({ type: FAN_STATE_VALID, payload: true });
     } catch (error) {
         dispatch({ type: FAN_STATE_INVALID, payload: error.message });
     }
@@ -410,8 +410,9 @@ export const getLightStat = () => async (dispatch) => {
 export const getFanStat = () => async (dispatch) => {
     try {
         dispatch({ type: FAN_STAT_REQUEST });
-        const { data } = await axios.get('/api/stat/fan');
-        dispatch({ type: FAN_STAT_VALID, payload: data });
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
+        dispatch({ type: FAN_STAT_VALID, payload: value });
     } catch (error) {
         dispatch({ type: FAN_STAT_INVALID, payload: error.message });
     }
