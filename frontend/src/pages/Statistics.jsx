@@ -264,9 +264,7 @@ export default function Statistics() {
   const handleChooseLight = () => {
     setDatatypes('light');
   }
-  const handleChooseTime = () => {
-    setDatatypes('time');
-  }
+
   const exportData = (data) => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(data)
@@ -323,25 +321,14 @@ export default function Statistics() {
           <StatisticsHeader />
           <div className="grid grid-cols-2 gap-9">
 
-            {/* <div className="col-span-1 bg-white rounded-2xl text-center p-8">
-              <h1 className="text-xl text-violet-500 font-bold mt-5">Total time the lights have been active</h1>
-              <div className="leading-9 mt-5">
-                <h1 className="italic text-3xl text-red-500 font-bold">18h54p <span className="text-green-500 text-lg"> ↑ 12%</span></h1>
-              </div>
-              <h2 className="text-gray-500 mt-5 text-sm">
-                The data is calculated and compared with data of the previous period
-              </h2>
-            </div> */}
-
           </div>
           <div className="bg-white rounded-2xl mt-10 p-5">
             <div className="grid grid-cols-4">
               <h1 className="col-span-1 text-xl text-violet-500 font-bold">Statistics</h1>
-              <div className="grid grid-cols-4 col-span-3 gap-9">
+              <div className="grid grid-cols-3 col-span-3 gap-9">
                 <button className="text-red-500 font-bold hover:bg-red-100 transition ease-in px-2 py-2 rounded-2xl" onClick={handleChooseTemp}>Temperature</button>
                 <button className="text-blue-500 font-bold hover:bg-blue-100 transition ease-in px-2 py-2 rounded-2xl" onClick={handleChooseHumid}>Humidity</button>
                 <button className="text-yellow-500 font-bold hover:bg-yellow-100 transition ease-in px-2 py-2 rounded-2xl" onClick={handleChooseLight}>Light</button>
-                <button className="text-pink-500 font-bold hover:bg-pink-100 transition ease-in px-2 py-2 rounded-2xl" onClick={handleChooseTime}>LED Operating Time</button>
               </div>
             </div>
             <div className="mt-10 ml-5">
