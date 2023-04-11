@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import NavBar from "../components/NavBar";
-
 import StatisticsSum from "../components/statistics/StatisticsSum";
-import Header from "../components/Header";
+import StatisticsHeader from "../components/statistics/StatisticsHeader";
 import RealtimeStatus from "../components/RealtimeStatus";
 import AverageFigure from "../components/statistics/AverageFigure";
+
 export default function Statistics() {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, "0");
@@ -80,28 +80,23 @@ export default function Statistics() {
 
   return (
     <div>
-      <div>
-        <NavBar />
-      </div>
+
+      <NavBar />
+
       <div className="ml-28 grid grid-cols-4 gap-9">
         <div className="col-span-3 bg-violet-100 mt-5 rounded-2xl p-5">
-          <Header />
-          <div className="grid grid-cols-2 mt-10 gap-9">
+          <StatisticsHeader />
+          <div className="grid grid-cols-2 gap-9">
 
-            <div className="col-span-1 bg-white rounded-2xl text-center p-8">
+            {/* <div className="col-span-1 bg-white rounded-2xl text-center p-8">
               <h1 className="text-xl text-violet-500 font-bold mt-5">Total time the lights have been active</h1>
               <div className="leading-9 mt-5">
                 <h1 className="italic text-3xl text-red-500 font-bold">18h54p <span className="text-green-500 text-lg"> ↑ 12%</span></h1>
-                
               </div>
               <h2 className="text-gray-500 mt-5 text-sm">
                 The data is calculated and compared with data of the previous period
               </h2>
-            </div>
-
-            <div className="col-span-1 bg-white rounded-2xl text-center p-5">
-              <AverageFigure />
-            </div>
+            </div> */}
 
           </div>
           <div className="bg-white rounded-2xl mt-10 p-5">
@@ -147,7 +142,11 @@ export default function Statistics() {
               onClick={() => handleExportData()}
             >Export</button>
           </div>
-          <RealtimeStatus />
+          
+          <div className="mt-5 bg-violet-100 p-3 rounded-xl">
+            <AverageFigure />
+          </div>
+
         </div>
       </div>
     </div>

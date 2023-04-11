@@ -98,6 +98,7 @@ export default function RealtimeStatus() {
                         <h1 className="text-2xl text-red-500 font-bold">{temperatureStat}°C</h1>
                     </div>
                 </div>
+
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
                         <img src={humidityicon} alt="humidicon" className='w-8 m-auto'/>
@@ -110,6 +111,7 @@ export default function RealtimeStatus() {
                         <h1 className="text-2xl text-blue-500 font-bold">{humidityStat}%</h1>
                     </div>
                 </div>
+
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
                         <img src={lighticon} alt="lighticon" className='w-8 m-auto'/>
@@ -122,6 +124,7 @@ export default function RealtimeStatus() {
                         <h1 className="text-2xl text-yellow-500 font-bold">{lightStat}%</h1>
                     </div>
                 </div>
+
                 <div className="grid grid-cols-5 justify-between mb-5">
                     <div className="mx-auto">
                         <img src={viewicon} alt="viewicon" className='w-10 m-auto'/>

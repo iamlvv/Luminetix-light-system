@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Clock from "react-live-clock";
 
-import avatar from "../images/avatardefault1.png";
-import viewicon from "../images/viewicon.png";
-import lighticon from "../images/lighticon.png";
-import humidityicon from "../images/humidityicon.png";
-import temperatureicon from "../images/temperatureicon.png";
+import avatar from "../../images/avatardefault1.png";
+import viewicon from "../../images/viewicon.png";
+import lighticon from "../../images/lighticon.png";
+import humidityicon from "../../images/humidityicon.png";
+import temperatureicon from "../../images/temperatureicon.png";
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserDetails } from "../redux/actions/userActions";
-import clockicon from "../images/clock.png";
+import { getUserDetails } from "../../redux/actions/userActions";
+import clockicon from "../../images/clock.png";
 
-import { getHumanFoundState, getHumidityStat, getLightStat, getTemperatureStat } from '../redux/actions/deviceActions';
+import { getHumanFoundState, getHumidityStat, getLightStat, getTemperatureStat } from '../../redux/actions/deviceActions';
 
 export default function Header() {
     const [name, setName] = React.useState("");

@@ -129,24 +129,24 @@ function AverageFigure() {
             <div className="grid grid-rows-3 gap-2 mt-5">
                 <div className="row-span-1 grid grid-cols-2">
                     <div className='grid grid-cols-4'>
-                        <img src={temperatureicon} alt='tempicon' className='m-auto w-7 my-3'/>
-                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Temperature</h1>
+                        <img src={temperatureicon} alt='tempicon' className='m-auto w-5 my-5 col-span-1'/>
+                        <h1 className='col-span-3 text-md font-bold my-auto mr-auto px-3'>Temperature</h1>
                     </div>
-                    <h1 className="text-2xl text-red-500 font-bold m-auto">{tempAverage}°C</h1>
+                    <h1 className="col-span-1 text-md text-red-500 font-bold m-auto">{tempAverage}°C</h1>
                 </div>
                 <div className="row-span-1 grid grid-cols-2">
                     <div className='grid grid-cols-4'>
-                        <img src={humidityicon} alt='humidicon' className='m-auto w-7 my-3'/>
-                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Humidity</h1>
+                        <img src={humidityicon} alt='humidicon' className='m-auto w-5 my-5 col-span-1'/>
+                        <h1 className='col-span-3 text-md font-bold my-auto mr-auto px-3'>Humidity</h1>
                     </div>
-                    <h1 className="text-2xl text-blue-500 font-bold m-auto">{humidAverage}%</h1>
+                    <h1 className="text-md text-blue-500 font-bold m-auto">{humidAverage}%</h1>
                 </div>
                 <div className='frow-span-1 grid grid-cols-2'>
                     <div className='grid grid-cols-4'>
-                        <img src={lighticon} alt='lighticon' className='m-auto w-7 my-3'/>
-                        <h1 className='col-span-3 text-lg font-bold my-auto mr-auto px-3'>Light</h1>
+                        <img src={lighticon} alt='lighticon' className='m-auto w-5 my-5 col-span-1'/>
+                        <h1 className='col-span-3 text-md font-bold my-auto mr-auto px-3'>Light</h1>
                     </div>
-                    <h1 className="text-2xl text-yellow-500 font-bold m-auto">{lightAverage}%</h1>
+                    <h1 className="text-md text-yellow-500 font-bold m-auto">{lightAverage}%</h1>
                 </div>
             </div>
         </div>
