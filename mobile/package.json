@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "expo": "~48.0.10",
     "expo-status-bar": "~1.4.4",
