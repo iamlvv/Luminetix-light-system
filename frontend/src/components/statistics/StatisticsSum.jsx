@@ -132,30 +132,31 @@ export default function StatisticsSum({ typeofstats, period }) {
 
 	const getTempStatDay = async () => {
 		const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
+		console.log(endTime)
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data/chart');
-		var result = solveDataDay("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+		var result = solveDataDay(startTime, endTime, response.data.data);
 		setTempDataDay(result);
 	}
 	const getHumidStatDay = async () => {
 		const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data/chart');
-		var result = solveDataDay("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+		var result = solveDataDay(startTime, endTime, response.data.data);
 		setHumiDataDay(result);
 	}
 	const getLightStatDay = async () => {
 		const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data/chart');
-		var result = solveDataDay("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+		var result = solveDataDay(startTime, endTime, response.data.data);
 		setLightDataDay(result);
 	}
 
 	const getTempStatWeek = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data/chart');
 		var result = solveDataWeek(startTimeISO, endTime, response.data.data);
 		setTempDataWeek(result);
@@ -163,7 +164,7 @@ export default function StatisticsSum({ typeofstats, period }) {
 	const getHumidStatWeek = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data/chart');
 		var result = solveDataWeek(startTimeISO, endTime, response.data.data);
 		setHumiDataWeek(result);
@@ -171,7 +172,7 @@ export default function StatisticsSum({ typeofstats, period }) {
 	const getLightStatWeek = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data/chart');
 		var result = solveDataWeek(startTimeISO, endTime, response.data.data);
 		setLightDataWeek(result);
@@ -180,7 +181,7 @@ export default function StatisticsSum({ typeofstats, period }) {
 	const getTempStatMonth = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data/chart');
 		var result = solveDataMonth(startTimeISO, endTime, response.data.data);
 		setTempDataMonth(result);
@@ -188,7 +189,7 @@ export default function StatisticsSum({ typeofstats, period }) {
 	const getHumidStatMonth = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data/chart');
 		var result = solveDataMonth(startTimeISO, endTime, response.data.data);
 		setHumiDataMonth(result);
@@ -196,7 +197,7 @@ export default function StatisticsSum({ typeofstats, period }) {
 	const getLightStatMonth = async () => {
 		const now = new Date();
 		const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29).toISOString().slice(0, 11) + "00:00:00Z";
-		const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+		const endTime = new Date().toISOString();
 		const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data/chart');
 		var result = solveDataMonth(startTimeISO, endTime, response.data.data);
 		setLightDataMonth(result);

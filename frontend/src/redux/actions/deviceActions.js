@@ -79,7 +79,7 @@ import {
 
 const headers = {
     'Content-Type': 'application/json',
-    'X-AIO-Key': "aio_BdmL03GnFRb5Y1f8xQ4eOcdwpjm6",
+    'X-AIO-Key': "aio_OXlv03ZQUG3KtYXVdbHpCRUjGp9w",
 };
 
 
@@ -187,10 +187,7 @@ export const turnOnFan = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "100"
         },
@@ -209,10 +206,7 @@ export const turnOffFan = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "0"
         },
@@ -230,10 +224,7 @@ export const turnOnTemperature = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "T_ON"
         },
@@ -251,10 +242,7 @@ export const turnOffTemperature = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "T_OFF"
         },
@@ -273,10 +261,7 @@ export const turnOnHumidity = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "H_ON"
         },
@@ -295,10 +280,7 @@ export const turnOffHumidity = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "H_OFF"
         },
@@ -316,10 +298,7 @@ export const turnOnLight = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "L_ON"
         },
@@ -337,10 +316,7 @@ export const turnOffLight = () => async (dispatch) => {
     axios({
         method: "POST",
         url: "https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-AIO-Key': "aio_oiOX20FObPLgTCTl1Kv9cU1bGZiN",
-        },
+        headers: headers,
         data: {
             value: "L_OFF"
         },
