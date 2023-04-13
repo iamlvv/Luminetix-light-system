@@ -3,13 +3,12 @@ const mongoose = require("mongoose");
 const notiSchema = mongoose.Schema(
   {
     name: {
-      type: String,
-      required: true,
+      type: String
     },
-    status: {
+    read: {
       type: Boolean,
-      required: true,
-      default: true,
+      required: tru,
+      default: false,
     },
     type: {
       alert: {
@@ -18,6 +17,7 @@ const notiSchema = mongoose.Schema(
       context: {
         type: Boolean,
       },
+      required: true
     },
     created_date: {
       type: Date,

@@ -4,7 +4,7 @@ const temperatureSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      // required: true,
+      required: true,
     },
     status: {
       type: Boolean,
