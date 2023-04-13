@@ -7,11 +7,11 @@ const port = process.env.PORT || 5000;
 
 connectDB();
 
-const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+const cors = require("cors");
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/users", require("./routes/userRoutes"));

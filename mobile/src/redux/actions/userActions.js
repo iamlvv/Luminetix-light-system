@@ -1,5 +1,4 @@
 import axios from "axios";
-import Swal from "sweetalert2";
 import {
     USER_DETAILS_FAIL,
     USER_DETAILS_REQUEST,
@@ -20,8 +19,10 @@ import {
     USER_UPDATE_PASSWORD_FAIL,
 
 } from "../../constants/userConstants";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const login = (email, password) => async (dispatch) => {
+
+export const login = (email, password, navigation) => async (dispatch) => {
     try {
         dispatch({
             type: USER_LOGIN_REQUEST,
@@ -34,7 +35,7 @@ export const login = (email, password) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            "http://localhost:5000/api/users/login",
+            "http://10.0.126.116:5000/api/users/login",
             { email, password },
             config
         );
@@ -43,13 +44,19 @@ export const login = (email, password) => async (dispatch) => {
             type: USER_LOGIN_SUCCESS,
             payload: data,
         });
-        localStorage.setItem("userInfo", JSON.stringify(data));
+        //localStorage.setItem("userInfo", JSON.stringify(data));
+        const storeData = async (data) => {
+            try {
+                await AsyncStorage.setItem('userInfo', JSON.stringify(data))
+            } catch (e) {
+                // saving error
+                console.log(e)
+            }
+        }
+        storeData(data);
+        navigation.navigate('Home');
+
     } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Email or password is incorrect!',
-          });
         dispatch({
             type: USER_LOGIN_FAIL,
             payload:
@@ -60,11 +67,21 @@ export const login = (email, password) => async (dispatch) => {
     }
 };
 
-export const logout = () => (dispatch) => {
-    localStorage.removeItem("userInfo");
+export const logout = ({navigation}) => (dispatch) => {
+    //localStorage.removeItem("userInfo");
+    const removeData = async () => {
+        try {
+            await AsyncStorage.removeItem('userInfo')
+        } catch (e) {
+            // remove error
+            console.log(e)
+        }
+    }
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
-    document.location.href = "/";
+    //document.location.href = "/";
+    removeData();
+    navigation.navigate('Login');
 };
 
 export const register =
@@ -81,7 +98,7 @@ export const register =
             };
 
             const { data } = await axios.post(
-                "http://localhost:5000/api/users",
+                "http://10.0.126.116:5000/api/users",
                 { fullname, username, email, password, phone },
                 config
             );
@@ -95,7 +112,17 @@ export const register =
                 type: USER_LOGIN_SUCCESS,
                 payload: data,
             });
-            localStorage.setItem("userInfo", JSON.stringify(data));
+
+            //localStorage.setItem("userInfo", JSON.stringify(data));
+            const storeData = async (data) => {
+                try {
+                    await AsyncStorage.setItem('userInfo', JSON.stringify(data))
+                } catch (e) {
+                    // saving error
+                    console.log(e)
+                }
+            }
+            storeData(data);
         } catch (error) {
             dispatch({
                 type: USER_REGISTER_FAIL,
@@ -123,7 +150,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`http://localhost:5000/api/users/${id}`, config);
+        const { data } = await axios.get(`http://10.0.126.116:5000/api/users/${id}`, config);
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -161,7 +188,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://localhost:5000/api/users/profile/password`, user, config);
+        const { data } = await axios.put(`http://10.0.126.116:5000/api/users/profile/password`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -200,23 +227,14 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const { data } = await axios.put(`http://localhost:5000/api/users/password`, user, config);
-        Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Password changed successfully!",
-        })
+        const { data } = await axios.put(`http://10.0.126.116:5000/api/users/password`, user, config);
         dispatch({
             type: USER_UPDATE_PASSWORD_SUCCESS,
             payload: true,
         });
     }
     catch (error) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Current password is incorrect!",
-        });
+
         const message =
             error.response && error.response.data.message
                 ? error.response.data.message

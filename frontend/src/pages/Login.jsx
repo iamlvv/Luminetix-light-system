@@ -16,7 +16,7 @@ export default function Login() {
   const navigate = useNavigate();
   useEffect(() => {
     if (userInfo) {
-      navigate('/homepage');
+      //navigate('/homepage');
     }
   }, [userInfo, dispatch, navigate]);
 
