@@ -42,7 +42,6 @@ export default function NotificationsBar() {
       },
   }
     const { data } = await axios.get(`http://localhost:5000/api/users/noti`,config );
-    console.log(data)
     const { notifications } = data;
     setNotificationList(notifications);
   }
@@ -98,7 +97,7 @@ export default function NotificationsBar() {
           Context
         </button>
       </div>
-      <div className="mt-5">{itemsNoti(filteredList)}</div>
+      <div className="mt-5 overflow-y-auto h-screen">{itemsNoti(filteredList)}</div>
     </div>
   );
 }

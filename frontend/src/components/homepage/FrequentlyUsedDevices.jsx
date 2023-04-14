@@ -4,22 +4,22 @@ import Switch from "react-switch";
 import Slider from "@mui/material/Slider";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { 
-  getFanStatFirst, 
-  getFanStateFirst, 
-  getHumidityStatFirst, 
-  getHumidityStateFirst, 
-  getLightStatFirst, 
-  getLightStateFirst, 
-  getTemperatureStatFirst, 
-  getTemperatureStateFirst, 
-  turnOffFan, 
-  turnOffHumidity, 
-  turnOffLight, 
-  turnOffTemperature, 
-  turnOnFan, 
-  turnOnHumidity, 
-  turnOnLight, 
+import {
+  getFanStatFirst,
+  getFanStateFirst,
+  getHumidityStatFirst,
+  getHumidityStateFirst,
+  getLightStatFirst,
+  getLightStateFirst,
+  getTemperatureStatFirst,
+  getTemperatureStateFirst,
+  turnOffFan,
+  turnOffHumidity,
+  turnOffLight,
+  turnOffTemperature,
+  turnOnFan,
+  turnOnHumidity,
+  turnOnLight,
   turnOnTemperature,
   getFanStat,
   getFanState,
@@ -39,20 +39,20 @@ export default function FrequentlyUsedDevices() {
   const LightStat = useSelector((state) => state.lightStat);
   const FanStat = useSelector((state) => state.fanStat);
   //get data from sensors through redux in first render
-  // const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
-  // const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
-  // const LightStatFirst = useSelector((state) => state.lightStatFirst);
-  // const FanStatFirst = useSelector((state) => state.fanStatFirst)
+  const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
+  const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
+  const LightStatFirst = useSelector((state) => state.lightStatFirst);
+  const FanStatFirst = useSelector((state) => state.fanStatFirst)
 
   const { temperatureStat } = TempStat;
   const { humidityStat } = HumidStat;
   const { lightStat } = LightStat;
   const { fanStat } = FanStat;
 
-  // const { temperatureStatFirst } = TempStatFirst;
-  // const { humidityStatFirst } = HumidStatFirst;
-  // const { lightStatFirst } = LightStatFirst;
-  // const { fanStatFirst } = FanStatFirst;
+  const { temperatureStatFirst } = TempStatFirst;
+  const { humidityStatFirst } = HumidStatFirst;
+  const { lightStatFirst } = LightStatFirst;
+  const { fanStatFirst } = FanStatFirst;
 
   //get data from state of devices through redux
   const TempState = useSelector((state) => state.temperatureState);
@@ -61,20 +61,20 @@ export default function FrequentlyUsedDevices() {
   const FanState = useSelector((state) => state.fanState);
 
   //get data from state of devices through redux in first render
-  // const TempStateFirst = useSelector((state) => state.temperatureStateFirst);
-  // const HumidityStateFirst = useSelector((state) => state.humidityStateFirst);
-  // const LightStateFirst = useSelector((state) => state.lightStateFirst);
-  // const FanStateFirst = useSelector((state) => state.fanStateFirst);
+  const TempStateFirst = useSelector((state) => state.temperatureStateFirst);
+  const HumidityStateFirst = useSelector((state) => state.humidityStateFirst);
+  const LightStateFirst = useSelector((state) => state.lightStateFirst);
+  const FanStateFirst = useSelector((state) => state.fanStateFirst);
 
   const { temperatureState } = TempState;
   const { humidityState } = HumidityState;
   const { lightState } = LightState;
   const { fanState } = FanState;
 
-  // const { temperatureStateFirst } = TempStateFirst;
-  // const { humidityStateFirst } = HumidityStateFirst;
-  // const { lightStateFirst } = LightStateFirst;
-  // const { fanStateFirst } = FanStateFirst;
+  const { temperatureStateFirst } = TempStateFirst;
+  const { humidityStateFirst } = HumidityStateFirst;
+  const { lightStateFirst } = LightStateFirst;
+  const { fanStateFirst } = FanStateFirst;
 
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
@@ -90,24 +90,24 @@ export default function FrequentlyUsedDevices() {
   //Lấy dữ liệu mới nhất khi component render lần đầu
   useEffect(() => {
     dispatch(getFanStat());
-    // dispatch(getFanStatFirst());
+    dispatch(getFanStatFirst());
     dispatch(getFanState());
-    // dispatch(getFanStateFirst());
+    dispatch(getFanStateFirst());
 
     dispatch(getTemperatureState());
-    //dispatch(getTemperatureStateFirst());
+    dispatch(getTemperatureStateFirst());
     dispatch(getTemperatureStat());
-    //dispatch(getTemperatureStatFirst());
+    dispatch(getTemperatureStatFirst());
 
     dispatch(getHumidityStat());
-    //dispatch(getHumidityStatFirst());
+    dispatch(getHumidityStatFirst());
     dispatch(getHumidityState());
-    //dispatch(getHumidityStateFirst());
+    dispatch(getHumidityStateFirst());
 
     dispatch(getLightStat());
-    //dispatch(getLightStatFirst());
+    dispatch(getLightStatFirst());
     dispatch(getLightState());
-    //dispatch(getLightStateFirst());
+    dispatch(getLightStateFirst());
   }, []);
 
   useEffect(() => {
@@ -123,33 +123,8 @@ export default function FrequentlyUsedDevices() {
     if (fanState) {
       setToggleButton4(fanState);
     }
-    // if (fanStat) {
-    //   setFStat(fanStat);
-    // }
-    // if (humidityStat) {
-    //   setHStat(humidityStat);
-    // }
-    // if (temperatureStat) {
-    //   setTStat(temperatureStat);
-    // }
-    // if (lightStat) {
-    //   setLStat(lightStat);
-    // }
   }, [temperatureState, humidityState, lightState, fanState]);
   //Lấy dữ liệu mới nhất sau mỗi 20s
-  // useEffect(() => {
-
-  //   setInterval(() => {
-  //     dispatch(getTemperatureStat());
-  //     dispatch(getHumidityStat());
-  //     dispatch(getLightStat());
-  //     dispatch(getTemperatureState());
-  //     dispatch(getHumidityState());
-  //     dispatch(getLightState());
-  //     dispatch(getFanState());
-  //     dispatch(getFanStat());
-  //   }, 20000);
-  // }, [dispatch]);
   const mark = [
     {
       value: 0,
@@ -194,7 +169,7 @@ export default function FrequentlyUsedDevices() {
       setToggleButton2(true);
     }
   }
-  
+
   const handleChangeFanState = () => {
     //Nếu true thì tắt quạt đi (true == đang bật)
     if (toggleButton4 === true) {
@@ -221,7 +196,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-sky-700 text-white w-14 h-14 rounded-full">
-              {humidityStat ? humidityStat : ""}
+              {humidityStat ? humidityStat : humidityStatFirst}
             </button>
             <div className="text-right" key={toggleButton1}>
               <Switch
@@ -241,7 +216,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-yellow-700 text-white w-14 h-14 rounded-full">
-              {lightStat ? lightStat : ""}
+              {lightStat ? lightStat : lightStatFirst}
             </button>
             <div className="text-right" key={toggleButton2}>
               <Switch
@@ -261,7 +236,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-red-700 text-white w-14 h-14 rounded-full">
-              {temperatureStat ? temperatureStat : ""}
+              {temperatureStat ? temperatureStat : temperatureStatFirst}
             </button>
             <div className="text-right" key={toggleButton3}>
               <Switch
@@ -282,7 +257,7 @@ export default function FrequentlyUsedDevices() {
           <div className="grid grid-cols-2">
             <div></div>
             <div className="text-right" key={toggleButton4}>
-            <Switch
+              <Switch
                 onChange={handleChangeFanState}
                 checked={toggleButton4}
                 onColor="#593EFF"
@@ -309,7 +284,7 @@ export default function FrequentlyUsedDevices() {
                 min={0}
                 max={100}
                 step={1}
-                onChange = {(e) => setValueFan(e.target.value)}
+                onChange={(e) => setValueFan(e.target.value)}
                 className="slider"
                 id="myRange"
 

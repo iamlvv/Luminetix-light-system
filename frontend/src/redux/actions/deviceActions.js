@@ -67,44 +67,44 @@ import {
   LIGHT_STAT_INVALID,
 
   FAN_STATE_REQUEST_FIRST,
-    FAN_STATE_VALID_FIRST,
-    FAN_STATE_INVALID_FIRST,
+  FAN_STATE_VALID_FIRST,
+  FAN_STATE_INVALID_FIRST,
 
-    HUMIDITY_STATE_REQUEST_FIRST,
-    HUMIDITY_STATE_VALID_FIRST,
-    HUMIDITY_STATE_INVALID_FIRST,
+  HUMIDITY_STATE_REQUEST_FIRST,
+  HUMIDITY_STATE_VALID_FIRST,
+  HUMIDITY_STATE_INVALID_FIRST,
 
-    LIGHT_STATE_REQUEST_FIRST,
-    LIGHT_STATE_VALID_FIRST,
-    LIGHT_STATE_INVALID_FIRST,
+  LIGHT_STATE_REQUEST_FIRST,
+  LIGHT_STATE_VALID_FIRST,
+  LIGHT_STATE_INVALID_FIRST,
 
-    TEMPERATURE_STATE_REQUEST_FIRST,
-    TEMPERATURE_STATE_VALID_FIRST,
-    TEMPERATURE_STATE_INVALID_FIRST,
+  TEMPERATURE_STATE_REQUEST_FIRST,
+  TEMPERATURE_STATE_VALID_FIRST,
+  TEMPERATURE_STATE_INVALID_FIRST,
 
-    HUMAN_FOUND_STATE_REQUEST_FIRST,
-    HUMAN_FOUND_STATE_VALID_FIRST,
-    HUMAN_FOUND_STATE_INVALID_FIRST,
+  HUMAN_FOUND_STATE_REQUEST_FIRST,
+  HUMAN_FOUND_STATE_VALID_FIRST,
+  HUMAN_FOUND_STATE_INVALID_FIRST,
 
-    LED_STATE_REQUEST_FIRST,
-    LED_STATE_VALID_FIRST,
-    LED_STATE_INVALID_FIRST,
+  LED_STATE_REQUEST_FIRST,
+  LED_STATE_VALID_FIRST,
+  LED_STATE_INVALID_FIRST,
 
-    TEMPERATURE_STAT_REQUEST_FIRST,
-    TEMPERATURE_STAT_VALID_FIRST,
-    TEMPERATURE_STAT_INVALID_FIRST,
+  TEMPERATURE_STAT_REQUEST_FIRST,
+  TEMPERATURE_STAT_VALID_FIRST,
+  TEMPERATURE_STAT_INVALID_FIRST,
 
-    HUMIDITY_STAT_REQUEST_FIRST,
-    HUMIDITY_STAT_VALID_FIRST,
-    HUMIDITY_STAT_INVALID_FIRST,
+  HUMIDITY_STAT_REQUEST_FIRST,
+  HUMIDITY_STAT_VALID_FIRST,
+  HUMIDITY_STAT_INVALID_FIRST,
 
-    FAN_STAT_REQUEST_FIRST,
-    FAN_STAT_VALID_FIRST,
-    FAN_STAT_INVALID_FIRST,
+  FAN_STAT_REQUEST_FIRST,
+  FAN_STAT_VALID_FIRST,
+  FAN_STAT_INVALID_FIRST,
 
-    LIGHT_STAT_REQUEST_FIRST,
-    LIGHT_STAT_VALID_FIRST,
-    LIGHT_STAT_INVALID_FIRST,
+  LIGHT_STAT_REQUEST_FIRST,
+  LIGHT_STAT_VALID_FIRST,
+  LIGHT_STAT_INVALID_FIRST,
 } from "../../constants/deviceConstants";
 import { client } from "mqtt";
 import axios from "axios";
@@ -146,7 +146,7 @@ export const getFanState = () => async (dispatch) => {
     });
     client.on("message", (topic, message) => {
       if (topic === "Tori/feeds/w-fan") {
-        dispatch({  
+        dispatch({
           type: FAN_STATE_VALID,
           payload: JSON.parse(message.toString()),
         });
@@ -209,7 +209,7 @@ export const getLightState = () => async (dispatch) => {
     });
     client.on("message", (topic, message) => {
       if (topic === "Tori/feeds/w-s-light") {
-        const  value = JSON.parse(message.toString());
+        const value = JSON.parse(message.toString());
         console.log(value);
         if (value === "L_ON") {
           dispatch({ type: LIGHT_STATE_VALID, payload: true });
@@ -445,9 +445,10 @@ export const getTemperatureStat = () => async (dispatch) => {
     client.subscribe("Tori0802/feeds/w-temp");
     client.on("message", function (topic, message) {
       if (topic === "Tori0802/feeds/w-temp") {
-      const value = JSON.parse(message.toString());
-      dispatch({ type: TEMPERATURE_STAT_VALID, payload: value });
-  }});
+        const value = JSON.parse(message.toString());
+        dispatch({ type: TEMPERATURE_STAT_VALID, payload: value });
+      }
+    });
   } catch (error) {
     dispatch({ type: TEMPERATURE_STAT_INVALID, payload: error.message });
   }
@@ -459,9 +460,10 @@ export const getHumidityStat = () => async (dispatch) => {
     client.subscribe("Tori0802/feeds/w-humi");
     client.on("message", function (topic, message) {
       if (topic === "Tori0802/feeds/w-humi") {
-      const  value = JSON.parse(message.toString());
-      dispatch({ type: HUMIDITY_STAT_VALID, payload: value });
-  }});
+        const value = JSON.parse(message.toString());
+        dispatch({ type: HUMIDITY_STAT_VALID, payload: value });
+      }
+    });
   } catch (error) {
     dispatch({ type: HUMIDITY_STAT_INVALID, payload: error.message });
   }
@@ -473,8 +475,8 @@ export const getLightStat = () => async (dispatch) => {
     client.subscribe("Tori0802/feeds/w-light");
     client.on("message", function (topic, message) {
       if (topic === "Tori0802/feeds/w-light") {
-      const  value = message.toString();
-      dispatch({ type: LIGHT_STAT_VALID, payload: value });
+        const value = message.toString();
+        dispatch({ type: LIGHT_STAT_VALID, payload: value });
       }
     });
   } catch (error) {
@@ -487,14 +489,114 @@ export const getFanStat = () => async (dispatch) => {
     client.subscribe("Tori0802/feeds/w-fan");
     client.on("message", function (topic, message) {
       if (topic === "Tori0802/feeds/w-fan") {
-      const  value = message.toString();
-      dispatch({ type: FAN_STAT_VALID, payload: value });
+        const value = message.toString();
+        dispatch({ type: FAN_STAT_VALID, payload: value });
       }
     });
   } catch (error) {
     dispatch({ type: FAN_STAT_INVALID, payload: error.message });
   }
 };
+
+export const getFanStatFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: FAN_STAT_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data', headers);
+    const { value } = data[0];
+    dispatch({ type: FAN_STAT_VALID_FIRST, payload: value });
+  } catch (error) {
+    dispatch({ type: FAN_STAT_INVALID_FIRST, payload: error.message });
+  }
+}
+export const getFanStateFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: FAN_STATE_REQUEST_FIRST });
+    const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data", headers);
+    const { value } = data[0];
+    if (value === "0") {
+      dispatch({ type: FAN_STATE_VALID_FIRST, payload: false });
+    }
+    else dispatch({ type: FAN_STATE_VALID_FIRST, payload: true });
+  } catch (error) {
+    dispatch({ type: FAN_STATE_INVALID_FIRST, payload: error.message });
+  }
+}
+export const getTemperatureStateFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: TEMPERATURE_STATE_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data', headers);
+    const { value } = data[0];
+    if (value === "T_ON") {
+      dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: true });
+    }
+    else dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: false });
+  } catch (error) {
+    dispatch({ type: TEMPERATURE_STATE_INVALID_FIRST, payload: error.message });
+  }
+}
+
+export const getHumidityStateFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: HUMIDITY_STATE_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data', headers);
+    const { value } = data[0]
+    if (value === "H_ON") {
+      dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: true });
+    }
+    else dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: false });
+  } catch (error) {
+    dispatch({ type: HUMIDITY_STATE_INVALID_FIRST, payload: error.message });
+  }
+}
+
+export const getLightStateFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: LIGHT_STATE_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data', headers);
+    const { value } = data[0];
+    if (value === "L_ON") {
+      dispatch({ type: LIGHT_STATE_VALID_FIRST, payload: true });
+    }
+    else dispatch({ type: LIGHT_STATE_VALID_FIRST, payload: false });
+  } catch (error) {
+    dispatch({ type: LIGHT_STATE_INVALID_FIRST, payload: error.message });
+  }
+}
+
+export const getLightStatFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: LIGHT_STAT_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data', headers);
+    const { value } = data[0];
+    dispatch({ type: LIGHT_STAT_VALID_FIRST, payload: value });
+  } catch (error) {
+    dispatch({ type: LIGHT_STAT_INVALID_FIRST, payload: error.message });
+  }
+}
+
+export const getHumidityStatFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: HUMIDITY_STAT_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data', headers);
+    const { value } = data[0];
+    dispatch({ type: HUMIDITY_STAT_VALID_FIRST, payload: value });
+  } catch (error) {
+    dispatch({ type: HUMIDITY_STAT_INVALID_FIRST, payload: error.message });
+  }
+}
+
+export const getTemperatureStatFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: TEMPERATURE_STAT_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data', headers);
+    const { value } = data[0];
+
+    dispatch({ type: TEMPERATURE_STAT_VALID_FIRST, payload: value });
+  } catch (error) {
+    dispatch({ type: TEMPERATURE_STAT_INVALID_FIRST, payload: error.message });
+  }
+}
+
 
 // export const setFanValue = (value) => async (dispatch) => {
 //   try {
@@ -531,102 +633,3 @@ export const getFanStat = () => async (dispatch) => {
 //     dispatch({ type: LED_VALUE_FAIL, payload: error.message });
 //   }
 // };
-export const getFanStatFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: FAN_STAT_REQUEST_FIRST });
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data')}`, headers);
-    const { value } = JSON.parse(data.contents)[0];
-    dispatch({ type: FAN_STAT_VALID_FIRST, payload: value });
-} catch (error) {
-    dispatch({ type: FAN_STAT_INVALID_FIRST, payload: error.message });
-}
-}
-export const getFanStateFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: FAN_STATE_REQUEST });
-    const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data", headers);
-    const { value } = data[0];
-    if (value === "0") {
-        dispatch({ type: FAN_STATE_VALID_FIRST, payload: false });
-    }
-    else dispatch({ type: FAN_STATE_VALID_FIRST, payload: true });
-} catch (error) {
-    dispatch({ type: FAN_STATE_INVALID_FIRST, payload: error.message });
-}
-}
-export const getTemperatureStateFirst = () => async (dispatch) => {
-  try {
-      dispatch({ type: TEMPERATURE_STATE_REQUEST_FIRST });
-      const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data')}`, headers);
-      const { value } = JSON.parse(data.contents)[0];
-      if (value === "T_ON") {
-          dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: true });
-      }
-      else dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: false });
-  } catch (error) {
-      dispatch({ type: TEMPERATURE_STATE_INVALID_FIRST, payload: error.message });
-  }
-}
-
-export const getHumidityStateFirst = () => async (dispatch) => {
-  try {
-      dispatch({ type: HUMIDITY_STATE_REQUEST_FIRST });
-      const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data')}`, headers);
-      const { value } = JSON.parse(data.contents)[0];
-      if (value === "H_ON") {
-          dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: true });
-      }
-      else dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: false });
-  } catch (error) {
-      dispatch({ type: HUMIDITY_STATE_INVALID_FIRST, payload: error.message });
-  }
-}
-
-export const getLightStateFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: LIGHT_STATE_REQUEST_FIRST });
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light/data')}`, headers);
-    const { value } = JSON.parse(data.contents)[0];
-    if (value === "L_ON") {
-        dispatch({ type: LIGHT_STATE_VALID_FIRST, payload: true });
-    }
-    else dispatch({ type: LIGHT_STATE_VALID_FIRST, payload: false });
-} catch (error) {
-    dispatch({ type: LIGHT_STATE_INVALID_FIRST, payload: error.message });
-}
-}
-
-export const getLightStatFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: LIGHT_STAT_REQUEST_FIRST });
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data')}`, headers);
-    const { value } = JSON.parse(data.contents)[0];
-    dispatch({ type: LIGHT_STAT_VALID_FIRST, payload: value });
-} catch (error) {
-    dispatch({ type: LIGHT_STAT_INVALID_FIRST, payload: error.message });
-}
-}
-
-export const getHumidityStatFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: HUMIDITY_STAT_REQUEST_FIRST });
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data')}`, headers);
-    const { value } = JSON.parse(data.contents)[0];
-    dispatch({ type: HUMIDITY_STAT_VALID_FIRST, payload: value });
-} catch (error) {
-    dispatch({ type: HUMIDITY_STAT_INVALID_FIRST, payload: error.message });
-}
-}
-
-export const getTemperatureStatFirst = () => async (dispatch) => {
-  try {
-    dispatch({ type: TEMPERATURE_STAT_REQUEST_FIRST });
-    const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data')}`, headers);
-    const { value } = JSON.parse(data.contents)[0];
-
-    dispatch({ type: TEMPERATURE_STAT_VALID_FIRST, payload: value });
-} catch (error) {
-    dispatch({ type: TEMPERATURE_STAT_INVALID_FIRST, payload: error.message });
-}
-}
-
