@@ -1,5 +1,4 @@
 import Homepage from './src/screens/Homepage/Homepage';
-import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Statistics from './src/screens/Statistics/Statistics';
@@ -10,13 +9,18 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import Login from './src/screens/Login/Login';
 
+import { createStackNavigator } from '@react-navigation/stack';
+import Signup from './src/screens/Login/Signup';
+import { Provider } from 'react-redux';
+import store from './store';
 const Tab = createBottomTabNavigator();
-export default function App() {
+const Stack = createStackNavigator();
+function Home( { navigation }) {
   return (
-    <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Home" component={Homepage}
+        <Tab.Screen name="Homepage" component={Homepage}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
@@ -68,7 +72,33 @@ export default function App() {
           }}
         />
       </Tab.Navigator>
+  )
+}
+export default function App() {
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} 
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Home" component={Home} 
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Signup" component = {Signup} 
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack.Navigator>
+
     </NavigationContainer>
+    </Provider>
+    
   );
 }
 

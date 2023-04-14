@@ -105,10 +105,6 @@ import {
     LIGHT_STAT_REQUEST_FIRST,
     LIGHT_STAT_VALID_FIRST,
     LIGHT_STAT_INVALID_FIRST,
-} from "../../constants/deviceConstants";
-import client from "../../mqtt/mqtt";
-import axios from 'axios'
-
 
 const headers = {
   'Content-Type': 'application/json',
