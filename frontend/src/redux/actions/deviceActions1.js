@@ -80,7 +80,7 @@ import {
 
 const headers = {
     'Content-Type': 'application/json',
-    'X-AIO-Key': "aio_OXlv03ZQUG3KtYXVdbHpCRUjGp9w",
+    'X-AIO-Key': process.env.ADAFRUIT_KEY,
 };
 
 

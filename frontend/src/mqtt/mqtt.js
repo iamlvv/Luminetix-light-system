@@ -1,8 +1,8 @@
 import mqtt from 'mqtt';
 
 const options = {
-  username: 'Tori0802',
-  password: 'aio_Ekae99Y7ZuaK7CJeE3ftAKKQBfXB'
+  username: process.env.ADAFRUIT_USERNAME,
+  password: process.env.ADAFRUIT_KEY
 };
 
 
