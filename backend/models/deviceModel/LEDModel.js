@@ -12,21 +12,11 @@ const LEDSchema = mongoose.Schema(
       default: true,
     },
     value: {
-      // LED color
-      red: {
-        type: Boolean,
-        default: false,
-      },
-      blue: {
-        type: Boolean,
-        default: false,
-      },
-      yellow: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  },
+      type: String,
+      enum: ["#ffffff", "#ffff00", "#0000ff", "#ff0000", "#000000"],
+      required: true,
+      default: "#000000"
+  }},
   {
     timestamps: true,
   }

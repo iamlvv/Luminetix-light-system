@@ -8,35 +8,28 @@ const connectMQTT = async (topics, credentials) => {
     });
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
-      topics.forEach(async (topic) => {
-        try {
-          await client.subscribe(
-            `${credentials.username}/${topic.topicName}`,
-            (err) => {
-              if (err) {
-                console.error(
-                  `Failed to subscribe to topic "${topic.topicName}": ${err}`
-                );
-              } else {
-                console.log(`Subscribed to topic "${topic.topicName}"`);
-              }
+      topics.forEach((topic) => {
+        client.subscribe(
+          `${credentials.username}/feeds/${topic.topicName}`,
+          (err) => {
+            if (err) {
+              console.error(`Failed to subscribe to topic "${topic.topicName}": ${err}`);
+              throw err; // throw error to stop execution
+            } else {
+              console.log(`Subscribed to topic "${topic.topicName}"`);
             }
-          );
-        } catch (err) {
-          console.error(
-            `Failed to subscribe to topic "${topic.topicName}": ${err}`
-          );
-        }
+          }
+        );
       });
     });
 
     client.on('error', (err) => {
-        console.error('MQTT client error:', err);
-      });
-      
+      console.error('MQTT client error:', err);
+    });
+
     client.on("message", async (topicReceived, message) => {
       const topic = topics.find(
-        (t) => `${config.topicPrefix}/${t.topicName}` === topicReceived
+        (t) => `${credentials.username}/feeds/${t.topicName}` === topicReceived
       );
       if (!topic) {
         console.error(`Received message on unknown topic "${topicReceived}"`);
@@ -45,9 +38,8 @@ const connectMQTT = async (topics, credentials) => {
       try {
         topic.messageHandler(message);
       } catch (err) {
-        console.error(
-          `Error handling message for topic "${topic.topicName}": ${err}`
-        );
+        console.error(`Error handling message for topic "${topic.topicName}": ${err}`);
+        throw err; // throw error to stop execution
       }
     });
 

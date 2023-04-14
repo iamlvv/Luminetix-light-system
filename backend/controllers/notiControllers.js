@@ -2,6 +2,9 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken.js");
 const User = require("../models/userModel.js");
 
+// @desc    Get all noti
+// @route   GET /api/users/noti
+// @access  Private
 const getUserNoti = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
@@ -15,6 +18,9 @@ const getUserNoti = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Add noti
+// @route   POST /api/users/noti
+// @access  Public
 const addNoti = asyncHandler(async (req, res) => {
   const { name, type, message } = req.body;
   const user = await User.findById(req.user._id);
@@ -38,6 +44,9 @@ const addNoti = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Delete all noti
+// @route   DELETE /api/users/noti
+// @access  Private
 const deleteNoti = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
@@ -54,6 +63,9 @@ const deleteNoti = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Mark noti as read
+// @route   PATCH /api/users/noti
+// @access  Private
 const markNotiAsRead = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 

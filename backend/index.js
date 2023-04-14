@@ -17,6 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/users", require("./routes/notiRoutes"));
+app.use("/api/devices", require("./routes/deviceRoutes"));
+app.use("/api/contexts", require("./routes/contextRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {

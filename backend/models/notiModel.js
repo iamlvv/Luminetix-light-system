@@ -7,7 +7,7 @@ const notiSchema = mongoose.Schema(
     },
     read: {
       type: Boolean,
-      required: tru,
+      required: true,
       default: false,
     },
     type: {

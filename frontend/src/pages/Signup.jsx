@@ -100,7 +100,7 @@ export default function Signup() {
                     <div>
                         Already have an account?
                     </div>
-                    <NavLink to='/login'>
+                    <NavLink to='/'>
                     <div className='font-bold'>
                         Log in
                     </div>
