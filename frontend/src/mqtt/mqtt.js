@@ -1,13 +1,8 @@
 import mqtt from 'mqtt';
 
 const options = {
-<<<<<<< Updated upstream
   username: process.env.ADAFRUIT_USERNAME,
   password: process.env.ADAFRUIT_KEY
-=======
-  username: 'Tori0802',
-  password: 'aio_JYmB82tiLT7gJ1f94AbCUEo7jm6X'
->>>>>>> Stashed changes
 };
 
 
