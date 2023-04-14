@@ -44,7 +44,6 @@ export const login = (email, password, navigation) => async (dispatch) => {
             type: USER_LOGIN_SUCCESS,
             payload: data,
         });
-        console.log(data)
         //localStorage.setItem("userInfo", JSON.stringify(data));
         const storeData = async (data) => {
             try {
@@ -54,7 +53,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
                 console.log(e)
             }
         }
-        storeData(data);
+        console.log(storeData(data));
         navigation.navigate('Home');
 
     } catch (error) {
@@ -99,7 +98,7 @@ export const register =
             };
 
             const { data } = await axios.post(
-                "http://10.0.126.116:5000/api/users",
+                "http://192.168.1.59:5000/api/users",
                 { fullname, username, email, password, phone },
                 config
             );
@@ -151,7 +150,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`http://10.0.126.116:5000/api/users/${id}`, config);
+        const { data } = await axios.get(`http://192.168.1.59:5000/api/users/${id}`, config);
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -189,7 +188,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://10.0.126.116:5000/api/users/profile/password`, user, config);
+        const { data } = await axios.put(`http://192.168.1.59:5000/api/users/profile/password`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -228,7 +227,7 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const { data } = await axios.put(`http://10.0.126.116:5000/api/users/password`, user, config);
+        const { data } = await axios.put(`http://192.168.1.59:5000/api/users/password`, user, config);
         dispatch({
             type: USER_UPDATE_PASSWORD_SUCCESS,
             payload: true,

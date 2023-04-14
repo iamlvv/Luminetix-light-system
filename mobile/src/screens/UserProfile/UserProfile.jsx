@@ -48,6 +48,7 @@ const UserProfile = ({navigation}) => {
       dispatch(getUserDetails("profile"));
     }
   }, []);
+  console.log(user)
   useEffect(() => {
     if (user) {
       setFullName(user.fullname);
