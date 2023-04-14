@@ -286,6 +286,7 @@ export const fanStateFirstReducer = (state = { fanStateFirst: false}, action) =>
     }
 }
 
+
 export const lightStatFirstReducer = (state = { lightStatFirst: "0"}, action) => {
     switch (action.type) {
         case deviceConstants.LIGHT_STAT_REQUEST_FIRST:
@@ -337,9 +338,6 @@ export const fanStatFirstReducer = (state = { fanStatFirst: "0"}, action) => {
             return state
     }
 }
-
-
-
 
 
 

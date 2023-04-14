@@ -1,35 +1,64 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { notificationList, notiList } from "../../redux/actions/notificationActions";
-
+//import { notificationList, notiList } from "../../redux/actions/notificationActions";
+import { getUserDetails } from "../../redux/actions/userActions";
+import axios from "axios";
 const itemsNoti = (list) => {
   return list.map((index) => (
     <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3" key={index.id}>
       <div className="col-span-3">
-        <h1 className="font-bold text-lg">{index.type}</h1>
-        <h2 className="text-gray-500 text-sm">{index.content}</h2>
+        <h1 className="font-bold text-lg">{index.name}</h1>
+        <h2 className="text-gray-500 text-sm">{index.message}</h2>
       </div>
       <div className="text-right font-bold mt-7">
-        <h1>{index.date}</h1>
+        <h1>{new Date(index.created_date).toLocaleDateString("en-US", {
+  day: "2-digit",
+  month: "2-digit"})}</h1>
       </div>
     </div>
   ));
 };
+
 export default function NotificationsBar() {
   const dispatch = useDispatch();
-  const notiList = useSelector((state) => state.notiList);
-  const { loading, error, notificationlist } = notiList;
+  const [notificationlist, setNotificationList] = React.useState([]); // Initialize notificationlist with empty array
+
+  // get user Info
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+  const dispatch2 = useDispatch();
   useEffect(() => {
-    dispatch(notificationList());
-  }, [dispatch]);
-  
+    if (userInfo) {
+      dispatch(getUserDetails("profile"));
+    }
+  }, [userInfo, dispatch]);
+  //If user exists, get user.notification and set into notificationlist state
+  const getNotificationList = async () => {
+    const config = {
+      headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+      },
+  }
+    const { data } = await axios.get(`http://localhost:5000/api/users/noti`,config );
+    console.log(data)
+    const { notifications } = data;
+    setNotificationList(notifications);
+  }
+  useEffect(() => {
+    if (user) {
+      getNotificationList()
+    }
+  }, [dispatch2, user]);
+
   const [filteredList, setFilteredList] = React.useState(notificationlist);
 
   const handleFilterAlerts = () => {
-    setFilteredList(notificationlist.filter((item) => item.type === "Alerts"));
+    setFilteredList(notificationlist.filter((item) => item.type === "alert"));
   };
   const handleFilterContext = () => {
-    setFilteredList(notificationlist.filter((item) => item.type === "Context"));
+    setFilteredList(notificationlist.filter((item) => item.type === "context"));
   };
   const handleShowAll = () => {
     setFilteredList(notificationlist);

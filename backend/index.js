@@ -3,18 +3,22 @@ const color = require("colors");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const dotenv = require("dotenv").config();
 const connectDB = require("./config/db");
+const connectMQTT = require("./mqtt/handleMQTT")
+const bodyParser=require("body-parser")
 const port = process.env.PORT || 5000;
 
 connectDB();
-
+const cors = require("cors");
 
 const app = express();
 
-const cors = require("cors");
-app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/users", require("./routes/notiRoutes"));
+app.use("/api/devices", require("./routes/deviceRoutes"));
+app.use("/api/contexts", require("./routes/contextRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {

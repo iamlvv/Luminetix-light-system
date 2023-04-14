@@ -24,10 +24,36 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    notification: {
+      type: [
+        {
+          name: {
+            type: String
+          },
+          read: {
+            type: Boolean,
+            default: false
+          },
+          type: {
+            type: String, //alert or context
+            require: true
+          },
+          created_date: {
+            type: Date,
+            default: Date.now,
+            required: true,
+          },
+          message: {
+            type: String, // String hoặc Object từ deviceModel?
+            required: true,
+          },
+        }
+      ]
+    }
   },
   {
     timestamps: true,
-  }
+  },
   
 );
 

@@ -5,100 +5,146 @@ const contextSchema = mongoose.Schema(
     name: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
     description: { type: String, required: true },
-    active_temperature: {
-      value: {
-        type: Number,
-        min: 0,
-        max: 100,
-        default: 0,
+    input: {
+      active_temperature: {
+        min: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        max: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        active: { type: Boolean, default: false },
+        // required: true,
       },
-      active: { type: Boolean, default: false },
-      // required: true,
-    },
-    active_humidity: {
-      value: {
-        type: Number,
-        min: 0,
-        max: 100,
-        default: 0,
+      active_light: {
+        min: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        max: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        active: { type: Boolean, default: false },
       },
-      active: { type: Boolean, default: false },
-      // required: true,
-    },
-    human_detection: {
-      value: {
-        type: Boolean,
-        default: false,
+      active_humidity: {
+        min: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        max: {
+          type: Number,
+          min: 0,
+          max: 100,
+          default: 0,
+        },
+        active: { type: Boolean, default: false },
+        // required: true,
       },
-      active: { type: Boolean, default: false },
-      // required: true,
-    },
-    lighting_time_limit: {
-      type: Number,
-      min: 1,
-      max: 24,
-      default: 0,
-      // required: true,
-    },
-    frequency: {
-      required: true,
-      today: { type: Boolean, default: true },
-      repeat: {
-        required: true,
-        daily: { type: Boolean, default: false },
-        weekly: {
+      human_detection: {
+        value: {
           type: Boolean,
           default: false,
         },
-        adjust_weekly: {
-          monday: { type: Boolean, default: false },
-          tuesday: { type: Boolean, default: false },
-          wednesday: { type: Boolean, default: false },
-          thursday: { type: Boolean, default: false },
-          friday: { type: Boolean, default: false },
-          saturday: { type: Boolean, default: false },
-          sunday: { type: Boolean, default: false },
+        active: { type: Boolean, default: false },
+        // required: true,
+      },
+      // lighting_time_limit: {
+      //   type: Number,
+      //   min: 1,
+      //   max: 24,
+      //   default: 0,
+      //   // required: true,
+      // },
+    },
+    output: {
+      frequency: {
+        today: { type: Boolean, default: true },
+        repeat: {
+          daily: { type: Boolean, default: false },
+          weekly: {
+            type: Boolean,
+            default: false,
+          },
+          adjust_weekly: {
+            monday: { type: Boolean, default: false },
+            tuesday: { type: Boolean, default: false },
+            wednesday: { type: Boolean, default: false },
+            thursday: { type: Boolean, default: false },
+            friday: { type: Boolean, default: false },
+            saturday: { type: Boolean, default: false },
+            sunday: { type: Boolean, default: false },
+          },
         },
       },
-    },
-    active_time: {
-      start_time: {
-        type: Number,
-        min: 0,
-        max: 24,
-        default: 0,
-        required: true,
+      active_time: {
+        start_time: {
+          type: Number,
+          min: 0,
+          max: 24,
+          default: 0,
+          required: true,
+        },
+        end_time: {
+          type: Number,
+          min: 0,
+          max: 24,
+          default: 0,
+          required: true,
+        },
       },
-      end_time: {
-        type: Number,
-        min: 0,
-        max: 24,
-        default: 0,
-        required: true,
-      },
-      required: true,
-    },
-    control_light: {
-      value: {
-        type: Boolean,
-        default: false,
-      },
-      light_color: {
-        type: String,
-        default: "white",
-      },
-    },
-    control_fan: {
-      value: {
-        type: Boolean,
-        default: false,
-      },
-      fan_speed: {
-        type: Number,
-        min: 0,
-        max: 100,
-        default: 0,
-      },
+      control_led: [
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+          status: {
+            type: Boolean,
+            required: true,
+            default: true,
+          },
+          value: {
+            type: String,
+            enum: ["#ffffff", "#ffff00", "#0000ff", "#ff0000", "#000000"],
+            required: true,
+            default: "#000000",
+          },
+        },
+      ],
+      control_fan: [
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+          status: {
+            type: Boolean,
+            required: true,
+            default: false,
+          },
+          value: {
+            // fan speed
+            type: Number,
+            min: 0,
+            max: 100,
+            default: 0,
+            required: true,
+          },
+        },
+      ],
     },
     // control_system: {}
     notification: {
