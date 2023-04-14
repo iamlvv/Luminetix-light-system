@@ -38,13 +38,13 @@ const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo, error, loading } = userLogin;
-
+    //console.log(getData())
     useEffect(() => {
         if (userInfo) {
             navigation.navigate('Home')
         }
     }, [userInfo, dispatch, navigation]);
-
+    //console.log(userInfo)
     const handleSubmit = async () => {
         if (email === '' || password === '') {
             alert('Please fill all the fields')
@@ -55,7 +55,7 @@ const Login = ({ navigation }) => {
             // };
             // axios({
             //     method: "POST",
-            //     url: "http://10.0.126.116:5000/api/users/login",
+            //     url: "http://192.168.1.59:5000/api/users/login",
             //     headers: headers,
             //     data: {
             //         email: email,
@@ -63,6 +63,7 @@ const Login = ({ navigation }) => {
             //     },
             // })
             //     .then(res => {
+            //         console.log("hei")
             //         console.log(res.data);
             //     })
             //     .catch(err => {

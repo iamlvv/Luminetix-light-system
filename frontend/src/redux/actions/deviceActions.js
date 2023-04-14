@@ -75,6 +75,46 @@ import {
     HUMIDITY_STAT_INVALID,
     FAN_STAT_INVALID,
     LIGHT_STAT_INVALID,
+
+    FAN_STATE_REQUEST_FIRST,
+    FAN_STATE_VALID_FIRST,
+    FAN_STATE_INVALID_FIRST,
+
+    HUMIDITY_STATE_REQUEST_FIRST,
+    HUMIDITY_STATE_VALID_FIRST,
+    HUMIDITY_STATE_INVALID_FIRST,
+
+    LIGHT_STATE_REQUEST_FIRST,
+    LIGHT_STATE_VALID_FIRST,
+    LIGHT_STATE_INVALID_FIRST,
+
+    TEMPERATURE_STATE_REQUEST_FIRST,
+    TEMPERATURE_STATE_VALID_FIRST,
+    TEMPERATURE_STATE_INVALID_FIRST,
+
+    HUMAN_FOUND_STATE_REQUEST_FIRST,
+    HUMAN_FOUND_STATE_VALID_FIRST,
+    HUMAN_FOUND_STATE_INVALID_FIRST,
+
+    LED_STATE_REQUEST_FIRST,
+    LED_STATE_VALID_FIRST,
+    LED_STATE_INVALID_FIRST,
+
+    TEMPERATURE_STAT_REQUEST_FIRST,
+    TEMPERATURE_STAT_VALID_FIRST,
+    TEMPERATURE_STAT_INVALID_FIRST,
+
+    HUMIDITY_STAT_REQUEST_FIRST,
+    HUMIDITY_STAT_VALID_FIRST,
+    HUMIDITY_STAT_INVALID_FIRST,
+
+    FAN_STAT_REQUEST_FIRST,
+    FAN_STAT_VALID_FIRST,
+    FAN_STAT_INVALID_FIRST,
+
+    LIGHT_STAT_REQUEST_FIRST,
+    LIGHT_STAT_VALID_FIRST,
+    LIGHT_STAT_INVALID_FIRST,
 } from '../../constants/deviceConstants';
 
 const headers = {
@@ -393,3 +433,33 @@ export const getFanStat = () => async (dispatch) => {
         dispatch({ type: FAN_STAT_INVALID, payload: error.message });
     }
 }
+
+export const getTemperatureStateFirst = () => async (dispatch) => {
+    try {
+        dispatch({ type: TEMPERATURE_STATE_REQUEST_FIRST });
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-temp/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
+        if (value === "T_ON") {
+            dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: true });
+        }
+        else dispatch({ type: TEMPERATURE_STATE_VALID_FIRST, payload: false });
+    } catch (error) {
+        dispatch({ type: TEMPERATURE_STATE_INVALID_FIRST, payload: error.message });
+    }
+}
+
+export const getHumidityStateFirst = () => async (dispatch) => {
+    try {
+        dispatch({ type: HUMIDITY_STATE_REQUEST_FIRST });
+        const { data } = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent('https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi/data')}`, headers);
+        const { value } = JSON.parse(data.contents)[0];
+        if (value === "H_ON") {
+            dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: true });
+        }
+        else dispatch({ type: HUMIDITY_STATE_VALID_FIRST, payload: false });
+    } catch (error) {
+        dispatch({ type: HUMIDITY_STATE_INVALID_FIRST, payload: error.message });
+    }
+}
+
+

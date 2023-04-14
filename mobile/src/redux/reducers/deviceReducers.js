@@ -234,6 +234,19 @@ export const turnOffLightReducer = (state = {}, action) => {
     }
 }
 
+export const fanStateFirstReducer = (state = {}, action) => {
+    switch (action.type) {
+        case deviceConstants.FAN_STATE_REQUEST_FIRST:
+            return { loading: true };
+        case deviceConstants.FAN_STATE_FIRST_SUCCESS:
+            return { loading: false, success: true };
+        case deviceConstants.FAN_STATE_FIRST_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+ 
 
 
 

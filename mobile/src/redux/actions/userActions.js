@@ -35,7 +35,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            "http://10.0.126.116:5000/api/users/login",
+            "http://192.168.1.59:5000/api/users/login",
             { email, password },
             config
         );
@@ -44,6 +44,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
             type: USER_LOGIN_SUCCESS,
             payload: data,
         });
+        console.log(data)
         //localStorage.setItem("userInfo", JSON.stringify(data));
         const storeData = async (data) => {
             try {
