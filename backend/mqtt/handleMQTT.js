@@ -11,7 +11,9 @@ const handleDeviceMessage = async (topic, message) => {
   const topicArray = topic.split("-");
   const deviceType = hasDigit ? topicArray.slice(0, topicArray.length - 1).join('-'): topic ;
   const deviceName = hasDigit ? (topicArray[topicArray.length-2] + topicArray[topicArray.length-1]) : topicArray[topicArray.length-1];
-  const data = message;
+
+
+  const data = message.toString();
 
   console.log(`Received message on topic ${topic}: ${data}`);
 
@@ -19,60 +21,67 @@ const handleDeviceMessage = async (topic, message) => {
 
   switch (deviceType) {
     case "w-light":
-      updateQuery = { value: JSON.parse(data) };
+      updateQuery = { "value": JSON.parse(data) };
       break;
     case "w-temp":
-      updateQuery = { value: JSON.parse(data) };
+      updateQuery = { "value": JSON.parse(data) };
       break;
     case "w-humi":
       updateQuery = { value: JSON.parse(data) };
       break;
     case "w-led":
-      updateQuery = { value: data };
+      updateQuery = {  "value": data };
       break;
     case "w-fan":
-      updateQuery = { value: JSON.parse(data) };
+      updateQuery = { "value": JSON.parse(data) };
       break;
     case "w-s-light":
-      updateQuery = { status: (data==="L_ON")? true: false  };
+      updateQuery = { "status": (data==="L_ON")? true: false  };
       break;
     case "w-s-temp":
-      updateQuery = { status: (data==="T_ON")? true: false };
+      updateQuery = { "status": (data==="T_ON")? true: false };
       break;
     case "w-s-humi":
-      updateQuery = { status: (data==="H_ON")? true: false };
+      updateQuery = { "status": (data==="H_ON")? true: false };
       break;
     default:
       console.log(`Unknown device type: ${deviceType}`);
       return;
   }
 
-  const deviceModel =
-    deviceType === "w-light" || "w-s-light"
-      ? Light
-      : deviceType === "w-humi" || "w-s-humi"
-      ? Humidity
-      : deviceType === "w-temp" || "w-s-temp"
-      ? Temperature
-      : deviceType === "w-fan"
-      ? Fan
-      : deviceType === "w-led"
-      ? LED
-      : null;
+  let deviceModel;
+if (deviceType === "w-light" || deviceType === "w-s-light") {
+  deviceModel = Light;
+} else if (deviceType === "w-humi" || deviceType === "w-s-humi") {
+  deviceModel = Humidity;
+} else if (deviceType === "w-temp" || deviceType === "w-s-temp") {
+  deviceModel = Temperature;
+} else if (deviceType === "w-fan") {
+  deviceModel = Fan;
+} else if (deviceType === "w-led") {
+  deviceModel = LED;
+} else {
+  console.error(`Error: Invalid device type ${deviceType}`);
+}
+
 
   if (!deviceModel) {
     console.log(`Unknown device type: ${deviceType}`);
     return;
   }
 
-  const updatedDevice = await deviceModel.findOneAndUpdate(
-    { name: deviceName },
-    updateQuery,
-    { new: true, upsert: true }
-  );
-
-  console.log(`Updated ${deviceType} ${deviceName}: ${updatedDevice}`);
-
+  try {
+    const updatedDevice = await deviceModel.findOneAndUpdate(
+      { name: deviceName },
+      updateQuery,
+      { new: true, upsert: true }
+    );
+    console.log(`Updated ${deviceType} ${deviceName}: ${updatedDevice}`);
+  } catch (err) {
+    console.error(`Error updating device: ${err}`);
+  }
+  
+  
   // Add notifications if light value <10 or LED is off
   if (deviceType === "w-light" && data < 10) {
     const users = await User.find({});
