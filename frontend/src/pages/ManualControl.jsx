@@ -7,11 +7,15 @@ import LightControl from "../components/manualcontrol/LightControl";
 import FanControl from "../components/manualcontrol/FanControl";
 import fanicon from "../images/Fan.png";
 import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
 
 function ManualControl() {
   const [isLightControl, setisLightControl] = useState(false);
   const [isFanControl, setisFanControl] = useState(true);
   const [devices, setDevices] = useState([]);
+
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
 
   // const [isRedLight, setisRedLight] = useState(true);
   // const [isBlueLight, setisBlueLight] = useState(false);
@@ -22,8 +26,13 @@ function ManualControl() {
   // const [FanState, setFanState] = useState("");
   const fetchDevices = async () => {
     try {
-      const led_res = await axios.get("http://localhost:5000/api/devices/led");
-      const fan_res = await axios.get("http://localhost:5000/api/devices/fan");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const led_res = await axios.get("http://localhost:5000/api/devices/led", config);
+      const fan_res = await axios.get("http://localhost:5000/api/devices/fan", config);
       const devices = [...led_res.data.leds, ...fan_res.data.fans];
       console.log(devices);
       setDevices(devices);
