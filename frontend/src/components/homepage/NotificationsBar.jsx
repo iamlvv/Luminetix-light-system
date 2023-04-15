@@ -3,17 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 //import { notificationList, notiList } from "../../redux/actions/notificationActions";
 import { getUserDetails } from "../../redux/actions/userActions";
 import axios from "axios";
+import Swal from "sweetalert2";
 const itemsNoti = (list) => {
-  return list.map((index) => (
-    <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3" key={index.id}>
+  return list.slice(0).reverse().map((index) => (
+    <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3" key={index._id}>
       <div className="col-span-3">
         <h1 className="font-bold text-lg">{index.name}</h1>
         <h2 className="text-gray-500 text-sm">{index.message}</h2>
       </div>
       <div className="text-right font-bold mt-7">
         <h1>{new Date(index.created_date).toLocaleDateString("en-US", {
-  day: "2-digit",
-  month: "2-digit"})}</h1>
+          day: "2-digit",
+          month: "2-digit"
+        })}</h1>
       </div>
     </div>
   ));
@@ -38,10 +40,10 @@ export default function NotificationsBar() {
   const getNotificationList = async () => {
     const config = {
       headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.token}`,
       },
-  }
-    const { data } = await axios.get(`http://localhost:5000/api/users/noti`,config );
+    }
+    const { data } = await axios.get(`http://localhost:5000/api/users/noti`, config);
     const { notifications } = data;
     setNotificationList(notifications);
   }
@@ -63,14 +65,38 @@ export default function NotificationsBar() {
     setFilteredList(notificationlist);
   };
   const handleDeleteAll = () => {
-    setFilteredList([]);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+        axios.delete(`http://localhost:5000/api/users/noti`, config);
+        setFilteredList([]);
+        Swal.fire(
+          'Deleted!',
+          'Your notifications has been deleted.',
+          'success'
+        )
+      }
+    })
+
   };
   return (
     <div>
       <div className="grid grid-cols-3">
         <h1 className="text-2xl font-bold col-span-2">Notifications</h1>
         <button className="bg-red-300 font-bold rounded-2xl py-1 hover:bg-red-400 transition ease-in"
-        onClick={handleDeleteAll}>
+          onClick={handleDeleteAll}>
           Delete all
         </button>
       </div>

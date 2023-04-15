@@ -4,8 +4,8 @@ const {handleDeviceMessage}  = require("./handleMQTT")
 const topics = ["w-light", "w-temp", "w-humi", "w-led", "w-fan", "w-s-light", "w-s-temp", "w-s-humi"];
 
 const credentials = {
-  username: process.env.ADAFRUIT_USERNAME,
-  password: process.env.ADAFRUIT_KEY,
+  username: process.env.REACT_APP_ADAFRUIT_USERNAME,
+  password: process.env.REACT_APP_ADAFRUIT_KEY,
 };
 const connectMQTT = async (topics, credentials) => {
   try {
@@ -13,6 +13,7 @@ const connectMQTT = async (topics, credentials) => {
       username: credentials.username,
       password: credentials.password,
     });
+    
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
       topics.forEach((topic) => {

@@ -123,7 +123,7 @@ const HomePage = () => {
               <h1 className="text-xl font-bold">Statistics today</h1>
               <NavLink to="/statistics">
                 <div className="text-right text-violet-700">
-                  <h2>
+                  <h2 className="font-bold">
                     More statistics <AiOutlineArrowRight className="inline" />
                   </h2>
                 </div>

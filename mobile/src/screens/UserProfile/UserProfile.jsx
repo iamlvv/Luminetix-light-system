@@ -1,8 +1,8 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, StyleSheet, Keyboard, Button } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDetails, logout } from '../../redux/actions/userActions';
+import { getUserDetails, logout, updateUserPassword, updateUserProfile } from '../../redux/actions/userActions';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,13 +29,13 @@ const styles = StyleSheet.create({
 });
 
 const UserProfile = ({navigation}) => {
-  const [fullName, setFullName] = React.useState('')
-  const [userName, setUserName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [phoneNumber, setPhoneNumber] = React.useState('')
-  const [currentPassword, setCurrentPassword] = React.useState('')
-  const [newPassword, setNewPassword] = React.useState('')
-  const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [fullname, setFullName] = useState("");
+	const [email, setEmail] = useState("");
+	const [phone, setPhone] = useState("");
+	const [username, setUserName] = useState("");
+	const [currentpassword, setCurrentPassword] = useState("");
+	const [newpassword, setNewPassword] = useState("");
+	const [confirmpassword, setConfirmPassword] = useState("");
   const dispatch = useDispatch();
   const dispatch2 = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
@@ -48,22 +48,31 @@ const UserProfile = ({navigation}) => {
       dispatch(getUserDetails("profile"));
     }
   }, []);
-  console.log(user)
   useEffect(() => {
     if (user) {
       setFullName(user.fullname);
       setUserName(user.username);
       setEmail(user.email);
-      setPhoneNumber(user.phone);
+      setPhone(user.phone);
     }
   }, [dispatch2, user]);
   const handleLogout = () => {
     dispatch(logout({navigation}));
   }
+  const handleUpdateInfo = () => {
+    dispatch(updateUserProfile({ id: user._id, fullname, username, email, phone }));
+  }
+  const handleUpdatePassword = () => {
+    if (newpassword !== confirmpassword) {
+      alert("New password and confirm password do not match!");
+    }
+    else {
+      dispatch(updateUserPassword({ id: user._id, currentpassword, newpassword }));
+    }
+  }
   return (
     <View className='h-full'>
       <ScrollView>
-
         <View className='flex justify-center flex-row mt-7 items-center'>
           <View className='mx-auto'>
             <Text className='font-bold text-xl ml-16'>Profile</Text>
@@ -79,23 +88,33 @@ const UserProfile = ({navigation}) => {
 
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>Full Name</Text>
-          <TextInput value={fullName} className='border-2  p-2 rounded-2xl border-gray-300' />
+          <TextInput value={fullname || ""} className='border-2  p-2 rounded-2xl border-gray-300' 
+            onChangeText={(text) => setFullName(text)}
+          />
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>User Name</Text>
-          <TextInput value={userName} className='border-2  p-2 rounded-2xl border-gray-300' />
+          <TextInput value={username || ""} className='border-2  p-2 rounded-2xl border-gray-300' 
+            onChangeText={(text) => setUserName(text)}
+          />
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>Email</Text>
-          <TextInput value={email} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='email-address' />
+          <TextInput value={email || ""} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='email-address' 
+            onChangeText={(text) => setEmail(text)}
+          />
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>Phone Number</Text>
-          <TextInput value={phoneNumber} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='phone-pad' />
+          <TextInput value={phone || ""} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='phone-pad' 
+            onChangeText={(text) => setPhone(text)}
+          />
         </View>
         <View>
-          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2 mx-auto'>
-            <Text className='text-white text-center font-bold'>Save</Text>
+          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2 mx-auto'
+            onPress={handleUpdateInfo}
+          >
+            <Text className='text-white text-center font-bold'>Save changes</Text>
           </TouchableOpacity>
         </View>
         <View className='mx-auto'>
@@ -103,19 +122,29 @@ const UserProfile = ({navigation}) => {
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>Current Password</Text>
-          <TextInput className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} />
+          <TextInput className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} 
+            value = {currentpassword || ""}
+            onChangeText={(text) => setCurrentPassword(text)}
+          />
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>New Password</Text>
-          <TextInput value='Johnny Depp' className='border-2  p-2  rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} />
+          <TextInput className='border-2  p-2  rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} 
+            value = {newpassword || ""}
+            onChangeText={(text) => setNewPassword(text)}
+          />
         </View>
         <View className='ml-5 mr-5'>
           <Text className='mb-5 mt-5'>Confirm new password</Text>
-          <TextInput value='Johnny Depp' className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} />
+          <TextInput value= {confirmpassword || ""} className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true} 
+            onChangeText={(text) => setConfirmPassword(text)}
+          />
         </View>
 
         <View className='mx-auto'>
-          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2'>
+          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2'
+            onPress={handleUpdatePassword}
+          >
             <Text className='text-white text-center font-bold'>Password Changes</Text>
           </TouchableOpacity>
         </View>
