@@ -6,6 +6,7 @@ const connectMQTT = async (topics, credentials) => {
       username: credentials.username,
       password: credentials.password,
     });
+    
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
       topics.forEach((topic) => {

@@ -86,7 +86,7 @@ const handleFan1 = async (message) => {
   console.log("w-fan:", data);
   const fan = await Fan.findOneAndUpdate(
     { name: "w-fan" },
-    { value: JSON.parse(data)  },
+    { value: JSON.parse(data) },
     { new: true, upsert: true }
   );
   console.log("Fan data have update");
@@ -96,7 +96,7 @@ const handleSLight = async (message) => {
   console.log("w-s-light:", data);
   const light = await Light.findOneAndUpdate(
     { name: "w-light" },
-    { status: (data==="L_ON")? true: false },
+    { status: (data === "L_ON") ? true : false },
     { new: true, upsert: true }
   );
   console.log("Light status have update");
@@ -122,7 +122,7 @@ const handleSTemp = async (message) => {
   console.log("w-s-temp:", data);
   const temperature = await Temperature.findOneAndUpdate(
     { name: "w-temp" },
-    { status: (data==="T_ON")? true: false },
+    { status: (data === "T_ON") ? true : false },
     { new: true, upsert: true }
   );
   console.log("Temperature status have update");
@@ -147,7 +147,7 @@ const handleSHumi = async (message) => {
   console.log("w-s-humi:", data);
   const humidity = await Humidiy.findOneAndUpdate(
     { name: "w-humi" },
-    { status: (data ==="H_ON")? true : false},
+    { status: (data === "H_ON") ? true : false },
     { new: true, upsert: true }
   );
   console.log("Humidity status have update");
