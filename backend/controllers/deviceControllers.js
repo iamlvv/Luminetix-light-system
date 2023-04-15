@@ -15,6 +15,19 @@ const getLED = asyncHandler(async (req, res) => {
     throw new Error("Led not found");
   }
 });
+const getLEDByID = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const led = await LED.findById(id);
+  
+  if (led) {
+    res.json({
+      led
+    });
+  } else {
+    res.status(404);
+    throw new Error("Led not found");
+  }
+});
 const getFan = asyncHandler(async (req, res) => {
   const fans = await Fan.find({});
   
@@ -27,6 +40,19 @@ const getFan = asyncHandler(async (req, res) => {
     throw new Error("Led not found");
   }
 });
+const getFanByID = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const fan = await Fan.findById(id);
+  
+  if (fan) {
+    res.json({
+      fan
+    });
+  } else {
+    res.status(404);
+    throw new Error("Led not found");
+  }
+});
 module.exports={
-    getLED,getFan
+    getLED,getFan, getFanByID, getLEDByID
 }
