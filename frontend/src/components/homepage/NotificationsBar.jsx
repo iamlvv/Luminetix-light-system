@@ -21,6 +21,10 @@ const itemsNoti = (list) => {
   ));
 };
 
+const style = {
+  height: "570px",
+}
+
 export default function NotificationsBar() {
   const dispatch = useDispatch();
   const [notificationlist, setNotificationList] = React.useState([]); // Initialize notificationlist with empty array
@@ -123,7 +127,7 @@ export default function NotificationsBar() {
           Context
         </button>
       </div>
-      <div className="mt-5 overflow-y-auto h-screen">{itemsNoti(filteredList)}</div>
+      <div className="mt-5 overflow-y-auto" style={style}>{itemsNoti(filteredList)}</div>
     </div>
   );
 }

@@ -32,10 +32,12 @@ function ManualControl() {
     }
   };
   const handleLightControl = () => {
+    console.log("Light");
     setisLightControl(true);
     setisFanControl(false);
   }
   const handleFanControl = () => {
+    console.log("Fan");
     setisFanControl(true);
     setisLightControl(false);
   }
@@ -99,7 +101,7 @@ function ManualControl() {
                 className="grid grid-cols-4 m-3 border rounded-3xl bg-purple-200 text-left"
               >
                 {
-                  device.name === "w-led" ? (
+                  device.name === "led" ? (
                     <button className="col-span-1 bg-white rounded-3xl p-3 m-2" onClick={handleLightControl}>
                       <img src={lighticon} alt="" />
                     </button>
@@ -109,10 +111,10 @@ function ManualControl() {
                     </button>
                   )
                 }
-                {device.name === "w-led" ? (
+                {device.name === "led" ? (
                   <button className="col-span-3 m-2 text-left" onClick={handleLightControl}>
                     <p className="font-bold text-lg text-gray-900">{device.name}</p>
-                    {
+                    {/* {
                       device.value === "#000000" ? (<p className="text-sm">OFF</p>) : (
                         device.value === "#ffff00" ? (<p className="text-sm">Yellow</p>) : (
                           device.value === "#ff0000" ? (<p className="text-sm">Red</p>) : (
@@ -120,12 +122,12 @@ function ManualControl() {
                           )
                         )
                       )
-                    }
+                    } */}
                   </button>
                 ) : (
                   <button className="col-span-3 m-2 text-left" onClick={handleFanControl}>
                     <p className="font-bold text-lg text-gray-900">{device.name}</p>
-                    <p className="text-sm">{device.value}</p>
+                    {/* <p className="text-sm">{device.value}</p> */}
                   </button>
                 )}
               </div>

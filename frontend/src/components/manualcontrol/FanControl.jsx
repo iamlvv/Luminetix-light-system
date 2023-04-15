@@ -19,9 +19,7 @@ function LightControl() {
 
     const dispatch = useDispatch();
     const FanStatFirst = useSelector((state) => state.fanStatFirst)
-    
     const { fanStatFirst } = FanStatFirst;
-
     const [fanStat, setFanStat] = React.useState(null);
 
 

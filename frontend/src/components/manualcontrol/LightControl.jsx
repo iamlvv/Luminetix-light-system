@@ -6,6 +6,39 @@ import bluelighticon from "../../images/greenlighticon.png";
 import shutdown from "../../images/shutdown.png";
 import arrow from "../../images/straight-arrow.png";
 import client from "../../mqtt/mqtt";
+// import axios from "axios";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getLedStatFirst } from "../../redux/actions/deviceActions";
+
+// const getLedStat = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
+//     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
+//     const { value } = data[0];
+//     console.log("Light: ",data[0]);
+//     if (value === "#000000") {
+//         setisLightOn(false);
+//         setisRedLight(false);
+//         setisBlueLight(false);
+//         setisYellowLight(false);
+//     }
+//     else if (value === "#ff0000") {
+//         setisLightOn(true);
+//         setisRedLight(true);
+//         setisBlueLight(false);
+//         setisYellowLight(false);
+//     }
+//     else if (value === "#ffff00") {
+//         setisLightOn(true);
+//         setisRedLight(false);
+//         setisBlueLight(false);
+//         setisYellowLight(true);
+//     }
+//     else if (value === "#0000ff") {
+//         setisLightOn(true);
+//         setisRedLight(false);
+//         setisBlueLight(true);
+//         setisYellowLight(false);
+//     }
+// }
 
 function LightControl() {
     const [isRedLight, setisRedLight] = React.useState(true);
@@ -13,6 +46,10 @@ function LightControl() {
     const [isYellowLight, setisYellowLight] = React.useState(false);
     const [isLightOn, setisLightOn] = React.useState(true);
     const [isSchedule, setisSchedule] = React.useState(false);
+
+    // const dispatch = useDispatch();
+    // const LedStatFirst = useSelector((state) => state.ledStatFirst)
+    // const { ledStatFirst } = LedStatFirst;
 
     useEffect(() => {
         client.on("message", (topic, message) => {
@@ -41,6 +78,11 @@ function LightControl() {
             }
         });
     });
+
+    // useEffect(() => {
+    //     getLedStat(setisBlueLight, setisYellowLight, setisRedLight, setisLightOn);
+    //     dispatch(getLedStatFirst());
+    // },[]);
 
     const handleRedLight = () => {
         if (client) {
@@ -114,7 +156,7 @@ function LightControl() {
         setisSchedule(!isSchedule);
     };
     return (
-        <div className="col-span-2 grid grid-rows-5 p-10">
+        <div className="col-span-2 grid grid-rows-5 p-10 h-screen">
             <div className="row-span-3">
                 <h1 className="text-3xl font-semibold">Light</h1>
                 {isLightOn && isRedLight ? (
