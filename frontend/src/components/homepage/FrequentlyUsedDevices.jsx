@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react'
 import { AiOutlineArrowRight } from "react-icons/ai";
 import Switch from "react-switch";
-import Slider from "@mui/material/Slider";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getFanStatFirst,
-  getFanStateFirst,
+
   getHumidityStatFirst,
   getHumidityStateFirst,
   getLightStatFirst,
@@ -51,15 +49,7 @@ const getLightStatistics = (handleget) => {
     }
   });
 }
-const getFanStatistics = (handleget) => {
-  client.subscribe("Tori0802/feeds/w-fan");
-  client.on("message", function (topic, message) {
-    if (topic === "Tori0802/feeds/w-fan") {
-      const value = JSON.parse(message.toString());
-      handleget(value);
-    }
-  });
-}
+
 const getHumidityState = (handleget) => {
   client.subscribe("Tori0802/feeds/w-s-humi");
   client.on("message", function (topic, message) {
@@ -104,20 +94,7 @@ const getLightState = (handleget) => {
     }
   });
 }
-const getFanState = (handleget) => {
-  client.subscribe("Tori0802/feeds/w-s-fan");
-  client.on("message", function (topic, message) {
-    if (topic === "Tori0802/feeds/w-s-fan") {
-      const value = JSON.parse(message.toString());
-      if (value != "0") {
-        handleget(true);
-      }
-      else if (value == "0") {
-        handleget(false);
-      }
-    }
-  });
-}
+
 
 export default function FrequentlyUsedDevices() {
   const dispatch = useDispatch();

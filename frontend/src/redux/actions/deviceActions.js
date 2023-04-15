@@ -106,11 +106,7 @@ import {
   LIGHT_STAT_VALID_FIRST,
   LIGHT_STAT_INVALID_FIRST,
 } from "../../constants/deviceConstants";
-<<<<<<< HEAD
-import  client from "mqtt/mqtt";
-=======
 import  client from "../../mqtt/mqtt";
->>>>>>> 7c1599b883075d20c33d32747c3b27bd6ed4055e
 import axios from "axios";
 
 
@@ -138,96 +134,92 @@ export const getLedState = () => async (dispatch) => {
   }
 };
 
-<<<<<<< HEAD
-export const getFanState = () => async (dispatch) => {
-  try {
-    dispatch({ type: FAN_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-fan", (err) => {
-      console.log("getFanStat");
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori0802/feeds/w-fan") {
-        dispatch({
-          type: FAN_STATE_VALID,
-          payload: JSON.parse(message.toString()),
-        });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: FAN_STATE_INVALID, payload: error.message });
-  }
-};
+// export const getFanState = () => async (dispatch) => {
+//   try {
+//     dispatch({ type: FAN_STATE_REQUEST });
+//     client.subscribe("Tori0802/feeds/w-fan", (err) => {
+//       console.log("getFanStat");
+//       if (err) {
+//         throw new Error(err);
+//       }
+//     });
+//     client.on("message", (topic, message) => {
+//       if (topic === "Tori0802/feeds/w-fan") {
+//         dispatch({
+//           type: FAN_STATE_VALID,
+//           payload: JSON.parse(message.toString()),
+//         });
+//       }
+//     });
+//   } catch (error) {
+//     dispatch({ type: FAN_STATE_INVALID, payload: error.message });
+//   }
+// };
 
-export const getTemperatureState = () => async (dispatch) => {
-  try {
-    dispatch({ type: TEMPERATURE_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-temp", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori0802/feeds/w-s-temp") {
-        if (JSON.parse(message.toString()) === "T_ON") {
-          dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
-        } else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: TEMPERATURE_STATE_INVALID, payload: error.message });
-  }
-};
+// export const getTemperatureState = () => async (dispatch) => {
+//   try {
+//     dispatch({ type: TEMPERATURE_STATE_REQUEST });
+//     client.subscribe("Tori0802/feeds/w-s-temp", (err) => {
+//       if (err) {
+//         throw new Error(err);
+//       }
+//     });
+//     client.on("message", (topic, message) => {
+//       if (topic === "Tori0802/feeds/w-s-temp") {
+//         if (JSON.parse(message.toString()) === "T_ON") {
+//           dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
+//         } else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
+//       }
+//     });
+//   } catch (error) {
+//     dispatch({ type: TEMPERATURE_STATE_INVALID, payload: error.message });
+//   }
+// };
 
 
-export const getHumidityState = () => async (dispatch) => {
-  try {
-    dispatch({ type: HUMIDITY_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-humi", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori0802/feeds/w-s-humi") {
-        const { value } = JSON.parse(message.toString());
-        if (value === "H_ON") {
-          dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
-        } else dispatch({ type: HUMIDITY_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: HUMIDITY_STATE_INVALID, payload: error.message });
-  }
-};
+// export const getHumidityState = () => async (dispatch) => {
+//   try {
+//     dispatch({ type: HUMIDITY_STATE_REQUEST });
+//     client.subscribe("Tori0802/feeds/w-s-humi", (err) => {
+//       if (err) {
+//         throw new Error(err);
+//       }
+//     });
+//     client.on("message", (topic, message) => {
+//       if (topic === "Tori0802/feeds/w-s-humi") {
+//         const { value } = JSON.parse(message.toString());
+//         if (value === "H_ON") {
+//           dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
+//         } else dispatch({ type: HUMIDITY_STATE_VALID, payload: false });
+//       }
+//     });
+//   } catch (error) {
+//     dispatch({ type: HUMIDITY_STATE_INVALID, payload: error.message });
+//   }
+// };
 
-export const getLightState = () => async (dispatch) => {
-  try {
-    dispatch({ type: LIGHT_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-light", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-light") {
-        const value = JSON.parse(message.toString());
-        console.log(value);
-        if (value === "L_ON") {
-          dispatch({ type: LIGHT_STATE_VALID, payload: true });
-        } else dispatch({ type: LIGHT_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: LIGHT_STATE_INVALID, payload: error.message });
-  }
-};
+// export const getLightState = () => async (dispatch) => {
+//   try {
+//     dispatch({ type: LIGHT_STATE_REQUEST });
+//     client.subscribe("Tori0802/feeds/w-s-light", (err) => {
+//       if (err) {
+//         throw new Error(err);
+//       }
+//     });
+//     client.on("message", (topic, message) => {
+//       if (topic === "Tori/feeds/w-s-light") {
+//         const value = JSON.parse(message.toString());
+//         console.log(value);
+//         if (value === "L_ON") {
+//           dispatch({ type: LIGHT_STATE_VALID, payload: true });
+//         } else dispatch({ type: LIGHT_STATE_VALID, payload: false });
+//       }
+//     });
+//   } catch (error) {
+//     dispatch({ type: LIGHT_STATE_INVALID, payload: error.message });
+//   }
+// };
 
-=======
-// 
->>>>>>> 7c1599b883075d20c33d32747c3b27bd6ed4055e
 export const getHumanFoundState = () => async (dispatch) => {
   try {
     dispatch({ type: HUMAN_FOUND_STATE_REQUEST });
