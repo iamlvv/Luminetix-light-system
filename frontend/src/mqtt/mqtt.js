@@ -1,10 +1,9 @@
 import mqtt from 'mqtt';
 
 const options = {
-  username: process.env.ADAFRUIT_USERNAME,
-  password: process.env.ADAFRUIT_KEY
+  username: process.env.REACT_APP_ADAFRUIT_USERNAME,
+  password: process.env.REACT_APP_ADAFRUIT_KEY
 };
-
 
 const client = mqtt.connect('mqtt://io.adafruit.com', options);
 

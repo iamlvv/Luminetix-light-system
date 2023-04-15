@@ -37,7 +37,7 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = React.useState('')
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo, error, loading } = userLogin;
+    const { userInfo } = userLogin;
     //console.log(getData())
     useEffect(() => {
         if (userInfo) {
@@ -55,7 +55,7 @@ const Login = ({ navigation }) => {
             // };
             // axios({
             //     method: "POST",
-            //     url: "http://192.168.1.59:5000/api/users/login",
+            //     url: "http://10.0.143.43:5000/api/users/login",
             //     headers: headers,
             //     data: {
             //         email: email,
@@ -65,6 +65,7 @@ const Login = ({ navigation }) => {
             //     .then(res => {
             //         console.log("hei")
             //         console.log(res.data);
+            //         navigation.navigate('Home')
             //     })
             //     .catch(err => {
             //         console.log(err);

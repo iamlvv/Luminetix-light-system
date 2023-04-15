@@ -1,21 +1,21 @@
 import {
   LED_STATE_REQUEST,
-  FAN_STATE_REQUEST,
-  TEMPERATURE_STATE_REQUEST,
-  HUMIDITY_STATE_REQUEST,
-  LIGHT_STATE_REQUEST,
+  // FAN_STATE_REQUEST,
+  // TEMPERATURE_STATE_REQUEST,
+  // HUMIDITY_STATE_REQUEST,
+  // LIGHT_STATE_REQUEST,
   HUMAN_FOUND_STATE_REQUEST,
   LED_STATE_VALID,
-  FAN_STATE_VALID,
-  TEMPERATURE_STATE_VALID,
-  HUMIDITY_STATE_VALID,
-  LIGHT_STATE_VALID,
+  // FAN_STATE_VALID,
+  // TEMPERATURE_STATE_VALID,
+  // HUMIDITY_STATE_VALID,
+  // LIGHT_STATE_VALID,
   HUMAN_FOUND_STATE_VALID,
   LED_STATE_INVALID,
-  FAN_STATE_INVALID,
-  TEMPERATURE_STATE_INVALID,
-  HUMIDITY_STATE_INVALID,
-  LIGHT_STATE_INVALID,
+  // FAN_STATE_INVALID,
+  // TEMPERATURE_STATE_INVALID,
+  // HUMIDITY_STATE_INVALID,
+  // LIGHT_STATE_INVALID,
   HUMAN_FOUND_STATE_INVALID,
   LED_TURN_ON,
   LED_TURN_OFF,
@@ -106,15 +106,14 @@ import {
   LIGHT_STAT_VALID_FIRST,
   LIGHT_STAT_INVALID_FIRST,
 } from "../../constants/deviceConstants";
-import { client } from "mqtt";
+import  client from "../../mqtt/mqtt";
 import axios from "axios";
 
 
 const headers = {
   'Content-Type': 'application/json',
-  'X-AIO-Key': process.env.ADAFRUIT_KEY,
+  'X-AIO-Key': process.env.REACT_APP_ADAFRUIT_KEY,
 };
-
 
 export const getLedState = () => async (dispatch) => {
   try {
@@ -135,92 +134,7 @@ export const getLedState = () => async (dispatch) => {
   }
 };
 
-export const getFanState = () => async (dispatch) => {
-  try {
-    dispatch({ type: FAN_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-fan", (err) => {
-      console.log("getFanStat");
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-fan") {
-        dispatch({
-          type: FAN_STATE_VALID,
-          payload: JSON.parse(message.toString()),
-        });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: FAN_STATE_INVALID, payload: error.message });
-  }
-};
-
-export const getTemperatureState = () => async (dispatch) => {
-  try {
-    dispatch({ type: TEMPERATURE_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-temp", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-temp") {
-        if (JSON.parse(message.toString()) === "T_ON") {
-          dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
-        } else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: TEMPERATURE_STATE_INVALID, payload: error.message });
-  }
-};
-
-
-export const getHumidityState = () => async (dispatch) => {
-  try {
-    dispatch({ type: HUMIDITY_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-humi", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-humi") {
-        const { value } = JSON.parse(message.toString());
-        if (value === "H_ON") {
-          dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
-        } else dispatch({ type: HUMIDITY_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: HUMIDITY_STATE_INVALID, payload: error.message });
-  }
-};
-
-export const getLightState = () => async (dispatch) => {
-  try {
-    dispatch({ type: LIGHT_STATE_REQUEST });
-    client.subscribe("Tori0802/feeds/w-s-light", (err) => {
-      if (err) {
-        throw new Error(err);
-      }
-    });
-    client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-light") {
-        const value = JSON.parse(message.toString());
-        console.log(value);
-        if (value === "L_ON") {
-          dispatch({ type: LIGHT_STATE_VALID, payload: true });
-        } else dispatch({ type: LIGHT_STATE_VALID, payload: false });
-      }
-    });
-  } catch (error) {
-    dispatch({ type: LIGHT_STATE_INVALID, payload: error.message });
-  }
-};
-
+// 
 export const getHumanFoundState = () => async (dispatch) => {
   try {
     dispatch({ type: HUMAN_FOUND_STATE_REQUEST });
@@ -633,3 +547,90 @@ export const getTemperatureStatFirst = () => async (dispatch) => {
 //     dispatch({ type: LED_VALUE_FAIL, payload: error.message });
 //   }
 // };
+
+//export const getFanState = () => async (dispatch) => {
+  //   try {
+  //     dispatch({ type: FAN_STATE_REQUEST });
+  //     client.subscribe("Tori0802/feeds/w-fan", (err) => {
+  //       console.log("getFanStat");
+  //       if (err) {
+  //         throw new Error(err);
+  //       }
+  //     });
+  //     client.on("message", (topic, message) => {
+  //       if (topic === "Tori/feeds/w-fan") {
+  //         dispatch({
+  //           type: FAN_STATE_VALID,
+  //           payload: JSON.parse(message.toString()),
+  //         });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     dispatch({ type: FAN_STATE_INVALID, payload: error.message });
+  //   }
+  // };
+  
+  // export const getTemperatureState = () => async (dispatch) => {
+  //   try {
+  //     dispatch({ type: TEMPERATURE_STATE_REQUEST });
+  //     client.subscribe("Tori0802/feeds/w-s-temp", (err) => {
+  //       if (err) {
+  //         throw new Error(err);
+  //       }
+  //     });
+  //     client.on("message", (topic, message) => {
+  //       if (topic === "Tori/feeds/w-s-temp") {
+  //         if (JSON.parse(message.toString()) === "T_ON") {
+  //           dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
+  //         } else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     dispatch({ type: TEMPERATURE_STATE_INVALID, payload: error.message });
+  //   }
+  // };
+  
+  
+  // export const getHumidityState = () => async (dispatch) => {
+  //   try {
+  //     dispatch({ type: HUMIDITY_STATE_REQUEST });
+  //     client.subscribe("Tori0802/feeds/w-s-humi", (err) => {
+  //       if (err) {
+  //         throw new Error(err);
+  //       }
+  //     });
+  //     client.on("message", (topic, message) => {
+  //       if (topic === "Tori/feeds/w-s-humi") {
+  //         const { value } = JSON.parse(message.toString());
+  //         if (value === "H_ON") {
+  //           dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
+  //         } else dispatch({ type: HUMIDITY_STATE_VALID, payload: false });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     dispatch({ type: HUMIDITY_STATE_INVALID, payload: error.message });
+  //   }
+  // };
+  
+  // export const getLightState = () => async (dispatch) => {
+  //   try {
+  //     dispatch({ type: LIGHT_STATE_REQUEST });
+  //     client.subscribe("Tori0802/feeds/w-s-light", (err) => {
+  //       if (err) {
+  //         throw new Error(err);
+  //       }
+  //     });
+  //     client.on("message", (topic, message) => {
+  //       if (topic === "Tori/feeds/w-s-light") {
+  //         const value = JSON.parse(message.toString());
+  //         console.log(value);
+  //         if (value === "L_ON") {
+  //           dispatch({ type: LIGHT_STATE_VALID, payload: true });
+  //         } else dispatch({ type: LIGHT_STATE_VALID, payload: false });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     dispatch({ type: LIGHT_STATE_INVALID, payload: error.message });
+  //   }
+  // };
+  

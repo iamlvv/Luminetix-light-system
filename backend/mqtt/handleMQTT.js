@@ -204,8 +204,8 @@ const topics = [
 ];
 
 const credentials = {
-  username: process.env.ADAFRUIT_USENAME,
-  password: process.env.ADAFRUIT_KEY,
+  username: process.env.REACT_APP_ADAFRUIT_USERNAME,
+  password: process.env.REACT_APP_ADAFRUIT_KEY,
 };
 
 connectMQTT(topics, credentials);

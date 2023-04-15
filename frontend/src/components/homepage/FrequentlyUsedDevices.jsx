@@ -21,55 +21,123 @@ import {
   turnOnHumidity,
   turnOnLight,
   turnOnTemperature,
-  getFanStat,
-  getFanState,
-  getHumidityStat,
-  getHumidityState,
-  getLightStat,
-  getLightState,
-  getTemperatureStat,
-  getTemperatureState
 } from '../../redux/actions/deviceActions';
+import client from '../../mqtt/mqtt';
+
+const getHumidityStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-humi");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-humi") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getTemperatureStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-temp");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-temp") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getLightStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-light");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-light") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getFanStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-fan");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-fan") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getHumidityState = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-s-humi");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-s-humi") {
+      
+      const value = message.toString();
+      if (value === "H_ON") {
+        handleget(true);
+      }
+      else if (value === "H_OFF") {
+        handleget(false);
+      }
+    }
+  });
+}
+const getTemperatureState = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-s-temp");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-s-temp") {
+      const value = message.toString();
+      if (value === "T_ON") {
+        handleget(true);
+      }
+      else if (value === "T_OFF") {
+        handleget(false);
+      }
+    }
+  });
+}
+
+const getLightState = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-s-light");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-s-light") {
+      const value = message.toString();
+      if (value === "L_ON") {
+        handleget(true);
+      }
+      else if (value === "L_OFF") {
+        handleget(false);
+      }
+    }
+  });
+}
+const getFanState = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-s-fan");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-s-fan") {
+      const value = JSON.parse(message.toString());
+      if (value != "0") {
+        handleget(true);
+      }
+      else if (value == "0") {
+        handleget(false);
+      }
+    }
+  });
+}
 
 export default function FrequentlyUsedDevices() {
   const dispatch = useDispatch();
   //get data from sensors through redux
-  const TempStat = useSelector((state) => state.temperatureStat);
-  const HumidStat = useSelector((state) => state.humidityStat);
-  const LightStat = useSelector((state) => state.lightStat);
-  const FanStat = useSelector((state) => state.fanStat);
   //get data from sensors through redux in first render
   const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
   const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
   const LightStatFirst = useSelector((state) => state.lightStatFirst);
   const FanStatFirst = useSelector((state) => state.fanStatFirst)
 
-  const { temperatureStat } = TempStat;
-  const { humidityStat } = HumidStat;
-  const { lightStat } = LightStat;
-  const { fanStat } = FanStat;
-
   const { temperatureStatFirst } = TempStatFirst;
   const { humidityStatFirst } = HumidStatFirst;
   const { lightStatFirst } = LightStatFirst;
   const { fanStatFirst } = FanStatFirst;
-
-  //get data from state of devices through redux
-  const TempState = useSelector((state) => state.temperatureState);
-  const HumidityState = useSelector((state) => state.humidityState);
-  const LightState = useSelector((state) => state.lightState);
-  const FanState = useSelector((state) => state.fanState);
 
   //get data from state of devices through redux in first render
   const TempStateFirst = useSelector((state) => state.temperatureStateFirst);
   const HumidityStateFirst = useSelector((state) => state.humidityStateFirst);
   const LightStateFirst = useSelector((state) => state.lightStateFirst);
   const FanStateFirst = useSelector((state) => state.fanStateFirst);
-
-  const { temperatureState } = TempState;
-  const { humidityState } = HumidityState;
-  const { lightState } = LightState;
-  const { fanState } = FanState;
 
   const { temperatureStateFirst } = TempStateFirst;
   const { humidityStateFirst } = HumidityStateFirst;
@@ -82,48 +150,63 @@ export default function FrequentlyUsedDevices() {
   const [toggleButton4, setToggleButton4] = React.useState(false);
   const [valueFan, setValueFan] = React.useState(0);
 
-  // const [lStat, setLStat] = React.useState(lightStatFirst);
-  // const [tStat, setTStat] = React.useState(temperatureStatFirst);
-  // const [hStat, setHStat] = React.useState(humidityStatFirst);
-  // const [fStat, setFStat] = React.useState(fanStatFirst);
+  const [lStat, setLStat] = React.useState(lightStatFirst);
+  const [tStat, setTStat] = React.useState(temperatureStatFirst);
+  const [hStat, setHStat] = React.useState(humidityStatFirst);
+  const [fStat, setFStat] = React.useState(fanStatFirst);
+
+  const [lState, setLState] = React.useState(null);
+  const [tState, setTState] = React.useState(null);
+  const [hState, setHState] = React.useState(null);
+  const [fState, setFState] = React.useState(null);
 
   //Lấy dữ liệu mới nhất khi component render lần đầu
   useEffect(() => {
-    dispatch(getFanStat());
+    // Get Stat and State First by Redux
     dispatch(getFanStatFirst());
-    dispatch(getFanState());
     dispatch(getFanStateFirst());
-
-    dispatch(getTemperatureState());
     dispatch(getTemperatureStateFirst());
-    dispatch(getTemperatureStat());
     dispatch(getTemperatureStatFirst());
-
-    dispatch(getHumidityStat());
     dispatch(getHumidityStatFirst());
-    dispatch(getHumidityState());
     dispatch(getHumidityStateFirst());
-
-    dispatch(getLightStat());
     dispatch(getLightStatFirst());
-    dispatch(getLightState());
     dispatch(getLightStateFirst());
+    // Get Stat and State using MQTT
+    getHumidityStatistics(setHStat);
+    getTemperatureStatistics(setTStat);
+    getLightStatistics(setLStat);
+    getFanStatistics(setFStat);
+    getHumidityState(setHState);
+    getTemperatureState(setTState);
+    getLightState(setLState);
+    getFanState(setFState);
   }, []);
-
   useEffect(() => {
-    if (temperatureState) {
-      setToggleButton3(temperatureState);
+    if (temperatureStateFirst && tState === null) {
+      setToggleButton3(temperatureStateFirst);
     }
-    if (humidityState) {
-      setToggleButton1(humidityState);
+    else if (tState !== null) {
+      setToggleButton3(tState);
     }
-    if (lightState) {
-      setToggleButton2(lightState);
+    if (humidityStateFirst && hState === null) {
+      setToggleButton1(humidityStateFirst);
     }
-    if (fanState) {
-      setToggleButton4(fanState);
+    else if (hState !== null) {
+      setToggleButton1(hState);
     }
-  }, [temperatureState, humidityState, lightState, fanState]);
+    if (lightStateFirst && lState === null) {
+      setToggleButton2(lightStateFirst);
+    }
+    else if (lState !== null) {
+      setToggleButton2(lState);
+    }
+    if (fanStateFirst && fState === null) {
+      setToggleButton4(fanStateFirst);
+    }
+    else if (fState !== null) {
+      setToggleButton4(fState);
+    }
+  }, [tState, hState, lState, fState, temperatureStateFirst, humidityStateFirst, lightStateFirst, fanStateFirst]);
   //Lấy dữ liệu mới nhất sau mỗi 20s
   const mark = [
     {
@@ -196,7 +279,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-sky-700 text-white w-14 h-14 rounded-full">
-              {humidityStat ? humidityStat : humidityStatFirst}
+              {hStat === "0" ? humidityStatFirst : hStat}
             </button>
             <div className="text-right" key={toggleButton1}>
               <Switch
@@ -216,7 +299,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-yellow-700 text-white w-14 h-14 rounded-full">
-              {lightStat ? lightStat : lightStatFirst}
+              {lStat === "0" ? lightStatFirst : lStat}
             </button>
             <div className="text-right" key={toggleButton2}>
               <Switch
@@ -236,7 +319,7 @@ export default function FrequentlyUsedDevices() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <div className="grid grid-cols-2 mb-10">
             <button className="bg-red-700 text-white w-14 h-14 rounded-full">
-              {temperatureStat ? temperatureStat : temperatureStatFirst}
+              {tStat === "0" ? temperatureStatFirst : tStat}
             </button>
             <div className="text-right" key={toggleButton3}>
               <Switch
@@ -287,7 +370,7 @@ export default function FrequentlyUsedDevices() {
                 onChange={(e) => setValueFan(e.target.value)}
                 className="slider"
                 id="myRange"
-
+                //defaultValue={fStat === "0" ? parseInt(fanStatFirst) : parseInt(fStat)}
               />
             </div>
           </div>

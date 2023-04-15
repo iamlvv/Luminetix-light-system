@@ -25,7 +25,7 @@ function Home( { navigation }) {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" color={color} size={size} />
             ),
-            tabBarActiveTintColor: 'purple',
+            tabBarActiveTintColor: '#593EFF',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
           }}
@@ -36,7 +36,7 @@ function Home( { navigation }) {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="stats-chart" color={color} size={size} />
             ),
-            tabBarActiveTintColor: 'purple',
+            tabBarActiveTintColor: '#593EFF',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
           }}
@@ -46,7 +46,7 @@ function Home( { navigation }) {
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="remote" color={color} size={size} />
             ),
-            tabBarActiveTintColor: 'purple',
+            tabBarActiveTintColor: '#593EFF',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
           }}
@@ -56,7 +56,7 @@ function Home( { navigation }) {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="settings" color={color} size={size} />
             ),
-            tabBarActiveTintColor: 'purple',
+            tabBarActiveTintColor: '#593EFF',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
           }}
@@ -66,7 +66,7 @@ function Home( { navigation }) {
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="user" color={color} size={size} />
             ),
-            tabBarActiveTintColor: 'purple',
+            tabBarActiveTintColor: '#593EFF',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
           }}

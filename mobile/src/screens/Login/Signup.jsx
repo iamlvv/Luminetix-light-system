@@ -28,8 +28,7 @@ const Signup = ({ navigation }) => {
             alert('Passwords do not match')
         }
         else {
-            dispatch(register(fullname, username, email, phone, password, navigation));
-            console.log(error);
+            dispatch(register(fullname, username, email, password, phone, navigation));
         }
     }
     return (

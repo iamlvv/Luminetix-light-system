@@ -21,7 +21,7 @@ const FrequentlyUsedDevices = () => {
         setToggleButton4(!toggleButton4)
     }
     return (
-        <View className='h-4/5'>
+        <View className='h-5/6'>
             <ScrollView>
                 <View className="flex flex-col gap-9">
                     <View className='bg-white shadow-sm rounded-2xl p-5 items-center'>

@@ -23,7 +23,6 @@ export default function Homepage() {
       setName(user.fullname);
     }
   }, [dispatch2, user]);
-  console.log(user)
   return (
     <View className='ml-5 mr-5'>
       <View className="bg-violet-500 mt-7 h-20 flex flex-row justify-between rounded-2xl items-center">

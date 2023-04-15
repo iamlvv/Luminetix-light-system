@@ -21,6 +21,25 @@ import {
 } from "../../constants/userConstants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const ipaddress = "10.0.143.43";
+
+const storeData = async (data) => {
+    try {
+        await AsyncStorage.setItem('userInfo', JSON.stringify(data))
+    } catch (e) {
+        // saving error
+        console.log(e)
+    }
+}
+
+const removeData = async () => {
+    try {
+        await AsyncStorage.removeItem('userInfo')
+    } catch (e) {
+        // remove error
+        console.log(e)
+    }
+}
 
 export const login = (email, password, navigation) => async (dispatch) => {
     try {
@@ -35,7 +54,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            "http://192.168.1.59:5000/api/users/login",
+            `http://${ipaddress}:5000/api/users/login`,
             { email, password },
             config
         );
@@ -45,18 +64,11 @@ export const login = (email, password, navigation) => async (dispatch) => {
             payload: data,
         });
         //localStorage.setItem("userInfo", JSON.stringify(data));
-        const storeData = async (data) => {
-            try {
-                await AsyncStorage.setItem('userInfo', JSON.stringify(data))
-            } catch (e) {
-                // saving error
-                console.log(e)
-            }
-        }
-        console.log(storeData(data));
+        storeData(data);
         navigation.navigate('Home');
 
     } catch (error) {
+        alert("Login Failed");
         dispatch({
             type: USER_LOGIN_FAIL,
             payload:
@@ -69,14 +81,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
 
 export const logout = ({navigation}) => (dispatch) => {
     //localStorage.removeItem("userInfo");
-    const removeData = async () => {
-        try {
-            await AsyncStorage.removeItem('userInfo')
-        } catch (e) {
-            // remove error
-            console.log(e)
-        }
-    }
+    
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
     //document.location.href = "/";
@@ -98,7 +103,7 @@ export const register =
             };
 
             const { data } = await axios.post(
-                "http://192.168.1.59:5000/api/users",
+                `http://${ipaddress}:5000/api/users`,
                 { fullname, username, email, password, phone },
                 config
             );
@@ -114,16 +119,9 @@ export const register =
             });
 
             //localStorage.setItem("userInfo", JSON.stringify(data));
-            const storeData = async (data) => {
-                try {
-                    await AsyncStorage.setItem('userInfo', JSON.stringify(data))
-                } catch (e) {
-                    // saving error
-                    console.log(e)
-                }
-            }
             storeData(data);
         } catch (error) {
+            alert("Registration Failed");
             dispatch({
                 type: USER_REGISTER_FAIL,
                 payload:
@@ -150,7 +148,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`http://192.168.1.59:5000/api/users/${id}`, config);
+        const { data } = await axios.get(`http://${ipaddress}:5000/api/users/${id}`, config);
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -188,7 +186,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://192.168.1.59:5000/api/users/profile/password`, user, config);
+        const { data } = await axios.put(`http://${ipaddress}:5000/api/users/profile`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -198,8 +196,12 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             type: USER_LOGIN_SUCCESS,
             payload: data,
         });
-        localStorage.setItem("userInfo", JSON.stringify(data));
+
+        //localStorage.setItem("userInfo", JSON.stringify(data));
+        alert("Profile Updated successfully");
+        storeData(data);
     } catch (error) {
+        alert("Profile Update Failed");
         const message =
             error.response && error.response.data.message
                 ? error.response.data.message
@@ -227,14 +229,15 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const { data } = await axios.put(`http://192.168.1.59:5000/api/users/password`, user, config);
+        const { data } = await axios.put(`http://${ipaddress}:5000/api/users/password`, user, config);
+        alert("Password Updated Successfully");
         dispatch({
             type: USER_UPDATE_PASSWORD_SUCCESS,
             payload: true,
         });
     }
     catch (error) {
-
+        alert("Password Update Failed");
         const message =
             error.response && error.response.data.message
                 ? error.response.data.message
