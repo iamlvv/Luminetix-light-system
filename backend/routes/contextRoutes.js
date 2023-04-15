@@ -4,6 +4,7 @@ const {
   createContext,
   deleteContext,
   getAllContexts,
+  toggleContext
 } = require("../controllers/contextControllers");
 
 const { protect } = require("../middleware/authMiddleware.js");
@@ -11,7 +12,10 @@ const { protect } = require("../middleware/authMiddleware.js");
 router
 .route("/")
 .get(protect, getAllContexts)
-.post(protect,createContext)
-.delete(protect,deleteContext);
+.post(protect,createContext);
+router
+.route("/:id")
+.delete(protect,deleteContext)
+.patch(protect,toggleContext);
 
 module.exports = router;

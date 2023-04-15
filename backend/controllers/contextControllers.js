@@ -2,7 +2,7 @@ const Context = require("../models/contextModel.js");
 const asyncHandler = require("express-async-handler");
 
 // @desc    Create a new context
-// @route   POST /api/context
+// @route   POST /api/contexts
 // @access  Private
 const createContext = asyncHandler(async (req, res) => {
   const { name, description, input, output } = req.body;
@@ -21,7 +21,7 @@ const createContext = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete a context by ID
-// @route   DELETE /api/context/:id
+// @route   DELETE /api/contexts/:id
 // @access  Private
 const deleteContext = asyncHandler(async (req, res) => {
   try {
@@ -39,7 +39,7 @@ const deleteContext = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get all contexts
-// @route   GET /api/context
+// @route   GET /api/contexts
 // @access  Private
 // Retrieve all contexts
 const getAllContexts = asyncHandler(async (req, res) => {
@@ -52,8 +52,28 @@ const getAllContexts = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Turn of context
+// @route   PATCH /api/contexts/:id
+// @access  Private
+const toggleContext = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const context = await Context.findById(id);
+    if (!Context) {
+      return res.status(404).json({ error: 'Context id: ${id} not found' });
+    }
+    const updatedContext = await Context.findByIdAndUpdate(id, {"active": context.active == true ? false: true}, { new: false });
+    
+    return res.json({ message: `Context "${updatedContext.name}" turned ${context.active == true ? "on": "off"}` });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = {
   createContext,
     deleteContext,
     getAllContexts,
+    toggleContext,
 };

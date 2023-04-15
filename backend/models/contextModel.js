@@ -4,7 +4,8 @@ const contextSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
+    active: { type: Boolean, required: true, default: true },
     input: {
       active_temperature: {
         min: {
@@ -20,7 +21,6 @@ const contextSchema = mongoose.Schema(
           default: 0,
         },
         active: { type: Boolean, default: false },
-        // required: true,
       },
       active_light: {
         min: {
@@ -51,7 +51,6 @@ const contextSchema = mongoose.Schema(
           default: 0,
         },
         active: { type: Boolean, default: false },
-        // required: true,
       },
       human_detection: {
         value: {
@@ -59,15 +58,7 @@ const contextSchema = mongoose.Schema(
           default: false,
         },
         active: { type: Boolean, default: false },
-        // required: true,
-      },
-      // lighting_time_limit: {
-      //   type: Number,
-      //   min: 1,
-      //   max: 24,
-      //   default: 0,
-      //   // required: true,
-      // },
+      }
     },
     output: {
       frequency: {
@@ -91,20 +82,12 @@ const contextSchema = mongoose.Schema(
       },
       active_time: {
         start_time: {
-          type: Number,
-          min: 0,
-          max: 24,
-          default: 0,
-          required: true,
+          type: Date
         },
         end_time: {
-          type: Number,
-          min: 0,
-          max: 24,
-          default: 0,
-          required: true,
+          type: Date
         },
-      },
+      },      
       control_led: [
         {
           name: {

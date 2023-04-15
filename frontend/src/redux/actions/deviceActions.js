@@ -106,7 +106,7 @@ import {
   LIGHT_STAT_VALID_FIRST,
   LIGHT_STAT_INVALID_FIRST,
 } from "../../constants/deviceConstants";
-import { client } from "mqtt";
+import  client from "mqtt/mqtt";
 import axios from "axios";
 
 
@@ -125,7 +125,7 @@ export const getLedState = () => async (dispatch) => {
       }
     });
     client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-led") {
+      if (topic === "Tori0802/feeds/w-led") {
         console.log("Led Stat: ", message.toString());
         dispatch({ type: LED_STATE_VALID, payload: message.toString() });
       }
@@ -145,7 +145,7 @@ export const getFanState = () => async (dispatch) => {
       }
     });
     client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-fan") {
+      if (topic === "Tori0802/feeds/w-fan") {
         dispatch({
           type: FAN_STATE_VALID,
           payload: JSON.parse(message.toString()),
@@ -166,7 +166,7 @@ export const getTemperatureState = () => async (dispatch) => {
       }
     });
     client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-temp") {
+      if (topic === "Tori0802/feeds/w-s-temp") {
         if (JSON.parse(message.toString()) === "T_ON") {
           dispatch({ type: TEMPERATURE_STATE_VALID, payload: true });
         } else dispatch({ type: TEMPERATURE_STATE_VALID, payload: false });
@@ -187,7 +187,7 @@ export const getHumidityState = () => async (dispatch) => {
       }
     });
     client.on("message", (topic, message) => {
-      if (topic === "Tori/feeds/w-s-humi") {
+      if (topic === "Tori0802/feeds/w-s-humi") {
         const { value } = JSON.parse(message.toString());
         if (value === "H_ON") {
           dispatch({ type: HUMIDITY_STATE_VALID, payload: true });
