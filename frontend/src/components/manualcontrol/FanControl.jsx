@@ -5,17 +5,25 @@ import fanicon from "../../images/Fan.png"
 import { useEffect } from 'react';
 import client from '../../mqtt/mqtt';
 import Slider from "@mui/material/Slider";
-// import { useSelector, useDispatch } from "react-redux";
-// import {
-//     getFanStatFirst,
-//     getFanStat,
-// } from '../../redux/actions/deviceActions';
 import axios from 'axios';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getFanStatFirst } from '../../redux/actions/deviceActions';
+const getFanStat = async(handleget) => {
+    const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data");
+    const { value } = data[0];
+    handleget(value);
+}
 function LightControl() {
     const [device, setDevice] = React.useState([]);
     const [isFanOn, setisFanOn] = React.useState(true);
-    const [fanStat, setFanStat] = React.useState(100);
+
+    const dispatch = useDispatch();
+    const FanStatFirst = useSelector((state) => state.fanStatFirst)
+    
+    const { fanStatFirst } = FanStatFirst;
+
+    const [fanStat, setFanStat] = React.useState(null);
+
 
     const fetchDevice = async () => {
         try {
@@ -26,22 +34,14 @@ function LightControl() {
             console.error(error);
         }
     };
+    
     useEffect(() => {
         fetchDevice();
+        getFanStat(setFanStat);
+        dispatch(getFanStatFirst())
     }, []);
-    
 
-    // const dispatch = useDispatch();
-    // const FanStat = useSelector((state) => state.fanStat);
-    // const FanStatFirst = useSelector((state) => state.fanStatFirst)
-
-    // useEffect(() => {
-    //     dispatch(getFanStat());
-    //     dispatch(getFanStatFirst());
-    // }, []);
-    // const { FanStat } = FanStat;
-    // const { fanStatFirst } = FanStatFirst;
-
+    console.log(fanStat, fanStatFirst)
     useEffect(() => {
         client.on("message", (topic, message) => {
             if (topic === "Tori0802/feeds/w-fan") {
@@ -100,7 +100,7 @@ function LightControl() {
         }
     }
     return (
-        <div className='col-span-2 grid grid-rows-5 h-screen p-10'>
+        <div className='col-span-2 grid grid-rows-5 p-10 '>
             <div className='row-span-3'>
                 <h1 className='text-3xl font-semibold'>Fan</h1>
                 {
@@ -183,7 +183,7 @@ function LightControl() {
                 <div className='col-span-3 bg-purple-50 m-10 rounded-full p-3'>
                     <Slider
                         defaultValue={device.value}
-                        value={fanStat}
+                        value={fanStat === null ? fanStatFirst : fanStat}
                         onChange={handleFanOnChange}
                         onChangeCommitted={handleFanOnChangeCommitted}
                         valueLabelDisplay='on'

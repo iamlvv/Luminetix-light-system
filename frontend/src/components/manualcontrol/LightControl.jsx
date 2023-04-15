@@ -114,7 +114,7 @@ function LightControl() {
         setisSchedule(!isSchedule);
     };
     return (
-        <div className="col-span-2 grid grid-rows-5 h-screen p-10">
+        <div className="col-span-2 grid grid-rows-5 p-10">
             <div className="row-span-3">
                 <h1 className="text-3xl font-semibold">Light</h1>
                 {isLightOn && isRedLight ? (

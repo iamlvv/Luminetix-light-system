@@ -64,7 +64,7 @@ const getHumidityState = (handleget) => {
   client.subscribe("Tori0802/feeds/w-s-humi");
   client.on("message", function (topic, message) {
     if (topic === "Tori0802/feeds/w-s-humi") {
-      
+
       const value = message.toString();
       if (value === "H_ON") {
         handleget(true);
@@ -126,45 +126,35 @@ export default function FrequentlyUsedDevices() {
   const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
   const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
   const LightStatFirst = useSelector((state) => state.lightStatFirst);
-  const FanStatFirst = useSelector((state) => state.fanStatFirst)
 
   const { temperatureStatFirst } = TempStatFirst;
   const { humidityStatFirst } = HumidStatFirst;
   const { lightStatFirst } = LightStatFirst;
-  const { fanStatFirst } = FanStatFirst;
 
   //get data from state of devices through redux in first render
   const TempStateFirst = useSelector((state) => state.temperatureStateFirst);
   const HumidityStateFirst = useSelector((state) => state.humidityStateFirst);
   const LightStateFirst = useSelector((state) => state.lightStateFirst);
-  const FanStateFirst = useSelector((state) => state.fanStateFirst);
 
   const { temperatureStateFirst } = TempStateFirst;
   const { humidityStateFirst } = HumidityStateFirst;
   const { lightStateFirst } = LightStateFirst;
-  const { fanStateFirst } = FanStateFirst;
 
   const [toggleButton1, setToggleButton1] = React.useState(false);
   const [toggleButton2, setToggleButton2] = React.useState(false);
   const [toggleButton3, setToggleButton3] = React.useState(false);
-  const [toggleButton4, setToggleButton4] = React.useState(false);
-  const [valueFan, setValueFan] = React.useState(0);
 
   const [lStat, setLStat] = React.useState(lightStatFirst);
   const [tStat, setTStat] = React.useState(temperatureStatFirst);
   const [hStat, setHStat] = React.useState(humidityStatFirst);
-  const [fStat, setFStat] = React.useState(fanStatFirst);
 
   const [lState, setLState] = React.useState(null);
   const [tState, setTState] = React.useState(null);
   const [hState, setHState] = React.useState(null);
-  const [fState, setFState] = React.useState(null);
 
   //Lấy dữ liệu mới nhất khi component render lần đầu
   useEffect(() => {
     // Get Stat and State First by Redux
-    dispatch(getFanStatFirst());
-    dispatch(getFanStateFirst());
     dispatch(getTemperatureStateFirst());
     dispatch(getTemperatureStatFirst());
     dispatch(getHumidityStatFirst());
@@ -175,11 +165,9 @@ export default function FrequentlyUsedDevices() {
     getHumidityStatistics(setHStat);
     getTemperatureStatistics(setTStat);
     getLightStatistics(setLStat);
-    getFanStatistics(setFStat);
     getHumidityState(setHState);
     getTemperatureState(setTState);
     getLightState(setLState);
-    getFanState(setFState);
   }, []);
   useEffect(() => {
     if (temperatureStateFirst && tState === null) {
@@ -200,24 +188,8 @@ export default function FrequentlyUsedDevices() {
     else if (lState !== null) {
       setToggleButton2(lState);
     }
-    if (fanStateFirst && fState === null) {
-      setToggleButton4(fanStateFirst);
-    }
-    else if (fState !== null) {
-      setToggleButton4(fState);
-    }
-  }, [tState, hState, lState, fState, temperatureStateFirst, humidityStateFirst, lightStateFirst, fanStateFirst]);
+  }, [tState, hState, lState, temperatureStateFirst, humidityStateFirst, lightStateFirst]);
   //Lấy dữ liệu mới nhất sau mỗi 20s
-  const mark = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 100,
-      label: "100",
-    },
-  ];
   //Handle change States
   const handleChangeTempState = () => {
     //Nếu true thì tắt đèn đi (true == sáng)
@@ -252,32 +224,21 @@ export default function FrequentlyUsedDevices() {
       setToggleButton2(true);
     }
   }
-
-  const handleChangeFanState = () => {
-    //Nếu true thì tắt quạt đi (true == đang bật)
-    if (toggleButton4 === true) {
-      dispatch(turnOffFan());
-      setToggleButton4(false);
-    } else if (toggleButton4 === false) {
-      dispatch(turnOnFan());
-      setToggleButton4(true);
-    }
-  }
   return (
     <div>
       <div className="grid grid-cols-2 mb-10">
         <h1 className="text-xl font-bold">Frequently Used Devices</h1>
         <NavLink to="/manualcontrol">
           <div className="text-right text-violet-700">
-            <h2>
+            <h2 className='font-bold'>
               More settings <AiOutlineArrowRight className="inline" />
             </h2>
           </div>
         </NavLink>
       </div>
-      <div className="grid grid-cols-4 gap-9 text-center">
+      <div className="grid grid-cols-3 gap-9 text-center ml-20 mr-20">
         <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="grid grid-cols-2 mb-10">
+          <div className="flex justify-center gap-9 mb-10">
             <button className="bg-sky-700 text-white w-14 h-14 rounded-full">
               {hStat === "0" ? humidityStatFirst : hStat}
             </button>
@@ -297,7 +258,7 @@ export default function FrequentlyUsedDevices() {
 
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="grid grid-cols-2 mb-10">
+          <div className="flex justify-center gap-9 mb-10">
             <button className="bg-yellow-700 text-white w-14 h-14 rounded-full">
               {lStat === "0" ? lightStatFirst : lStat}
             </button>
@@ -317,7 +278,7 @@ export default function FrequentlyUsedDevices() {
 
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="grid grid-cols-2 mb-10">
+          <div className="flex justify-center gap-9 mb-10">
             <button className="bg-red-700 text-white w-14 h-14 rounded-full">
               {tStat === "0" ? temperatureStatFirst : tStat}
             </button>
@@ -334,48 +295,6 @@ export default function FrequentlyUsedDevices() {
             </div>
           </div>
           <h1 className="font-bold text-lg mt-5 mb-5">Temperature</h1>
-
-        </div>
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="grid grid-cols-2">
-            <div></div>
-            <div className="text-right" key={toggleButton4}>
-              <Switch
-                onChange={handleChangeFanState}
-                checked={toggleButton4}
-                onColor="#593EFF"
-                height={24}
-                width={48}
-                className="react-switch"
-
-              />
-            </div>
-          </div>
-          <div className="mb-2 mt-10">
-            {/* <Slider
-              aria-label="Fan"
-              value={fanStat ? parseInt(fanStat) : 0}
-              step={1}
-              min={0}
-              max={100}
-              valueLabelDisplay="on"
-              marks={mark}
-              color="secondary"
-            /> */}
-            <div>
-              <input type='range'
-                min={0}
-                max={100}
-                step={1}
-                onChange={(e) => setValueFan(e.target.value)}
-                className="slider"
-                id="myRange"
-                //defaultValue={fStat === "0" ? parseInt(fanStatFirst) : parseInt(fStat)}
-              />
-            </div>
-          </div>
-          <h1 className="font-bold text-lg mb-5">Fan</h1>
-
         </div>
       </div></div>
   )
