@@ -16,7 +16,7 @@ const ContextHomeScreen = () => {
   useEffect(() => {
     dispatch(listOfContexts());
   }, [dispatch]);
-
+  
   return (
     <div className='bg-violet-100 rounded-2xl p-5'>
       <Header />
@@ -68,7 +68,7 @@ const ContextHomeScreen = () => {
               <div className='my-3'>
                 <select id='contextlistoptions' className='w-full text-md border border-solid rounded-lg p-2'>
                   {contextlist.map((context) => (
-                    <option value={context.id} key={context.id} className='text-md'>{context.name}</option>
+                    <option value={context._id} key={context._id} className='text-md'>{context.name}</option>
                   ))}
                 </select>
               </div>

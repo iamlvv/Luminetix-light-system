@@ -12,17 +12,16 @@ function ContextInfo() {
   const { loading, error, context } = contextdetail;
   const { id } = useParams();
   useEffect(() => {
-    dispatch(contextDetail(Number(id)));
-  }, [dispatch, id])
-
+    dispatch(contextDetail((id)));
+  },[])
   const contextList = useSelector((state) => state.contextList);
   const { load, err, contextlist } = contextList;
   useEffect(() => {
     dispatch(listOfContexts());
   }, [dispatch]);
-  const [toggleButton1, setToggleButton1] = React.useState(context.tempstate);
-  const [toggleButton2, setToggleButton2] = React.useState(context.humidstate);
-  const [toggleButton3, setToggleButton3] = React.useState(context.viewstate);
+  const [toggleButton1, setToggleButton1] = React.useState(false);
+  const [toggleButton2, setToggleButton2] = React.useState(false);
+  const [toggleButton3, setToggleButton3] = React.useState(false);
   const [toggleButton4, setToggleButton4] = React.useState(true);
   return (
     <div>
@@ -32,7 +31,7 @@ function ContextInfo() {
           <div className='bg-violet-100 rounded-xl col-span-3 p-5 mt-5'>
             <h1 className='font-bold text-2xl mb-5'>{context.name}</h1>
             <div>
-              <input type='text' name='content' placeholder={context.content} className='w-full p-3 rounded-xl border border-black' />
+              <input type='text' name='content' placeholder={context.description} className='w-full p-3 rounded-xl border border-black' />
             </div>
             {/* Body */}
             <div>
@@ -52,7 +51,7 @@ function ContextInfo() {
                     </div>
                     <Switch
                       // onChange={() => setToggleButton1(!toggleButton1)}
-                      checked={context.tempstate}
+                      checked={toggleButton1}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -62,13 +61,13 @@ function ContextInfo() {
                   <div className='pt-10'>
                   <Slider
                     aria-label="temperature"
-                    defaultValue={context.tempstat}
+                    defaultValue={34}
                     step={1}
                     min={0}
                     max={100}
                     valueLabelDisplay="on"
                     color="secondary"
-                    key={`slider-${context.tempstat}`} 
+                    key={`slider-${context._id}`} 
                     onChange = {(e, value) => console.log(value)}
                   />
                   </div>
@@ -82,7 +81,7 @@ function ContextInfo() {
                     </div>  
                     <Switch
                       // onChange={() => setToggleButton2(!toggleButton2)}
-                      checked={context.humidstate}
+                      checked={toggleButton2}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -103,7 +102,7 @@ function ContextInfo() {
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='number' name='fromhumid' placeholder={context.humidstat + '%'} className='w-full p-2 rounded-lg border' />
+                      <input type='number' name='fromhumid' placeholder={25 + '%'} className='w-full p-2 rounded-lg border' />
                     </div>
                   </div>
                 </div>
@@ -116,7 +115,7 @@ function ContextInfo() {
                     </div> 
                     <Switch
                       // onChange={() => setToggleButton3(!toggleButton3)}
-                      checked={context.viewstate}
+                      checked={toggleButton3}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -133,7 +132,7 @@ function ContextInfo() {
                   <div className='bg-white shadow-sm rounded-xl py-5 px-5 grid grid-cols-4 text-center row-span-1 mt-3'>
                       <div className='grid grid-rows-2 col-span-3'>
                         <h1 className='font-bold'>Lighting time limit</h1>
-                        <input type='number' name='content' placeholder={context.lighttimelimit + " hour"} className=' text-center w-3/4 p-1 rounded-md border mx-auto' />
+                        <input type='number' name='content' placeholder={24 + " hour"} className=' text-center w-3/4 p-1 rounded-md border mx-auto' />
                         {/* <p className=' text-xs text-gray-500 mt-2'>The light will turn off after this time</p> */}
                       </div> 
                       <Switch
@@ -171,7 +170,7 @@ function ContextInfo() {
 
               <div className='flex flex-row justify-between mt-10'>
                 <NavLink to='/contextsetup'><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Back</button></NavLink>
-                <NavLink to={`/contextsetup/${context.id}/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Next</button></NavLink>
+                <NavLink to={`/contextsetup/${context._id}/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Next</button></NavLink>
               </div>
             </div>
           </div>

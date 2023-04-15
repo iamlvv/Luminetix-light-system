@@ -21,23 +21,23 @@ function ContextSideBar() {
       {(
         contextlist.map((scene) => (
           <NavLink
-            to={`/contextsetup/${scene.id}`}
+            to={`/contextsetup/${scene._id}`}
             className={({ isActive }) =>
               isActive ? 'bg-violet-200' : 'bg-white'
             }
-            key={scene.id}
+            key={scene._id}
           >
             <div
               className='mt-5 grid grid-cols-4 gap-5 rounded-2xl p-3 hover:cursor-pointer hover:shadow-md border transition ease-in'
             >
               <div className='col-span-3'>
                 <h1 className='font-bold'>{scene.name}</h1>
-                <h2 className='text-gray-500 text-sm'>{scene.content}</h2>
+                <h2 className='text-gray-500 text-sm'>{scene.description}</h2>
               </div>
               <div className='my-auto'>
                 <Switch
-                  onChange={() => setToggleButton1(scene.contextstate = !scene.contextstate)}
-                  checked={scene.contextstate}
+                  onChange={() => setToggleButton1(scene.active = !scene.active)}
+                  checked={scene.active}
                   onColor="#593EFF"
                   height={24}
                   width={48}
