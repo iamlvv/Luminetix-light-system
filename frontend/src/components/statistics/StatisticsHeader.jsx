@@ -10,10 +10,10 @@ import temperatureicon from "../../images/temperatureicon.png";
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDetails } from "../../redux/actions/userActions";
 import clockicon from "../../images/clock.png";
-
+import Header from '../Header';
 import { getHumanFoundState, getHumidityStat, getLightStat, getTemperatureStat } from '../../redux/actions/deviceActions';
 
-export default function Header() {
+export default function StatisticsHeader() {
     const [name, setName] = React.useState("");
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
@@ -112,43 +112,7 @@ export default function Header() {
                 <h1 className="my-auto text-2xl font-bold">Hello, {name}!</h1>
             </div>
 
-            <div className='grid grid-cols-4 bg-white rounded-xl p-2'>
-                <div className="col-span-1 grid grid-cols-1 justify-between">
-                    <div className="m-auto">
-                        <img src={temperatureicon} alt="tempicon" className='w-8 p-1'/>
-                    </div>
-                    <div className='mx-auto'>
-                        <h1 className="text-md text-red-500 font-bold">{temperatureStat}°C</h1>
-                    </div>
-                </div>
-
-                <div className="col-span-1 grid grid-cols-1 justify-between">
-                    <div className="m-auto">
-                        <img src={humidityicon} alt="humidicon" className='w-8 p-1'/>
-                    </div>
-                    <div className='mx-auto'>
-                        <h1 className="text-md text-blue-500 font-bold">{humidityStat}%</h1>
-                    </div>
-                </div>
-
-                <div className="col-span-1 grid grid-cols-1 justify-between">
-                    <div className="m-auto">
-                        <img src={lighticon} alt="lighticon" className='w-8 p-1'/>
-                    </div>
-                    <div className='mx-auto'>
-                        <h1 className="text-md text-yellow-500 font-bold mx-auto">{lightStat}%</h1>
-                    </div>
-                </div>
-
-                <div className="col-span-1 grid grid-cols-1 justify-between">
-                    <div className="m-auto">
-                        <img src={viewicon} alt="viewicon" className='w-8'/>
-                    </div>
-                    <div className='mx-auto'>
-                        <h1 className="text-md text-violet-500 font-bold">{humanFoundState === "0" ? "No" : "Yes"}</h1>
-                    </div>
-                </div>
-            </div>
+            <Header />
 
             <div className="bg-white rounded-2xl shadow-sm grid grid-cols-2 px-3 py-5">
                 <img src={clockicon} alt="clockicon" className="w-1/2 mx-auto my-auto h-auto col-span-1" />

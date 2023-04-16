@@ -5,6 +5,7 @@ import StatisticsSum from "../components/statistics/StatisticsSum";
 import StatisticsHeader from "../components/statistics/StatisticsHeader";
 import RealtimeStatus from "../components/RealtimeStatus";
 import AverageFigure from "../components/statistics/AverageFigure";
+import Header from "../components/Header";
 
 const solveDataDay = (startTime, endTime, dataNeedSolving) => {
 	let dataSolved = [];
@@ -318,7 +319,7 @@ export default function Statistics() {
 
       <div className="ml-28 grid grid-cols-4 gap-9">
         <div className="col-span-3 bg-violet-100 mt-5 rounded-2xl p-5">
-          <StatisticsHeader />
+          <Header />
           <div className="grid grid-cols-2 gap-9">
 
           </div>

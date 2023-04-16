@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Switch from "react-switch";
-import { AiOutlinePlus } from "react-icons/ai"
+import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai"
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { contextToggle, listOfContexts } from '../../redux/actions/contextActions';
@@ -27,6 +27,20 @@ function ContextSideBar() {
       return scene;
     }
     ))
+  }
+  const handleDeleteContext = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const response = await axios.delete(`http://localhost:5000/api/contexts/${id}`, config);
+      const { data } = response;
+      dispatch(listOfContexts());
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <div className='mt-5 mr-9'>
@@ -56,6 +70,7 @@ function ContextSideBar() {
                   width={48}
                 //className="react-switch"
                 />
+                <AiOutlineDelete className='inline ml-3 ' onClick={() => handleDeleteContext(scene._id)}/>
               </div>
             </div>
           </NavLink>
