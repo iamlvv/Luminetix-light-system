@@ -82,10 +82,10 @@ const contextSchema = mongoose.Schema(
       },
       active_time: {
         start_time: {
-          type: Date
+          type: String
         },
         end_time: {
-          type: Date
+          type: String
         },
       },      
       control_led: [

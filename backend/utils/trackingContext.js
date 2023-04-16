@@ -33,7 +33,7 @@ const checkContext = async (context) => {
   }
   if (context.input.active_humidity.active) {
     const { min, max } = context.input.active_humidity;
-    const humis = await Humi.find({
+    const humis = await Humidity.find({
       status: true,
       value: { $lt: max, $gt: min },
     });
@@ -106,16 +106,20 @@ const evaluateContext = async (context,client) => {
               ? context.notification.message
               : context.description;
             if (context.notification.included_info.fan_status) {
-              message += "Fan status:\n";
+              message += "\nFan status:\n";
               fans.forEach((fan) => {
                 message += `${fan.name} value: ${fan.value}\n`;
               });
             }
             if (context.notification.included_info.light_status) {
-              message += "LED status:\n";
+              message += "\nLED status:\n";
               leds.forEach((led) => {
                 message += `${led.name} value: ${led.value}\n`;
               });
+            }
+            if (context.notification.included_info.date_time) {
+              message += "\nDate time: ";
+              message += `${new Date().getHours()}:${new Date().getMinutes()}`;
             }
             const users = await User.find({});
             for (const user of users) {
@@ -149,13 +153,13 @@ const trackingContext = async (deviceType, client,message) => {
     if (deviceType === "w-humi") {
       contexts = await Context.find({
         active: true,
-        "input.active_humi.active": true,
+        "input.active_humidity.active": true,
       });
     }
     if (deviceType== "w-s-temp" && message== "T_OFF") {
       contexts = await Context.find({
         active: true,
-        "input.active_temp.active": false,
+        "input.active_temperature.active": false,
       });
     }
     if (deviceType== "w-s-light" && message== "L_OFF") {
@@ -167,7 +171,7 @@ const trackingContext = async (deviceType, client,message) => {
     if (deviceType== "w-s-humi" && message== "H_OFF") {
       contexts = await Context.find({
         active: true,
-        "input.active_humi.active": false,
+        "input.active_humidity.active": false,
       });
     }
     
