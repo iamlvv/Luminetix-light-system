@@ -22,7 +22,7 @@ const createContext = asyncHandler(async (req, res) => {
         body: {
           name: `New context`,
           type: "context",
-          message: "Create new context: ${context.name}",
+          message: `Create new context: ${context.name}`,
         },
         user: user,
       });

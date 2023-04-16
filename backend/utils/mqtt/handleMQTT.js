@@ -82,32 +82,32 @@ if (deviceType === "w-light" || deviceType === "w-s-light") {
   }
   
   
-//  Add notifications if light value <10 or LED is off
-  // if (deviceType === "w-light" && data < 10) {
-  //   const users = await User.find({});
-  //   for (const user of users) {
-  //     await addNoti({
-  //       body: {
-  //         name: "Low Light Alert",
-  //         type: "alert",
-  //         message: `The light level is very low: ${data}%`,
-  //       },
-  //       user: user,
-  //     });
-  //   }
-  // } else if (deviceType === "w-led" && data === "#000000") {
-  //   const users = await User.find({});
-  //   for (const user of users) {
-  //     await addNoti({
-  //       body: {
-  //         name: "LED Status",
-  //         type: "alert",
-  //         message: `LED is turn off at ${new Date().getHours()}:${new Date().getMinutes()} `,
-  //       },
-  //       user: user,
-  //     });
-  //   }
-  // }
+ //Add notifications if light value <10 or LED is off
+  if (deviceType === "w-light" && data < 10) {
+    const users = await User.find({});
+    for (const user of users) {
+      await addNoti({
+        body: {
+          name: "Low Light Alert",
+          type: "alert",
+          message: `The light level is very low: ${data}%`,
+        },
+        user: user,
+      });
+    }
+  } else if (deviceType === "w-led" && data === "#000000") {
+    const users = await User.find({});
+    for (const user of users) {
+      await addNoti({
+        body: {
+          name: "LED Status",
+          type: "alert",
+          message: `LED is turn off at ${new Date().getHours()}:${new Date().getMinutes()} `,
+        },
+        user: user,
+      });
+    }
+  }
 };
 
 module.exports = { handleDeviceMessage };
