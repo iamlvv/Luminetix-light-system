@@ -3,7 +3,7 @@ const color = require("colors");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const dotenv = require("dotenv").config();
 const connectDB = require("./config/db");
-const connectMQTT = require("./mqtt/connectMQTT")
+const connectMQTT = require("./utils/mqtt/connectMQTT")
 const bodyParser=require("body-parser")
 const port = process.env.PORT || 5000;
 

@@ -1,5 +1,7 @@
 const mqtt = require("mqtt");
 const {handleDeviceMessage}  = require("./handleMQTT")
+const {trackingContext} = require("../trackingContext");
+
 
 const topics = ["w-light", "w-temp", "w-humi", "w-led", "w-fan", "w-s-light", "w-s-temp", "w-s-humi"];
 
@@ -45,6 +47,8 @@ const connectMQTT = async (topics, credentials) => {
       }
       try {
         handleDeviceMessage(topic,message);
+        trackingContext(topic,client,message);
+
       } catch (err) {
         console.error(`Error handling message for topic "${topic}": ${err}`);
         throw err; // throw error to stop execution

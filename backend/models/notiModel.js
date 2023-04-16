@@ -7,17 +7,12 @@ const notiSchema = mongoose.Schema(
     },
     read: {
       type: Boolean,
-      required: true,
-      default: false,
+      default: false
     },
     type: {
-      alert: {
-        type: Boolean,
-      },
-      context: {
-        type: Boolean,
-      },
-      required: true
+      type: String,
+      emum: ["alert", "context"],//alert or context
+      require: true
     },
     created_date: {
       type: Date,
