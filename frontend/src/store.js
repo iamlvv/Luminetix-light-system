@@ -14,6 +14,7 @@ const reducer = combineReducers({
     contextCreate: contextReducers.contextCreateReducer,
     contextUpdate: contextReducers.contextUpdateReducer,
     contextDelete: contextReducers.contextDeleteReducer,
+    contextToggle: contextReducers.contextToggleReducer,
     notiList: notificationReducers.notificationListReducer,
     notificationDetail: notificationReducers.notificationDetailReducer,
     notificationCreate: notificationReducers.notificationCreateReducer,

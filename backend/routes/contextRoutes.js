@@ -16,6 +16,6 @@ router
 router
 .route("/:id")
 .delete(protect,deleteContext)
-.patch(protect,toggleContext);
+.patch(toggleContext);
 
 module.exports = router;

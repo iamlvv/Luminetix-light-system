@@ -1,20 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Switch from "react-switch";
 import { AiOutlinePlus } from "react-icons/ai"
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { listOfContexts } from '../../redux/actions/contextActions';
-
+import { contextToggle, listOfContexts } from '../../redux/actions/contextActions';
+import axios from 'axios';
 function ContextSideBar() {
-  const [toggleButton1, setToggleButton1] = React.useState(false);
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
   const { loading, error, contextlist } = contextList;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const [stateContext, setStateContext] = useState(contextlist)
 
   useEffect(() => {
     dispatch(listOfContexts());
-  }, [dispatch]);
+  }, []);
 
+  const handleToggleContext = async (id) => {
+    dispatch(contextToggle(id));
+  }
   return (
     <div className='mt-5 mr-9'>
       <h1 className='text-2xl font-bold'>List of scenes</h1>
@@ -36,12 +42,12 @@ function ContextSideBar() {
               </div>
               <div className='my-auto'>
                 <Switch
-                  onChange={() => setToggleButton1(scene.active = !scene.active)}
+                  onChange={() => handleToggleContext(scene._id)}
                   checked={scene.active}
                   onColor="#593EFF"
                   height={24}
                   width={48}
-                  className="react-switch"
+                  //className="react-switch"
                 />
               </div>
             </div>

@@ -34,8 +34,6 @@ export const listOfContexts = () => async (dispatch, getState) => {
         };
         const response = await axios.get('http://localhost:5000/api/contexts', config);
         const { data } = response;
-        console.log(response)
-
         dispatch({ type: CONTEXT_LIST_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: CONTEXT_LIST_FAIL, payload: error.message });
@@ -61,6 +59,26 @@ export const contextDetail = (id) => async (dispatch, getState) => {
     }
 }
 
+export const contextToggle = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: CONTEXT_DETAIL_REQUEST })
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        const response = await axios.patch(`http://localhost:5000/api/contexts/${id}`, config);
+        console.log(response);
+        dispatch({ type: CONTEXT_DETAIL_SUCCESS, payload: response });
+    }
+    catch (error) {
+        console.log(error)
+        dispatch({ type: CONTEXT_DETAIL_FAIL, payload: error.message });
+    }
+}
 export const contextCreate = (context) => async (dispatch) => {
     try {
         dispatch({ type: CONTEXT_CREATE_REQUEST });
