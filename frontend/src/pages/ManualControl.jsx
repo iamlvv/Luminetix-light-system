@@ -7,23 +7,16 @@ import LightControl from "../components/manualcontrol/LightControl";
 import FanControl from "../components/manualcontrol/FanControl";
 import fanicon from "../images/Fan.png";
 import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function ManualControl() {
   const [isLightControl, setisLightControl] = useState(false);
   const [isFanControl, setisFanControl] = useState(true);
   const [devices, setDevices] = useState([]);
 
-	const userLogin = useSelector((state) => state.userLogin);
-	const { userInfo } = userLogin;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  // const [isRedLight, setisRedLight] = useState(true);
-  // const [isBlueLight, setisBlueLight] = useState(false);
-  // const [isYellowLight, setisYellowLight] = useState(false);
-  // const [isLightOn, setisLightOn] = useState(true);
-  // const [isSchedule, setisSchedule] = useState(false);
-  // const [LedState, setLedState] = useState("");
-  // const [FanState, setFanState] = useState("");
   const fetchDevices = async () => {
     try {
       const config = {
@@ -41,48 +34,104 @@ function ManualControl() {
     }
   };
   const handleLightControl = () => {
-    console.log("Light");
     setisLightControl(true);
     setisFanControl(false);
   }
   const handleFanControl = () => {
-    console.log("Fan");
     setisFanControl(true);
     setisLightControl(false);
   }
+
+  const [isRedLight, setisRedLight] = React.useState(true);
+  const [isBlueLight, setisBlueLight] = React.useState(false);
+  const [isYellowLight, setisYellowLight] = React.useState(false);
+  const [isLightOn, setisLightOn] = React.useState(true);
+  const [isFanOn, setisFanOn] = React.useState(true);
+  const [fanStat, setFanStat] = React.useState(null);
+
+  const getLedState = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
+    const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
+    const { value } = data[0];
+    // console.log("Led State - frontend: ",value);
+    if (value === "#000000") {
+      setisLightOn(false);
+      setisRedLight(false);
+      setisBlueLight(false);
+      setisYellowLight(false);
+    }
+    else if (value === "#ff0000") {
+      setisLightOn(true);
+      setisRedLight(true);
+      setisBlueLight(false);
+      setisYellowLight(false);
+    }
+    else if (value === "#ffff00") {
+      setisLightOn(true);
+      setisRedLight(false);
+      setisBlueLight(false);
+      setisYellowLight(true);
+    }
+    else if (value === "#0000ff") {
+      setisLightOn(true);
+      setisRedLight(false);
+      setisBlueLight(true);
+      setisYellowLight(false);
+    }
+  }
+
+  useEffect(() => {
+    client.on("message", (topic, message) => {
+      if (topic === "Tori0802/feeds/w-led") {
+        console.log("Led Stat: ", message.toString());
+        if (message.toString() === "#000000") {
+          setisLightOn(false);
+        } else {
+          setisLightOn(true);
+          if (message.toString() === "#ff0000") {
+            setisRedLight(true);
+            setisBlueLight(false);
+            setisYellowLight(false);
+          } else if (message.toString() === "#ffff00") {
+            setisRedLight(false);
+            setisBlueLight(false);
+            setisYellowLight(true);
+          } else if (message.toString() === "#0000ff") {
+            setisRedLight(false);
+            setisBlueLight(true);
+            setisYellowLight(false);
+          }
+        }
+      } else {
+        console.log("topic not w-led");
+      }
+    });
+  });
+
+  useEffect(() => {
+    client.on("message", (topic, message) => {
+      if (topic === "Tori0802/feeds/w-fan") {
+        console.log("Fan Stat", parseInt(message.toString()));
+        if (message.toString() === "0") {
+          setisFanOn(false);
+          setFanStat(0);
+        } else {
+          setisFanOn(true);
+          setFanStat(parseInt(message.toString()));
+        }
+      } else {
+        console.log("topic not w-fan");
+      }
+    });
+  });
+
   useEffect(() => {
     fetchDevices();
+    getLedState(setisBlueLight, setisYellowLight, setisRedLight, setisLightOn);
   }, []);
+
   if (!Array.isArray(devices)) {
     return <p>Loading...</p>;
   }
-  // useEffect(() => {
-  //   client.on("message", (topic, message) => {
-  //     if (topic === "Tori0802/feeds/w-led") {
-  //       console.log("Led Stat: ", message.toString());
-  //       if (message.toString() === "#000000") {
-  //         setisLightOn(false);
-  //       } else {
-  //         setisLightOn(true);
-  //         if (message.toString() === "#ff0000") {
-  //           setisRedLight(true);
-  //           setisBlueLight(false);
-  //           setisYellowLight(false);
-  //         } else if (message.toString() === "#ffffff") {
-  //           setisRedLight(false);
-  //           setisBlueLight(false);
-  //           setisYellowLight(true);
-  //         } else if (message.toString() === "#0000ff") {
-  //           setisRedLight(false);
-  //           setisBlueLight(true);
-  //           setisYellowLight(false);
-  //         }
-  //       }
-  //     } else {
-  //       console.log("error");
-  //     }
-  //   });
-  // });
 
   return (
     <div>
@@ -123,20 +172,34 @@ function ManualControl() {
                 {device.name === "led" ? (
                   <button className="col-span-3 m-2 text-left" onClick={handleLightControl}>
                     <p className="font-bold text-lg text-gray-900">{device.name}</p>
-                    {/* {
-                      device.value === "#000000" ? (<p className="text-sm">OFF</p>) : (
-                        device.value === "#ffff00" ? (<p className="text-sm">Yellow</p>) : (
-                          device.value === "#ff0000" ? (<p className="text-sm">Red</p>) : (
-                            device.value === "#0000ff" ? (<p className="text-sm">Blue</p>) : (<p> </p>)
+                    {
+                      !isLightOn ? (<p className="text-sm">OFF</p>) : (
+                        isLightOn && isYellowLight ? (<p className="text-sm">Yellow</p>) : (
+                          isLightOn && isRedLight ? (<p className="text-sm">Red</p>) : (
+                            isLightOn && isBlueLight ? (<p className="text-sm">Blue</p>) : (<p> </p>)
                           )
                         )
                       )
-                    } */}
+                    }
                   </button>
                 ) : (
                   <button className="col-span-3 m-2 text-left" onClick={handleFanControl}>
                     <p className="font-bold text-lg text-gray-900">{device.name}</p>
-                    {/* <p className="text-sm">{device.value}</p> */}
+                    {
+                      fanStat === null ? (
+                        device.value === 0 ? (
+                          <p className="text-sm">OFF</p>
+                        ) : (
+                          <p className="text-sm">{device.value}</p>
+                        )
+                      ) : (
+                        fanStat === 0 ? (
+                          <p className="text-sm">OFF</p>
+                        ) : (
+                          <p className="text-sm">{fanStat}</p>
+                        )
+                      )
+                    }
                   </button>
                 )}
               </div>

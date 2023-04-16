@@ -6,15 +6,22 @@ import { useEffect } from 'react';
 import client from '../../mqtt/mqtt';
 import Slider from "@mui/material/Slider";
 import axios from 'axios';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { getFanStatFirst } from '../../redux/actions/deviceActions';
-const getFanStat = async(handleget) => {
+
+const getFanStat = async (setFanStat, setisFanOn) => {
     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data");
     const { value } = data[0];
-    handleget(value);
+    setFanStat(parseInt(value));
+    if (value === "0") {
+        setisFanOn(false);
+    } else {
+        setisFanOn(true);
+    }
 }
 function LightControl() {
-    const [device, setDevice] = React.useState([]);
+    // const [device, setDevice] = React.useState([]);
     const [isFanOn, setisFanOn] = React.useState(true);
 
     const dispatch = useDispatch();
@@ -22,28 +29,26 @@ function LightControl() {
     const { fanStatFirst } = FanStatFirst;
     const [fanStat, setFanStat] = React.useState(null);
 
+    // const fetchDevice = async () => {
+    //     try {
+    //         const fan_res = await axios.get("http://localhost:5000/api/devices/fan");
+    //         const device = [...fan_res.data.fans]
+    //         setDevice(device[0]);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
-    const fetchDevice = async () => {
-        try {
-            const fan_res = await axios.get("http://localhost:5000/api/devices/fan");
-            const device = [...fan_res.data.fans]
-            setDevice(device[0]);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    
     useEffect(() => {
-        fetchDevice();
-        getFanStat(setFanStat);
+        // fetchDevice();
+        getFanStat(setFanStat, setisFanOn);
         dispatch(getFanStatFirst())
     }, []);
 
-    console.log(fanStat, fanStatFirst)
+    console.log("flag: ", typeof fanStat, " ", typeof fanStatFirst)
     useEffect(() => {
         client.on("message", (topic, message) => {
             if (topic === "Tori0802/feeds/w-fan") {
-                console.log("Fan Stat", parseInt(message.toString()));
                 if (message.toString() === "0") {
                     setisFanOn(false);
                     setFanStat(0);
@@ -87,7 +92,6 @@ function LightControl() {
 
     const handleFanOnChange = (e) => {
         setFanStat(parseInt(e.target.value));
-
     }
     const handleFanOnChangeCommitted = (e) => {
         if (client) {
@@ -101,22 +105,40 @@ function LightControl() {
         <div className='col-span-2 grid grid-rows-5 p-10 '>
             <div className='row-span-3'>
                 <h1 className='text-3xl font-semibold'>Fan</h1>
-                {
 
-                    isFanOn ? (
-                        <div className='bg-white w-64 h-64 mx-auto my-10 rounded-full border border-gray-300 grid grid-rows-2 gap-10'>
-                            <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
-                            <div className='row-span-1 text-center text-gray-900 font-semibold'>
-                                <p>Fan on</p>
+                {
+                    fanStat === null ? (
+                        fanStatFirst !== 0 ? (
+                            <div className='bg-white w-64 h-64 mx-auto my-10 rounded-full border border-gray-300 grid grid-rows-2 gap-10'>
+                                <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                <div className='row-span-1 text-center text-gray-900 font-semibold'>
+                                    <p>Fan on</p>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className='bg-gray-300 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
+                                <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                <div className='row-span-1 text-center text-gray-900 font-semibold'>
+                                    <p>Fan off</p>
+                                </div>
+                            </div>
+                        )
                     ) : (
-                        <div className='bg-gray-300 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
-                            <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
-                            <div className='row-span-1 text-center text-gray-900 font-semibold'>
-                                <p>Fan off</p>
+                        fanStat !== 0 ? (
+                            <div className='bg-white w-64 h-64 mx-auto my-10 rounded-full border border-gray-300 grid grid-rows-2 gap-10'>
+                                <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                <div className='row-span-1 text-center text-gray-900 font-semibold'>
+                                    <p>Fan on</p>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className='bg-gray-300 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10'>
+                                <img src={fanicon} alt="light" className='w-2/5 mx-auto my-10 justify-between row-span-1' />
+                                <div className='row-span-1 text-center text-gray-900 font-semibold'>
+                                    <p>Fan off</p>
+                                </div>
+                            </div>
+                        )
                     )
                 }
             </div>
@@ -180,7 +202,6 @@ function LightControl() {
             <div className='row-span-1 grid grid-cols-4'>
                 <div className='col-span-3 bg-purple-50 m-10 rounded-full p-3'>
                     <Slider
-                        defaultValue={device.value}
                         value={fanStat === null ? fanStatFirst : fanStat}
                         onChange={handleFanOnChange}
                         onChangeCommitted={handleFanOnChangeCommitted}

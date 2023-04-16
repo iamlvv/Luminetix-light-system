@@ -115,6 +115,18 @@ const headers = {
   'X-AIO-Key': process.env.REACT_APP_ADAFRUIT_KEY,
 };
 
+export const getLedStateFirst = () => async (dispatch) => {
+  try {
+    dispatch({ type: LED_STATE_REQUEST_FIRST });
+    const { data } = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data', headers);
+    const { value } = data[0];
+    console.log("Led Stat First: ", value);
+    dispatch({ type: LED_STATE_VALID_FIRST, payload: value });
+  } catch (error) {
+    dispatch({ type: LED_STATE_INVALID_FIRST, payload: error.message });
+  }
+}
+
 export const getLedState = () => async (dispatch) => {
   try {
     dispatch({ type: LED_STATE_REQUEST });

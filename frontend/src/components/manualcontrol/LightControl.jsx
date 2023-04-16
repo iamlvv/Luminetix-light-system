@@ -6,39 +6,39 @@ import bluelighticon from "../../images/greenlighticon.png";
 import shutdown from "../../images/shutdown.png";
 import arrow from "../../images/straight-arrow.png";
 import client from "../../mqtt/mqtt";
-// import axios from "axios";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getLedStatFirst } from "../../redux/actions/deviceActions";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getLedStateFirst } from "../../redux/actions/deviceActions";
 
-// const getLedStat = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
-//     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
-//     const { value } = data[0];
-//     console.log("Light: ",data[0]);
-//     if (value === "#000000") {
-//         setisLightOn(false);
-//         setisRedLight(false);
-//         setisBlueLight(false);
-//         setisYellowLight(false);
-//     }
-//     else if (value === "#ff0000") {
-//         setisLightOn(true);
-//         setisRedLight(true);
-//         setisBlueLight(false);
-//         setisYellowLight(false);
-//     }
-//     else if (value === "#ffff00") {
-//         setisLightOn(true);
-//         setisRedLight(false);
-//         setisBlueLight(false);
-//         setisYellowLight(true);
-//     }
-//     else if (value === "#0000ff") {
-//         setisLightOn(true);
-//         setisRedLight(false);
-//         setisBlueLight(true);
-//         setisYellowLight(false);
-//     }
-// }
+const getLedState = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
+    const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
+    const { value } = data[0];
+    // console.log("Led State - frontend: ",value);
+    if (value === "#000000") {
+        setisLightOn(false);
+        setisRedLight(false);
+        setisBlueLight(false);
+        setisYellowLight(false);
+    }
+    else if (value === "#ff0000") {
+        setisLightOn(true);
+        setisRedLight(true);
+        setisBlueLight(false);
+        setisYellowLight(false);
+    }
+    else if (value === "#ffff00") {
+        setisLightOn(true);
+        setisRedLight(false);
+        setisBlueLight(false);
+        setisYellowLight(true);
+    }
+    else if (value === "#0000ff") {
+        setisLightOn(true);
+        setisRedLight(false);
+        setisBlueLight(true);
+        setisYellowLight(false);
+    }
+}
 
 function LightControl() {
     const [isRedLight, setisRedLight] = React.useState(true);
@@ -47,9 +47,7 @@ function LightControl() {
     const [isLightOn, setisLightOn] = React.useState(true);
     const [isSchedule, setisSchedule] = React.useState(false);
 
-    // const dispatch = useDispatch();
-    // const LedStatFirst = useSelector((state) => state.ledStatFirst)
-    // const { ledStatFirst } = LedStatFirst;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         client.on("message", (topic, message) => {
@@ -79,10 +77,10 @@ function LightControl() {
         });
     });
 
-    // useEffect(() => {
-    //     getLedStat(setisBlueLight, setisYellowLight, setisRedLight, setisLightOn);
-    //     dispatch(getLedStatFirst());
-    // },[]);
+    useEffect(() => {
+        getLedState(setisBlueLight, setisYellowLight, setisRedLight, setisLightOn);
+        dispatch(getLedStateFirst());
+    }, []);
 
     const handleRedLight = () => {
         if (client) {

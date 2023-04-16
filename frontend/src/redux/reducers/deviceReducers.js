@@ -91,7 +91,7 @@ export const temperatureStatReducer = (state = { temperatureStat: "0" }, action)
     }
 }
 
-export const humidityStatReducer = (state = { humidityStat: "0"}, action) => {
+export const humidityStatReducer = (state = { humidityStat: "0" }, action) => {
     switch (action.type) {
         case deviceConstants.HUMIDITY_STAT_REQUEST:
             return { loading: true };
@@ -234,110 +234,120 @@ export const turnOffLightReducer = (state = {}, action) => {
     }
 }
 
-export const LightStateFirstReducer = (state = { lightStateFirst: false}, action) => {
+export const LightStateFirstReducer = (state = { lightStateFirst: false }, action) => {
     switch (action.type) {
         case deviceConstants.LIGHT_STATE_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.LIGHT_STATE_VALID_FIRST:
-            return { loading: false, lightStateFirst: action.payload}
+            return { loading: false, lightStateFirst: action.payload }
         case deviceConstants.LIGHT_STATE_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const humidityStateFirstReducer = (state = { humidityStateFirst: false}, action) => {
+export const humidityStateFirstReducer = (state = { humidityStateFirst: false }, action) => {
     switch (action.type) {
         case deviceConstants.HUMIDITY_STATE_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.HUMIDITY_STATE_VALID_FIRST:
-            return { loading: false, humidityStateFirst: action.payload}
+            return { loading: false, humidityStateFirst: action.payload }
         case deviceConstants.HUMIDITY_STATE_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const temperatureStateFirstReducer = (state = { temperatureStateFirst: false}, action) => {
+export const temperatureStateFirstReducer = (state = { temperatureStateFirst: false }, action) => {
     switch (action.type) {
         case deviceConstants.TEMPERATURE_STATE_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.TEMPERATURE_STATE_VALID_FIRST:
-            return { loading: false, temperatureStateFirst: action.payload}
+            return { loading: false, temperatureStateFirst: action.payload }
         case deviceConstants.TEMPERATURE_STATE_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const fanStateFirstReducer = (state = { fanStateFirst: false}, action) => {
+export const fanStateFirstReducer = (state = { fanStateFirst: false }, action) => {
     switch (action.type) {
         case deviceConstants.FAN_STATE_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.FAN_STATE_VALID_FIRST:
-            return { loading: false, fanStateFirst: action.payload}
+            return { loading: false, fanStateFirst: action.payload }
         case deviceConstants.FAN_STATE_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
 
-export const lightStatFirstReducer = (state = { lightStatFirst: "0"}, action) => {
+export const lightStatFirstReducer = (state = { lightStatFirst: "0" }, action) => {
     switch (action.type) {
         case deviceConstants.LIGHT_STAT_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.LIGHT_STAT_VALID_FIRST:
-            return { loading: false, lightStatFirst: action.payload}
+            return { loading: false, lightStatFirst: action.payload }
         case deviceConstants.LIGHT_STAT_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const humidityStatFirstReducer = (state = { humidityStatFirst: "0"}, action) => {
+export const humidityStatFirstReducer = (state = { humidityStatFirst: "0" }, action) => {
     switch (action.type) {
         case deviceConstants.HUMIDITY_STAT_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.HUMIDITY_STAT_VALID_FIRST:
-            return { loading: false, humidityStatFirst: action.payload}
+            return { loading: false, humidityStatFirst: action.payload }
         case deviceConstants.HUMIDITY_STAT_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const temperatureStatFirstReducer = (state = { temperatureStatFirst: "0"}, action) => {
+export const temperatureStatFirstReducer = (state = { temperatureStatFirst: "0" }, action) => {
     switch (action.type) {
         case deviceConstants.TEMPERATURE_STAT_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.TEMPERATURE_STAT_VALID_FIRST:
-            return { loading: false, temperatureStatFirst: action.payload}
+            return { loading: false, temperatureStatFirst: action.payload }
         case deviceConstants.TEMPERATURE_STAT_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-export const fanStatFirstReducer = (state = { fanStatFirst: "0"}, action) => {
+export const fanStatFirstReducer = (state = { fanStatFirst: "0" }, action) => {
     switch (action.type) {
         case deviceConstants.FAN_STAT_REQUEST_FIRST:
             return { loading: true };
         case deviceConstants.FAN_STAT_VALID_FIRST:
-            return { loading: false, fanStatFirst: action.payload}
+            return { loading: false, fanStatFirst: action.payload }
         case deviceConstants.FAN_STAT_INVALID_FIRST:
-            return { loading: false, error: action.payload}
+            return { loading: false, error: action.payload }
         default:
             return state
     }
 }
 
-
-
+export const LEDStateFirstReducer = (state = { LEDStateFirst: false }, action) => {
+    switch (action.type) {
+        case deviceConstants.LED_STATE_REQUEST_FIRST:
+            return { loading: true };
+        case deviceConstants.LED_STATE_VALID_FIRST:
+            return { loading: false, LEDStateFirst: action.payload }
+        case deviceConstants.LED_STATE_INVALID_FIRST:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}

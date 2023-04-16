@@ -5,8 +5,8 @@ import * as deviceReducers from './redux/reducers/deviceReducers'
 import * as userReducers from './redux/reducers/userReducers'
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
+    ? JSON.parse(localStorage.getItem("userInfo"))
+    : null;
 
 const reducer = combineReducers({
     contextList: contextReducers.contextListReducer,
@@ -43,6 +43,7 @@ const reducer = combineReducers({
     userDetails: userReducers.userDetailsReducer,
     userUpdateProfile: userReducers.userUpdateProfileReducer,
     userUpdatePassword: userReducers.userUpdatePasswordReducer,
+    LEDStateFirst: deviceReducers.LEDStateFirstReducer,
     lightStateFirst: deviceReducers.LightStateFirstReducer,
     fanStateFirst: deviceReducers.fanStateFirstReducer,
     humidityStateFirst: deviceReducers.humidityStateFirstReducer,
