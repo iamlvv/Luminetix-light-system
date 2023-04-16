@@ -28,10 +28,8 @@ function App() {
             <Route path='signup' element={<Signup/>} />
             <Route path='/homepage' element={<HomePage/>} />
             <Route path='/contextsetup/:id' element={<ContextInfo/>} />
-            <Route path='/contextsetup/:id/2' element = {<ContextNextPage />} />
             <Route path='/contextsetup/:id/3' element = {<ContextLastPage />} />
             <Route path='/contextsetup/createnew' element = {<ContextCreatePage />} />
-            <Route path='/contextsetup/createnew/2' element = {<ContextNextPageCreate />} />
             <Route path='/contextsetup/createnew/3' element = {<ContextLastPageCreate />} />
           </Routes>
         </div>

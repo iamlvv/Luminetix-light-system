@@ -19,6 +19,9 @@ import {
     CONTEXT_DELETE_REQUEST,
     CONTEXT_DELETE_SUCCESS,
     CONTEXT_DELETE_FAIL,
+    CONTEXT_TOGGLE_REQUEST,
+    CONTEXT_TOGGLE_SUCCESS,
+    CONTEXT_TOGGLE_FAIL,
 } from "../../constants/contextConstants";
 import axios from "axios";
 export const listOfContexts = () => async (dispatch, getState) => {
@@ -61,7 +64,7 @@ export const contextDetail = (id) => async (dispatch, getState) => {
 
 export const contextToggle = (id) => async (dispatch, getState) => {
     try {
-        dispatch({ type: CONTEXT_DETAIL_REQUEST })
+        dispatch({ type: CONTEXT_TOGGLE_REQUEST })
         const {
             userLogin: { userInfo },
         } = getState();
@@ -72,11 +75,11 @@ export const contextToggle = (id) => async (dispatch, getState) => {
         };
         const response = await axios.patch(`http://localhost:5000/api/contexts/${id}`, config);
         console.log(response);
-        dispatch({ type: CONTEXT_DETAIL_SUCCESS, payload: response });
+        dispatch({ type: CONTEXT_TOGGLE_SUCCESS, payload: response });
     }
     catch (error) {
         console.log(error)
-        dispatch({ type: CONTEXT_DETAIL_FAIL, payload: error.message });
+        dispatch({ type: CONTEXT_TOGGLE_FAIL, payload: error.message });
     }
 }
 export const contextCreate = (context) => async (dispatch) => {

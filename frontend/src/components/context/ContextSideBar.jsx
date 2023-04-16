@@ -12,7 +12,7 @@ function ContextSideBar() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const [stateContext, setStateContext] = useState(contextlist)
+  const [stateContext, setStateContext] = useState(null)
 
   useEffect(() => {
     dispatch(listOfContexts());
@@ -20,6 +20,13 @@ function ContextSideBar() {
 
   const handleToggleContext = async (id) => {
     dispatch(contextToggle(id));
+    setStateContext(contextlist.map((scene) => {
+      if (scene._id == id) {
+        scene.active = !scene.active;
+      }
+      return scene;
+    }
+    ))
   }
   return (
     <div className='mt-5 mr-9'>
@@ -43,11 +50,11 @@ function ContextSideBar() {
               <div className='my-auto'>
                 <Switch
                   onChange={() => handleToggleContext(scene._id)}
-                  checked={scene.active}
+                  checked={stateContext !== null ? stateContext.find(x => x._id == scene._id).active : scene.active}
                   onColor="#593EFF"
                   height={24}
                   width={48}
-                  //className="react-switch"
+                //className="react-switch"
                 />
               </div>
             </div>
