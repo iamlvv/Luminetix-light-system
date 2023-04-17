@@ -6,6 +6,7 @@ const contextSchema = mongoose.Schema(
     created_at: { type: Date, default: Date.now, required: true },
     description: { type: String, required: false },
     active: { type: Boolean, required: true, default: true },
+    auto_active: { type: Boolean, required: true, default: true },
     input: {
       active_temperature: {
         min: {
@@ -62,7 +63,7 @@ const contextSchema = mongoose.Schema(
     },
     output: {
       frequency: {
-        today: { type: Boolean, default: true },
+        no_repeat: { type: Boolean, default: true },
         repeat: {
           daily: { type: Boolean, default: false },
           weekly: {
@@ -82,11 +83,14 @@ const contextSchema = mongoose.Schema(
       },
       active_time: {
         start_time: {
-          type: String
+          type: String,
+          match: /^([01]\d|2[0-3]):([0-5]\d)$/,
+          default: "00:00"
         },
         end_time: {
-          type: String
-        },
+          type: String,
+          match: /^([01]\d|2[0-3]):([0-5]\d)$/
+        }
       },      
       control_led: [
         {

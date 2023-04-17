@@ -1,9 +1,9 @@
 const mqtt = require("mqtt");
 const {handleDeviceMessage}  = require("./handleMQTT")
-const {trackingContext} = require("../trackingContext");
+const {trackingContext,  autoUpdateContext} = require("../trackingContext");
 
 
-const topics = ["w-light", "w-temp", "w-humi", "w-led", "w-fan", "w-s-light", "w-s-temp", "w-s-humi"];
+const topics = ["w-light", "w-temp", "w-humi", "w-led", "w-fan", "w-s-light", "w-s-temp", "w-s-humi","w-human"];
 
 const credentials = {
   username: process.env.ADAFRUIT_USERNAME,
@@ -47,14 +47,14 @@ const connectMQTT = async (topics, credentials) => {
       }
       try {
         handleDeviceMessage(topic,message);
-        trackingContext(topic,client,message);
+        trackingContext(topic,message,client);
 
       } catch (err) {
         console.error(`Error handling message for topic "${topic}": ${err}`);
         throw err; // throw error to stop execution
       }
     });
-
+    if(client) autoUpdateContext.start();
     return client;
   } catch (error) {
     console.error(`Error: ${error.message}`.red.underline.bold);

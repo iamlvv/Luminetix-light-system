@@ -4,7 +4,8 @@ const {
   createContext,
   deleteContext,
   getAllContexts,
-  toggleContext
+  toggleContext,
+  updateContext
 } = require("../controllers/contextControllers");
 
 const { protect } = require("../middleware/authMiddleware.js");
@@ -16,6 +17,10 @@ router
 router
 .route("/:id")
 .delete(protect,deleteContext)
-.patch(toggleContext);
+.patch(protect, toggleContext);
+router
+.route("/:id/edit")
+.put(protect,updateContext);
+
 
 module.exports = router;
