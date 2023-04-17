@@ -9,7 +9,6 @@ import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
 import lighticon2 from '../../images/lighticon2.png'
 import fanicon2 from '../../images/fanicon1.jpg'
-import { ProgressBar } from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 
 function ContextCreatePage() {
