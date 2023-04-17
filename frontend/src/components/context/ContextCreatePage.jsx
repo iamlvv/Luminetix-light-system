@@ -1,24 +1,26 @@
-import { Slider } from '@mui/material';
 import Switch from 'react-switch';
 import React from 'react'
 import TimePicker from "rc-time-picker";
 import 'rc-time-picker/assets/index.css';
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
 import lighticon2 from '../../images/lighticon2.png'
 import fanicon2 from '../../images/fanicon1.jpg'
 import "react-step-progress-bar/styles.css";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function ContextCreatePage() {
-
   const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
   const [toggleButtonHum, setToggleButtonHum] = React.useState(false);
   const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(false);
   const [toggleButtonLED, setToggleButtonLED] = React.useState(false);
   const [toggleButtonFan, setToggleButtonFan] = React.useState(false);
   const [toggleButtonSystem, setToggleButtonSystem] = React.useState(false);
+  const [toggleButtonLight, setToggleButtonLight] = React.useState(false);
 
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -26,38 +28,147 @@ function ContextCreatePage() {
   const [toTemp, setToTemp] = React.useState("");
   const [fromHum, setFromHum] = React.useState("");
   const [toHum, setToHum] = React.useState("");
+  const [fromLight, setFromLight] = React.useState("");
+  const [toLight, setToLight] = React.useState("");
   const [repeat, setRepeat] = React.useState("");
   const [starttime, setStartTime] = React.useState("");
   const [endtime, setEndTime] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [ledColor, setLEDColor] = React.useState("");
+  const [fanSpeed, setFanSpeed] = React.useState("");
+  const [fanstatus, setFanStatus] = React.useState("");
+  const [light_status, setLightStatus] = React.useState("");
+  const [date_time, setDateTime] = React.useState("");
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+      },
+  };
+    var input = {
+      active_temperature: {
+        min: parseInt(fromTemp),
+        max: parseInt(toTemp),
+        active: toggleButtonTemp,
+      },
+      active_light: {
+        min: parseInt(fromLight),
+        max: parseInt(toLight),
+        active: toggleButtonLight,
+      },
+      active_humidity: {
+        min: parseInt(fromHum),
+        max: parseInt(toHum),
+        active: toggleButtonHum,
+      },
+      human_detection: {
+        value: toggleButtonHumanDetection,
+        active: toggleButtonHumanDetection,
+      },
+    }
+    var output = {
+      frequency: {
+        today: repeat === "Today" ? true : false,
+        repeat: {
+          daily: repeat === 'Everyday' ? true : false,
+          weekly: false,
+          adjust_weekly: {
+            monday: repeat === 'Monday' ? true : false,
+            tuesday: repeat === 'Tuesday' ? true : false,
+            wednesday: repeat === 'Wednesday' ? true : false,
+            thursday: repeat === 'Thursday' ? true : false,
+            friday: repeat === 'Friday' ? true : false,
+            saturday: repeat === 'Saturday' ? true : false,
+            sunday: repeat === 'Sunday' ? true : false,
+          }
+        }
+      },
+      active_time: {
+        start_time: starttime,
+        end_time: endtime,
+      },
+      control_led: [
+        {
+          name: 'LED',
+          status: toggleButtonLED,
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yello' ? "#ffff00" : "#ffffff",
+        }
+      ],
+      control_fan: [
+        {
+          name: 'Fan',
+          status: toggleButtonFan,
+          value: fanSpeed,
+        }
+      ],
+      notification: {
+        email: email,
+        message: message,
+        included_info: {
+          fan_status: fanstatus !== "" ? true : false,
+          light_status: light_status !== "" ? true : false,
+          date_time: date_time !== "" ? true : false,
+        }
+      }
+    }
+    fetch('http://localhost:5000/api/contexts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+      body: JSON.stringify({
+        name: name,
+        description: description,
+        input: input,
+        output: output,
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        navigate('/contextsetup/createnew/finish')
+      }
+      )
+      .catch((error) => {
+        //console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        })
+      }
+      );
   }
+
   return (
     <div>
       <div>
         <NavBar />
         <div className='ml-28 grid grid-cols-4 gap-9' >
           <form className='bg-violet-100 rounded-xl col-span-3 p-5 mt-5'
-            onSubmit = {handleSubmit}
+            onSubmit={handleSubmit}
           >
             <div>
               <input type='text' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
-                 onChange={(e) => setName(e.target.value)}
-               />
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div className='mt-5'>
-              <input type='text' name='description' value = {description || ""} className='w-full p-3 rounded-2xl border border-black' 
+              <input type='text' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             {/* Body */}
             <div className='bg-white mt-10 mb-5 rounded-2xl p-5'>
-            <h1 className='font-bold text-2xl mb-2'>Input</h1>
-            <h2 className='text-gray-500'>Choose condition that will start the context.</h2>
+              <h1 className='font-bold text-2xl mb-2'>Input</h1>
+              <h2 className='text-gray-500'>Choose condition that will start the context.</h2>
             </div>
             <div>
               <h1 className='font-bold mb-5'>Sensors status</h1>
@@ -70,7 +181,7 @@ function ContextCreatePage() {
                       <p className=' text-xs text-gray-500'>Choose temperature level that trigger context</p>
                     </div>
                     <Switch
-                      // onChange={() => setToggleButton2(!toggleButton2)}
+                      onChange={() => setToggleButtonTemp(!toggleButtonTemp)}
                       checked={toggleButtonTemp}
                       onColor="#593EFF"
                       height={24}
@@ -118,8 +229,37 @@ function ContextCreatePage() {
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='number' name='fromhumid' value={toHum || ""} className='w-full p-2 rounded-lg border' 
+                      <input type='number' name='fromhumid' value={toHum || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setToHum(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className='bg-white shadow-sm rounded-xl text-center p-5'>
+                  <div className='grid grid-cols-2'>
+                    <div className='grid grid-rows-2'>
+                      <h1 className='font-bold'>Light</h1>
+                      <p className=' text-xs text-gray-500'>Choose light level that trigger context</p>
+                    </div>
+                    <Switch
+                      onChange={() => setToggleButtonLight(!toggleButtonLight)}
+                      checked={toggleButtonLight}
+                      onColor="#593EFF"
+                      height={24}
+                      width={48}
+                      className="react-switch my-auto ml-auto"
+                    />
+                  </div>
+                  <div className='flex justify-between gap-9 p-5 text-left'>
+                    <div>
+                      <label className='text-xs font-bold'>From</label>
+                      <input type='text' name='fromtemp' value={fromLight || ""} className='w-full p-2 rounded-lg border'
+                        onChange={(e) => setFromLight(e.target.value)} />
+                    </div>
+                    <div>
+                      <label className='text-xs font-bold'>To</label>
+                      <input type='text' name='totemp' value={toLight || ""} className='w-full p-2 rounded-lg border'
+                        onChange={(e) => setToLight(e.target.value)}
                       />
                     </div>
                   </div>
@@ -154,7 +294,7 @@ function ContextCreatePage() {
                       <select className='w-full border rounded text-gray-500 px-4 text-xs p-1'
                         onChange={(e) => setRepeat(e.target.value)}
                       >
-                        <option>today</option>
+                        <option>Today</option>
                         <option>Everyday</option>
                         <option>Monday</option>
                         <option>Tuesday</option>
@@ -172,7 +312,7 @@ function ContextCreatePage() {
                     <div className='m-auto col-span-2'>
                       <TimePicker
                         placeholder="Select Start Time"
-                        use12Hours
+                        use12Hours = {false}
                         showSecond={false}
                         focusOnOpen={true}
                         format="hh:mm A"
@@ -186,11 +326,11 @@ function ContextCreatePage() {
                     <div className='m-auto col-span-2'>
                       <TimePicker
                         placeholder="Select End Time"
-                        use12Hours
+                        use12Hours = {false}
                         showSecond={false}
                         focusOnOpen={true}
                         format="hh:mm A"
-                        onChange={e => setStartTime(e.format('LT'))}
+                        onChange={e => setEndTime(e.format('LT'))}
                       />
                     </div>
                   </div>
@@ -198,8 +338,8 @@ function ContextCreatePage() {
               </div>
               <div>
                 <div className='p-5 bg-white rounded-2xl mt-10 mb-5'>
-                <h1 className='font-bold text-2xl mb-2'>Then...</h1>
-                <h2 className='text-gray-500'>Choose what you want to happen with your devices.</h2>
+                  <h1 className='font-bold text-2xl mb-2'>Then...</h1>
+                  <h2 className='text-gray-500'>Choose what you want to happen with your devices.</h2>
                 </div>
                 <div >
                   <h1 className='font-bold'>Control devices</h1>
@@ -223,7 +363,9 @@ function ContextCreatePage() {
                       <div className='grid grid-cols-2 row-span-1'>
                         <h1 className='font-bold col-span-1 m-auto'>LED</h1>
                         <div className='my-auto ml-auto'>
-                          <select className='border px-4 py-1 rounded'>
+                          <select className='border px-4 py-1 rounded'
+                            onChange={(e) => setLEDColor(e.target.value)}
+                          >
                             <option>Yellow</option>
                             <option>Red</option>
                             <option>Blue</option>
@@ -248,12 +390,11 @@ function ContextCreatePage() {
                       </div>
                       <div className='grid grid-cols-2 row-span-1'>
                         <h1 className='font-bold col-span-1 m-auto'>Fan</h1>
-                        <div className='my-auto ml-auto'>
-                          <select className='border px-4 py-1 rounded'>
-                            <option>Level 1</option>
-                            <option>Level 2</option>
-                            <option>Level 3</option>
-                          </select>
+                        <div className='my-auto'>
+                          <input type='number' name='fan' className='w-10 border-2'
+                            value={fanSpeed || ""}
+                            onChange={(e) => setFanSpeed(e.target.value)}
+                          />
                         </div>
                       </div>
                     </div>
@@ -292,15 +433,21 @@ function ContextCreatePage() {
                       <h1 className='font-bold mb-5'>Include information</h1>
                       <div className='flex flex-col gap-5'>
                         <div>
-                          <input type='checkbox' className='mr-3 mb-4' />
+                          <input type='checkbox' className='mr-3 mb-4' name='fanstatus'
+                            onChange={(e) => setFanStatus(e.target.checked)}
+                          />
                           <label>Fan status</label>
                         </div>
                         <div>
-                          <input type='checkbox' className='mr-3 mb-4' />
+                          <input type='checkbox' className='mr-3 mb-4' name='lightstatus'
+                            onChange={(e) => setLightStatus(e.target.checked)}
+                          />
                           <label>Light status</label>
                         </div>
                         <div>
-                          <input type='checkbox' className='mr-3 mb-4' />
+                          <input type='checkbox' className='mr-3 mb-4' name='dateandtime'
+                            onChange={(e) => setDateTime(e.target.checked)}
+                          />
                           <label>Date and time</label>
                         </div>
                       </div>
@@ -311,7 +458,7 @@ function ContextCreatePage() {
               </div>
               <div className='flex flex-row justify-between mt-10'>
                 <NavLink to='/contextsetup'><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Back</button></NavLink>
-                <NavLink to={`/contextsetup/createnew/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg' type='submit'>Next</button></NavLink>
+                <button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg' type='submit'>Next</button>
               </div>
             </div>
           </form>
