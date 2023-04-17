@@ -25,8 +25,8 @@ const ContextHomeScreen = () => {
           <h1 className='font-bold mb-3 text-2xl'>Tutorial</h1>
           <div className='text-gray-500'>
             <ul>
-              <li>First, <span className='font-bold hover:text-gray-900'>Create new scene</span> or <span className='font-bold hover:text-gray-900'>Modify available scene</span>.</li>
-              <li>Second, <span className='font-bold hover:text-gray-900'>Modify condition</span>to trigger the context.</li>
+              <li>First, <span className='font-bold hover:text-gray-900'>Create new scene </span> or <span className='font-bold hover:text-gray-900'>Modify available scene</span>.</li>
+              <li>Second, <span className='font-bold hover:text-gray-900'>Modify condition </span>to trigger the context.</li>
               <li>Then, <span className='font-bold hover:text-gray-900'>Decide what to do</span> with your device.</li>
             </ul>
           </div>
@@ -35,7 +35,7 @@ const ContextHomeScreen = () => {
           <h1 className='font-bold mb-3 text-2xl'>Next step</h1>
           <div className='text-gray-500'>
             <ul>
-              <li>Choose a scene to modify on <span className='font-bold hover:text-gray-900'>List of scences</span></li>
+              <li>Choose a scene to modify on <span className='font-bold hover:text-gray-900'>List of scenes</span></li>
               <li>OR</li>
               <li><span className='font-bold hover:text-gray-900'>Create a new scene</span></li>
             </ul>
