@@ -7,16 +7,32 @@ import LightControl from "../components/manualcontrol/LightControl";
 import FanControl from "../components/manualcontrol/FanControl";
 import fanicon from "../images/Fan.png";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function ManualControl() {
   const [isLightControl, setisLightControl] = useState(false);
   const [isFanControl, setisFanControl] = useState(true);
   const [devices, setDevices] = useState([]);
 
+  const [isRedLight, setisRedLight] = React.useState(true);
+  const [isBlueLight, setisBlueLight] = React.useState(false);
+  const [isYellowLight, setisYellowLight] = React.useState(false);
+  const [isLightOn, setisLightOn] = React.useState(true);
+  const [isFanOn, setisFanOn] = React.useState(true);
+  const [fanStat, setFanStat] = React.useState(null);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+    const handleLightControl = () => {
+    setisLightControl(true);
+    setisFanControl(false);
+  }
+  const handleFanControl = () => {
+    setisFanControl(true);
+    setisLightControl(false);
+  }
+  
+  // Lấy dữ liệu về danh sách thiết bị (Lần đầu tiên)
   const fetchDevices = async () => {
     try {
       const config = {
@@ -33,22 +49,8 @@ function ManualControl() {
       console.error(error);
     }
   };
-  const handleLightControl = () => {
-    setisLightControl(true);
-    setisFanControl(false);
-  }
-  const handleFanControl = () => {
-    setisFanControl(true);
-    setisLightControl(false);
-  }
 
-  const [isRedLight, setisRedLight] = React.useState(true);
-  const [isBlueLight, setisBlueLight] = React.useState(false);
-  const [isYellowLight, setisYellowLight] = React.useState(false);
-  const [isLightOn, setisLightOn] = React.useState(true);
-  const [isFanOn, setisFanOn] = React.useState(true);
-  const [fanStat, setFanStat] = React.useState(null);
-
+  // Lấy dữ liệu từ adafruit và set state (Lần đầu tiên)
   const getLedState = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
     const { value } = data[0];
@@ -79,6 +81,7 @@ function ManualControl() {
     }
   }
 
+  // Lấy dữ liệu từ MQTT và set state (Update)
   useEffect(() => {
     client.on("message", (topic, message) => {
       if (topic === "Tori0802/feeds/w-led") {
@@ -106,7 +109,6 @@ function ManualControl() {
       }
     });
   });
-
   useEffect(() => {
     client.on("message", (topic, message) => {
       if (topic === "Tori0802/feeds/w-fan") {
@@ -124,6 +126,7 @@ function ManualControl() {
     });
   });
 
+  // Lấy dữ liệu lần đầu tiên render
   useEffect(() => {
     fetchDevices();
     getLedState(setisBlueLight, setisYellowLight, setisRedLight, setisLightOn);
