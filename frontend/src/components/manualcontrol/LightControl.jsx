@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import lighticon from "../../images/lighticon2.png";
 import yellowlighticon from "../../images/yellowlighticon.png";
 import redlighticon from "../../images/redlighticon.png";
@@ -7,13 +7,14 @@ import shutdown from "../../images/shutdown.png";
 import arrow from "../../images/straight-arrow.png";
 import client from "../../mqtt/mqtt";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getLedStateFirst } from "../../redux/actions/deviceActions";
 
+// Nhận data qua database/AIO để render lần đầu tiên
 const getLedState = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
     const { value } = data[0];
-    // console.log("Led State - frontend: ",value);
+
     if (value === "#000000") {
         setisLightOn(false);
         setisRedLight(false);
@@ -49,6 +50,7 @@ function LightControl() {
 
     const dispatch = useDispatch();
 
+    // Nhận data qua mqtt và re-render Led State trên UI
     useEffect(() => {
         client.on("message", (topic, message) => {
             if (topic === "Tori0802/feeds/w-led") {
@@ -82,6 +84,7 @@ function LightControl() {
         dispatch(getLedStateFirst());
     }, []);
 
+    // Gửi data qua mqtt và update Led State trên UI
     const handleRedLight = () => {
         if (client) {
             client.publish(
@@ -115,6 +118,7 @@ function LightControl() {
         setisBlueLight(false);
         setisYellowLight(true);
     };
+    // Lưu giữ state của đèn khi tắt và bật
     const handleLightState = () => {
         if (!isLightOn && isRedLight) {
             if (client) {
