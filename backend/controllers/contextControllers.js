@@ -51,7 +51,7 @@ const deleteContext = asyncHandler(async (req, res) => {
         body: {
           name: `Delete context`,
           type: "context",
-          message: "Delete context: ${context.name}",
+          message: `Delete context: ${context.name}`,
         },
         user: user,
       });

@@ -51,7 +51,7 @@ function All() {
     return (
         <View className = 'bg-white mt-2 mb-2 ml-2 mr-2 rounded-2xl p-5'>
             <ScrollView>
-                {notificationlist.map((item) => (
+                {notificationlist.slice(0).reverse().map((item) => (
                     <View key={item._id} className = "flex flex-col pb-5 border-b border-gray-100">
                         <Text className = "font-bold mt-5">{item.name}</Text>
                         <Text className = 'text-gray-500 mt-5'>{item.message}</Text>
@@ -91,7 +91,7 @@ function Alerts() {
     return (
         <View className = 'bg-white mt-2 mb-2 ml-2 mr-2 rounded-2xl p-5'>
             <ScrollView>
-                {notificationlist.map((item) => (
+                {notificationlist.slice(0).reverse().map((item) => (
                     <View key={item._id} className = "flex flex-col pb-5 border-b border-gray-100">
                         <Text className = "font-bold mt-5">{item.name}</Text>
                         <Text className = 'text-gray-500 mt-5'>{item.message}</Text>
@@ -131,7 +131,7 @@ function Contexts() {
     return (
         <View className = 'bg-white mt-2 mb-2 ml-2 mr-2 rounded-2xl p-5'>
             <ScrollView>
-                {notificationlist.map((item) => (
+                {notificationlist.slice(0).reverse().map((item) => (
                     <View key={item._id} className = "flex flex-col pb-5 border-b border-gray-100">
                         <Text className = "font-bold mt-5">{item.name}</Text>
                         <Text className = 'text-gray-500 mt-5'>{item.message}</Text>
