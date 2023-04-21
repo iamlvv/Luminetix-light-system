@@ -1,11 +1,12 @@
 import { View, Text, Switch, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import ContextInfo from './ContextInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { contextToggle, listOfContexts } from '../../redux/actions/contextActions';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, RefreshControl } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import ContextCreate from './ContextCreate';
@@ -26,18 +27,25 @@ function MyStack() {
     </Stack.Navigator>
   );
 }
-function ContextHome({ navigation }) {
+function ContextHome({ route, navigation }) {
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
   const { loading, error, contextlist } = contextList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
   const [stateContext, setStateContext] = useState(null)
-
+  const [id, setId] = useState(null)
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   useEffect(() => {
     dispatch(listOfContexts());
-  }, [navigation]);
+  }, [navigation, dispatch, id, refreshing]);
+
 
   const handleToggleContext = async (id) => {
     dispatch(contextToggle(id));
@@ -64,8 +72,11 @@ function ContextHome({ navigation }) {
     }
   }
   return (
-    <View>
-      <ScrollView>
+    <View className=''>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View className='items-center mt-10 mb-10'>
           <Text className='font-bold text-xl'>Context Setup</Text>
         </View>

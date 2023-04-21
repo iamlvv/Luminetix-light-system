@@ -2,11 +2,13 @@ import { View, Text, Image, TouchableOpacity, Button } from 'react-native'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { contextDetail } from '../../redux/actions/contextActions';
+import { contextDetail, listOfContexts } from '../../redux/actions/contextActions';
 import { ScrollView, Switch, TextInput } from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown'
 import CheckBox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Link } from '@react-navigation/native';
+
 const ipaddress = "10.0.145.226";
 
 const ContextCreate = ({navigation}) => {
@@ -212,7 +214,7 @@ const ContextCreate = ({navigation}) => {
             .then(response => response.json())
             .then(data => {
                 alert("Create context successfully")
-                navigation.navigate('ContextHome')
+                navigation.navigate('ContextHome', { id: Math.random()})
             }
             )
             .catch((error) => {
