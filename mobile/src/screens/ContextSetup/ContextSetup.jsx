@@ -1,6 +1,6 @@
 import { View, Text, Switch, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import ContextInfo from './ContextInfo';
@@ -36,6 +36,7 @@ function ContextHome({ route, navigation }) {
   const [stateContext, setStateContext] = useState(null)
   const [id, setId] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
+  const isFocused = useIsFocused();
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -44,7 +45,7 @@ function ContextHome({ route, navigation }) {
   }, []);
   useEffect(() => {
     dispatch(listOfContexts());
-  }, [navigation, dispatch, id, refreshing]);
+  }, [navigation, dispatch, id, refreshing, isFocused]);
 
 
   const handleToggleContext = async (id) => {
