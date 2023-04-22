@@ -156,7 +156,7 @@ const contextSchema = mongoose.Schema(
           default: false,
         },
       },
-    },
+    }
   },
   {
     timestamps: true,

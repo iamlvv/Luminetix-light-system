@@ -7,6 +7,7 @@ const LED = require("../../models/deviceModel/LEDModel");
 const HumanDetection = require("../../models/deviceModel/humanDetectionModel");
 const { addNoti } = require("../../controllers/notiControllers");
 
+
 const handleDeviceMessage = async (topic, message) => {
   const hasDigit = /\d/.test(topic);
   const topicArray = topic.split("-");
@@ -120,4 +121,4 @@ const handleDeviceMessage = async (topic, message) => {
   }
 };
 
-module.exports = { handleDeviceMessage};
+module.exports = {handleDeviceMessage};

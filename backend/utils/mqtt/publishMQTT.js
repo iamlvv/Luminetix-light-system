@@ -3,8 +3,10 @@ const Humidity = require("../../models/deviceModel/humidityModel");
 const Temperature = require("../../models/deviceModel/temperatureModel");
 const Fan = require("../../models/deviceModel/fanModel");
 const LED = require("../../models/deviceModel/LEDModel");
+const client = require("./connectMQTT");
 
-const controlDevice = async (deviceType, deviceName, message, client) => {
+
+const controlDevice = async (deviceType, deviceName, message) => {
   try {
     let deviceModel;
     if (deviceType == "w-led") deviceModel = LED;
