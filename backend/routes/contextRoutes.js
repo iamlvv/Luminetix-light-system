@@ -13,7 +13,7 @@ const { protect } = require("../middleware/authMiddleware.js");
 router
 .route("/")
 .get(protect, getAllContexts)
-.post(createContext);
+.post(protect,createContext);
 router
 .route("/:id")
 .delete(protect,deleteContext)
