@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import Swal from "sweetalert2";
 import {
     USER_DETAILS_FAIL,
@@ -21,6 +21,7 @@ import {
 
 } from "../../constants/userConstants";
 
+const url = process.env.REACT_APP_API_URL;
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({
@@ -32,9 +33,9 @@ export const login = (email, password) => async (dispatch) => {
                 "Content-Type": "application/json",
             },
         };
-
+        console.log( `${url}/users/login`);
         const { data } = await axios.post(
-            "http://localhost:5000/api/users/login",
+            `${url}/users/login`,
             { email, password },
             config
         );
@@ -81,7 +82,7 @@ export const register =
             };
 
             const { data } = await axios.post(
-                "http://localhost:5000/api/users",
+                `${url}/users`,
                 { fullname, username, email, password, phone },
                 config
             );
@@ -123,7 +124,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`http://localhost:5000/api/users/${id}`, config);
+        const { data } = await axios.get(`${url}/users/${id}`, config);
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -161,7 +162,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://localhost:5000/api/users/profile`, user, config);
+        const { data } = await axios.put(`${url}/users/profile`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -200,7 +201,7 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const { data } = await axios.put(`http://localhost:5000/api/users/password`, user, config);
+        const { data } = await axios.put(`${url}/users/password`, user, config);
         Swal.fire({
             icon: "success",
             title: "Success",

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFanStatFirst } from '../../redux/actions/deviceActions';
 
+
 const getFanStat = async (setFanStat, setisFanOn) => {
     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data");
     const { value } = data[0];

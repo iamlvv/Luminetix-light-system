@@ -20,6 +20,8 @@ import {
 } from "../../constants/notificationConstants";
 import client from "../../mqtt/mqtt";
 
+const url = process.env.REACT_APP_API_URL;
+
 export const notificationList = (user) => async (dispatch, getState) => {
   try {
     dispatch({ type: NOTIFICATION_LIST_REQUEST });
@@ -32,7 +34,7 @@ export const notificationList = (user) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const listOfNoti = await axios.get("/api/users/noti");
+    const listOfNoti = await axios.get(`${url}/users/noti`);
     console.log(listOfNoti);
     dispatch({ type: NOTIFICATION_LIST_SUCCESS, payload: listOfNoti });
   } catch (error) {
@@ -43,7 +45,7 @@ export const notificationList = (user) => async (dispatch, getState) => {
 export const notificationDetail = (id) => async (dispatch) => {
   try {
     dispatch({ type: NOTIFICATION_DETAIL_REQUEST });
-    const listOfNoti = await axios.get("/api/users/noti");
+    const listOfNoti = await axios.get(`${url}/users/noti`);
     dispatch({
       type: NOTIFICATION_DETAIL_SUCCESS,
       payload: listOfNoti.find((x) => x.id === id),
@@ -57,7 +59,7 @@ export const notificationCreate = (notification) => async (dispatch) => {
   try {
     axios({
       method: "POST",
-      url: "/api/users/noti",
+      url: `${url}/users/noti`,
       data: {
         name: notification.name,
         type: notification.type,
