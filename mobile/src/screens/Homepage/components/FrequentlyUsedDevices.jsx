@@ -17,8 +17,8 @@ const FrequentlyUsedDevices = () => {
                 client.subscribe('Tori0802/feeds/w-s-humi')
                 client.onMessageArrived = onMessage
             },
-            userName: options.username,
-            password: options.password,
+            // userName: options.username,
+            // password: options.password,
             onFailure: (errorMessage) => {
                 console.log('Connection failed: ' + errorMessage.errorMessage);
             }

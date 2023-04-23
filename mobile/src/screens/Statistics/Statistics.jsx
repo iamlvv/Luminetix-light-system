@@ -5,6 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 import axios from 'axios';
 import ChartStats from './components/ChartStats';
+const ipaddress = process.env['IPADDRESS'];
 
 const solveDataDay = (startTime, endTime, dataNeedSolving) => {
   let dataSolved = [];

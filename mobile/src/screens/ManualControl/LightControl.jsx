@@ -93,7 +93,7 @@ const LightControl = ({ navigation }) => {
     return (
         <View className='h-5/6 mt-6 mx-3'>
             {/* Header */}
-            <View className='flex flex-row mt-5'>
+            <View className='flex flex-row mt-5 items-center'>
                 {/* Back button */}
                 <TouchableOpacity onPress={() => navigation.navigate("ManualControl")} className='items-center ml-5 flex flex-row'>
                     <Ionicons name="chevron-back-outline" size={25} color="#5E44FF" />

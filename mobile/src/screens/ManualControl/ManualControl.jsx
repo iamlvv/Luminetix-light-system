@@ -9,7 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
 
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env['IPADDRESS'];
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -23,7 +23,7 @@ function MyStack() {
 }
 
 function ManualControlHome({ navigation }) {
-  const isFocused = useIsFocused();
+  const isFocused = useIsFocused(); 
 
   const [ledState, setLedState] = useState('#000000');
   const [fanState, setFanState] = useState('OFF');
@@ -99,7 +99,7 @@ function ManualControlHome({ navigation }) {
       {/* Header */}
       <View className='flex flex-row mt-5 justify-center items-center'>
         {/* Back button */}
-        <View View className='items-center ml-10'>
+        <View className='items-center ml-10'>
           {/* <TouchableOpacity
             onPress={handleBackBtn}
           >
@@ -107,11 +107,11 @@ function ManualControlHome({ navigation }) {
           </TouchableOpacity> */}
         </View>
         {/* Profile title */}
-        <View View className='mx-auto' >
+        <View className='mx-auto' >
           <Text className='font-semibold text-2xl'>Manual control</Text>
         </View>
         {/* Noti button */}
-        <View View className='items-center mr-5' >
+        <View className='items-center mr-5' >
           <TouchableOpacity
             onPress={handleNotiBtn}
           >
