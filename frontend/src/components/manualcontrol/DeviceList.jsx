@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import lighticon from "../../images/lighticon2.png";
 import fanicon from "../../images/Fan.png";
+const url = process.env.REACT_APP_API_URL;
+
 
 function DeviceList() {
   const [devices, setDevices] = useState([]);
@@ -9,8 +11,8 @@ function DeviceList() {
   const [FanState, setFanState] = useState("");
   const fetchDevices = async () => {
     try {
-      const led_res = await axios.get("http://localhost:5000/api/devices/led");
-      const fan_res = await axios.get("http://localhost:5000/api/devices/fan");
+      const led_res = await axios.get(`${url}/devices/led`);
+      const fan_res = await axios.get(`${url}/devices/fan`);
       const devices = [...led_res.data.leds, ...fan_res.data.fans];
       console.log(devices);
       setDevices(devices);

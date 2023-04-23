@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getUserDetails } from "../../redux/actions/userActions";
 import axios from "axios";
 import Swal from "sweetalert2";
+const url = process.env.REACT_APP_API_URL;
+
 const itemsNoti = (list) => {
   return list.slice(0).reverse().map((index) => (
     <div className="grid grid-cols-4 mb-5 shadow-xl rounded-2xl p-3" key={index._id}>
@@ -47,7 +49,7 @@ export default function NotificationsBar() {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    const { data } = await axios.get(`http://localhost:5000/api/users/noti`, config);
+    const { data } = await axios.get(`${url}/users/noti`, config);
     const { notifications } = data;
     setNotificationList(notifications);
   }
@@ -84,7 +86,7 @@ export default function NotificationsBar() {
             Authorization: `Bearer ${userInfo.token}`,
           },
         }
-        axios.delete(`http://localhost:5000/api/users/noti`, config);
+        axios.delete(`${url}/users/noti`, config);
         setFilteredList([]);
         Swal.fire(
           'Deleted!',

@@ -8,6 +8,7 @@ const {handleMQTT} = require("./utils/mqtt/connectMQTT");
 const {dailyRepeatContext} = require("./controllers/contextControllers");
 const bodyParser=require("body-parser")
 const port = process.env.PORT || 5000;
+const apiUrl = process.env.API_URL || `http://localhost:${port}`
 
 connectDB();
 const cors = require("cors");
@@ -26,3 +27,5 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+
+console.log(`API URL: ${apiUrl}`);

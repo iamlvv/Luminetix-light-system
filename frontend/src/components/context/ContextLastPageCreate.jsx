@@ -6,6 +6,9 @@ import contextsetupicon from '../../images/contextsetupicon.png'
 import NavBar from '../NavBar'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+
+const url = process.env.REACT_APP_API_URL;
+
 function ContextLastPageCreate() {
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
@@ -19,7 +22,7 @@ function ContextLastPageCreate() {
                     Authorization: `Bearer ${userInfo.token}`,
                 },
             };
-            const response = await axios.get(`http://localhost:5000/api/contexts/`, config);
+            const response = await axios.get(`${url}/contexts/`, config);
             const { data } = response;
             console.log(data[data.length - 1]);
             setName(data[data.length - 1].name);

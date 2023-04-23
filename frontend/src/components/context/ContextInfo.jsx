@@ -11,6 +11,8 @@ import fanicon2 from '../../images/fanicon1.jpg'
 import lighticon2 from '../../images/lighticon2.png'
 import { turnOnLed } from '../../redux/actions/deviceActions';
 import axios from 'axios';
+const url = process.env.REACT_APP_API_URL;
+
 function ContextInfo() {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
@@ -47,7 +49,7 @@ function ContextInfo() {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const response = await axios.get('http://localhost:5000/api/contexts', config);
+      const response = await axios.get(`${url}/contexts`, config);
       const data = response.data.find(x => x._id == id);
       setName(data.name)
       setDescription(data.description)

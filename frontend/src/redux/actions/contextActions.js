@@ -24,6 +24,8 @@ import {
     CONTEXT_TOGGLE_FAIL,
 } from "../../constants/contextConstants";
 import axios from "axios";
+const url = process.env.REACT_APP_API_URL;
+
 export const listOfContexts = () => async (dispatch, getState) => {
     try {
         dispatch({ type: CONTEXT_LIST_REQUEST });
@@ -35,7 +37,7 @@ export const listOfContexts = () => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const response = await axios.get('http://localhost:5000/api/contexts', config);
+        const response = await axios.get(`${url}/contexts`, config);
         const { data } = response;
         dispatch({ type: CONTEXT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -54,7 +56,7 @@ export const contextDetail = (id) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const response = await axios.get('http://localhost:5000/api/contexts', config);
+        const response = await axios.get(`${url}/contexts`, config);
         const { data } = response;
         dispatch({ type: CONTEXT_DETAIL_SUCCESS, payload: data.find(x => x._id == id) });
     } catch (error) {
@@ -73,7 +75,7 @@ export const contextToggle = (id) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const response = await axios.patch(`http://localhost:5000/api/contexts/${id}`, config);
+        const response = await axios.patch(`${url}/contexts/${id}`, config);
         console.log(response);
         dispatch({ type: CONTEXT_TOGGLE_SUCCESS, payload: response });
     }

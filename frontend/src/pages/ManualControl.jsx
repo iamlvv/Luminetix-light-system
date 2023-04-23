@@ -9,6 +9,9 @@ import fanicon from "../images/Fan.png";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+const url = process.env.REACT_APP_API_URL;
+
+
 function ManualControl() {
   const [isLightControl, setisLightControl] = useState(false);
   const [isFanControl, setisFanControl] = useState(true);
@@ -40,8 +43,8 @@ function ManualControl() {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const led_res = await axios.get("http://localhost:5000/api/devices/led", config);
-      const fan_res = await axios.get("http://localhost:5000/api/devices/fan", config);
+      const led_res = await axios.get(`${url}/devices/led`, config);
+      const fan_res = await axios.get(`${url}/devices/fan`, config);
       const devices = [...led_res.data.leds, ...fan_res.data.fans];
       console.log(devices);
       setDevices(devices);

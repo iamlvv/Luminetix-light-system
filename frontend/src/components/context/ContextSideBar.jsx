@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { contextToggle, listOfContexts } from '../../redux/actions/contextActions';
 import axios from 'axios';
+const url = process.env.REACT_APP_API_URL;
+
 function ContextSideBar() {
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
@@ -35,7 +37,7 @@ function ContextSideBar() {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const response = await axios.delete(`http://localhost:5000/api/contexts/${id}`, config);
+      const response = await axios.delete(`${url}/contexts/${id}`, config);
       const { data } = response;
       dispatch(listOfContexts());
     } catch (error) {
