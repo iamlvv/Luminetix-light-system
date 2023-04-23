@@ -9,7 +9,7 @@ import CheckBox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Link } from '@react-navigation/native';
 
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 
 const ContextCreate = ({navigation}) => {
     const color = ["Red", "Blue", "Yellow"]
@@ -20,10 +20,9 @@ const ContextCreate = ({navigation}) => {
 
     const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
     const [toggleButtonHum, setToggleButtonHum] = React.useState(false);
-    const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(false);
+    const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(true);
     const [toggleButtonLED, setToggleButtonLED] = React.useState(false);
     const [toggleButtonFan, setToggleButtonFan] = React.useState(false);
-    const [toggleButtonSystem, setToggleButtonSystem] = React.useState(false);
     const [toggleButtonLight, setToggleButtonLight] = React.useState(false);
 
     const [name, setName] = React.useState("");
@@ -250,10 +249,12 @@ const ContextCreate = ({navigation}) => {
                             <Text>From</Text>
                             <TextInput value={fromTemp || ""} onChangeText={(text) => setFromTemp(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                             <Text>To</Text>
                             <TextInput value={toTemp || ""} onChangeText={(text) => setToTemp(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                         </View>
                     </View>
@@ -269,10 +270,12 @@ const ContextCreate = ({navigation}) => {
                             <Text>From</Text>
                             <TextInput value={fromHum || ""} onChangeText={(text) => setFromHum(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                             <Text>To</Text>
                             <TextInput value={toHum || ""} onChangeText={(text) => setToHum(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                         </View>
                     </View>
@@ -289,10 +292,12 @@ const ContextCreate = ({navigation}) => {
                             <Text>From</Text>
                             <TextInput value={fromLight || ""} onChangeText={(text) => setFromLight(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                             <Text>To</Text>
                             <TextInput value={toLight || ""} onChangeText={(text) => setToLight(text)}
                                 className='border border-gray-200 rounded-sm mr-1'
+                                keyboardType='numeric'
                             />
                         </View>
                     </View>
@@ -300,7 +305,7 @@ const ContextCreate = ({navigation}) => {
                 <View className='items-center mt-5'>
                     <View className='flex flex-row items-center justify-center bg-white rounded-2xl w-2/3 mb-5 ml-5 mr-5 p-5'>
                         <Text className=''>Detect People</Text>
-                        <Switch value={toggleButtonHumanDetection} onValueChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
+                        <Switch value={toggleButtonHumanDetection} onValueChange={() => setToggleButtonHumanDetection(toggleButtonHumanDetection)}
                             trackColor={{ false: '#E3E5E5', true: '#593EFF' }}
                             thumbColor={toggleButtonHumanDetection ? '#f4f3f4' : '#593EFF'}
                         />
@@ -407,6 +412,7 @@ const ContextCreate = ({navigation}) => {
                             <View className='mt-5'>
                                 <TextInput value={fanSpeed || ""} onChangeText={(text) => setFanSpeed(text)}
                                     className='border border-gray-200 rounded-sm mr-1'
+                                    keyboardType='numeric'
                                 />
                             </View>
                         </View>
@@ -420,6 +426,7 @@ const ContextCreate = ({navigation}) => {
                             <Text>Email</Text>
                             <TextInput value={email || ""} onChangeText={(text) => setEmail(text)}
                                 className='border border-gray-200 rounded-2xl mr-1 mt-2 mb-2 p-2'
+                                keyboardType='email-address'
                             />
                             <View className='flex flex-1 gap-5 flex-col'>
                                 <View className='flex flex-1 gap-2 flex-row'>

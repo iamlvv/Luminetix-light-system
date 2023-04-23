@@ -21,7 +21,7 @@ import {
 } from "../../constants/userConstants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 
 const storeData = async (data) => {
     try {

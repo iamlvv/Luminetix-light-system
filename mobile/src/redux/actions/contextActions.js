@@ -24,7 +24,7 @@ import {
     CONTEXT_TOGGLE_FAIL,
 } from "../../constants/contextConstants";
 import axios from "axios";
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 
 export const listOfContexts = () => async (dispatch, getState) => {
     try {

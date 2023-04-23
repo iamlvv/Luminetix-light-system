@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 
 import axios from 'axios';
 import ChartStats from './components/ChartStats';
-const ipaddress = "10.0.145.226";
 
 const solveDataDay = (startTime, endTime, dataNeedSolving) => {
   let dataSolved = [];
@@ -167,6 +167,7 @@ const Statistics = () => {
   const periodList = ["Day", "Week", "Month"];
   const typeofstatsList = ["temperature", "humidity", "light"];
 
+  const isFocused = useIsFocused();
   const getTempStatDay = async () => {
     const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
     const endTime = new Date().toISOString();
@@ -249,7 +250,7 @@ const Statistics = () => {
     getTempStatMonth();
     getHumidStatMonth();
     getLightStatMonth();
-  }, [period, typeofstats])
+  }, [period, typeofstats, isFocused])
 
 
   if (typeofstats === "temperature" && period === "day") {
@@ -286,65 +287,64 @@ const Statistics = () => {
   const weekInactive = 'bg-white text-violet-500 rounded-2xl p-2';
   const monthActive = 'bg-violet-200 text-violet-500 rounded-2xl p-2';
   const monthInactive = 'bg-white text-violet-500 rounded-2xl p-2';
-  console.log(data)
   return (
-    <View>
+    <View className=''>
       <ScrollView>
         <View className="items-center mt-10">
           <Text className="font-bold text-2xl">Statistics</Text>
         </View>
-        <View className='flex flex-1 flex-row justify-center gap-9 mb-10'>
-          <View className='flex-1 flex flex-col bg-white rounded-2xl p-2'>
-            <View className='items-center'>
-              <Text className='font-bold text-violet-500'>Average Figure</Text>
+          <View className='flex flex-1 flex-row justify-center gap-9 mb-10 mt-5'>
+            <View className='flex-1 flex flex-col bg-white rounded-2xl p-2 ml-5'>
+              <View className='items-center'>
+                <Text className='font-bold text-violet-500'>Average Figure</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Temperature</Text>
+                <Text>{31.2}</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Humidity</Text>
+                <Text>{31.2}</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Light</Text>
+                <Text>{31.2}</Text>
+              </View>
             </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Temperature</Text>
-              <Text>{31.2}</Text>
-            </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Humidity</Text>
-              <Text>{31.2}</Text>
-            </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Light</Text>
-              <Text>{31.2}</Text>
+            <View className='flex-1 flex flex-col bg-white rounded-2xl p-2'>
+              <View className='items-center'>
+                <Text className='font-bold text-violet-500'>Current Figure</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Temperature</Text>
+                <Text>{31.2}</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Humidity</Text>
+                <Text>{31.2}</Text>
+              </View>
+              <View className='flex flex-row justify-between gap-5'>
+                <Text>Light</Text>
+                <Text>{31.2}</Text>
+              </View>
             </View>
           </View>
-          <View className='flex-1 flex flex-col bg-white rounded-2xl p-2'>
-            <View className='items-center'>
-              <Text className='font-bold text-violet-500'>Current Figure</Text>
-            </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Temperature</Text>
-              <Text>{31.2}</Text>
-            </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Humidity</Text>
-              <Text>{31.2}</Text>
-            </View>
-            <View className='flex flex-row justify-between gap-5'>
-              <Text>Light</Text>
-              <Text>{31.2}</Text>
-            </View>
+          <View className='flex flex-row mb-5 items-center justify-center gap-9'>
+            {periodList.map((item, index) => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  setPeriod(item.toLowerCase());
+                  setActive(index + 1);
+                }} key={index}
+                  className={item === 'Day' ? active === 1 ? dayActive : dayInactive : item === 'Week' ? active === 2 ? weekActive : weekInactive : active === 3 ? monthActive : monthInactive}
+                >
+                  <Text className="font-bold text-xl">{item}</Text>
+                </TouchableOpacity>
+              )
+            })
+            }
           </View>
-        </View>
-        <View className='flex flex-row mb-5 items-center justify-center gap-9'>
-          {periodList.map((item, index) => {
-            return (
-              <TouchableOpacity onPress={() => {
-                setPeriod(item.toLowerCase());
-                setActive(index + 1);
-              }} key={index}
-                className={item === 'Day' ? active === 1 ? dayActive : dayInactive : item === 'Week' ? active === 2 ? weekActive : weekInactive : active === 3 ? monthActive : monthInactive}
-              >
-                <Text className="font-bold text-xl">{item}</Text>
-              </TouchableOpacity>
-            )
-          })
-          }
-        </View>
-        <View className='flex flex-row gap-9'>
+        <View className='flex flex-row gap-9 justify-center'>
           {typeofstatsList.map((item, index) => {
             return (
               <TouchableOpacity onPress={() => setTypeofstats(item)} key={index}
@@ -357,7 +357,7 @@ const Statistics = () => {
           })
           }
         </View>
-        <View>
+        <View className='mt-10'>
           <ChartStats data={data} typeofstats={typeofstats} />
         </View>
       </ScrollView>

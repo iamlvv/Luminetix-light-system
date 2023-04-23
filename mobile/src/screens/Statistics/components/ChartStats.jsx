@@ -1,4 +1,4 @@
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
 import { LineChart } from "react-native-chart-kit";
 
@@ -60,7 +60,7 @@ const ChartStats = ({ data, typeofstats }) => {
                             borderRadius: 16
                         }}
                     />
-                    : <Text>loading</Text>}
+                    : <ActivityIndicator size="large" color="#593EFF" />}
             </View>
         </View>
     )

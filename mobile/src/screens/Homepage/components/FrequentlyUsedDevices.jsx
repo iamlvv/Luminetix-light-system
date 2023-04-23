@@ -1,10 +1,39 @@
 import { View, Text, Switch, ScrollView, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Paho from 'paho-mqtt'
+
+//const mqtt = require('mqtt');
+
+const options = {
+    username: 'Tori0802',
+    password: 'aio_cIuj686CteXKup6dz0WwPKcaYjB3'
+};
+
+const client = new Paho.Client('io.adafruit.com', Number(8883), 'clientId-' + Math.round(Math.random(100000000, 1000000000)*1000000000));
+
+const brokerUrl = "mqtt://io.adafruit.com";
+const username = "Tori0802";
+const password = "aio_cIuj686CteXKup6dz0WwPKcaYjB3";
 
 const FrequentlyUsedDevices = () => {
     const [toggleButton1, setToggleButton1] = useState(false);
     const [toggleButton2, setToggleButton2] = useState(false);
     const [toggleButton3, setToggleButton3] = useState(false);
+    useEffect(() => {
+        client.connect({
+            onSuccess: () => {
+                console.log('connected')
+                client.subscribe('Tori0802/feeds/w-s-humi')
+                client.onMessageArrived = onMessage
+            },
+            userName: options.username,
+            password: options.password,
+            onFailure: (errorMessage) => {
+                console.log('Connection failed: ' + errorMessage.errorMessage);
+            }
+        })
+    }, [])
+
 
     const handleHumidityChange = () => {
         setToggleButton1(!toggleButton1)

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
 const Tab = createMaterialTopTabNavigator();
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 function MyTabs() {
     return (
         <Tab.Navigator>
@@ -91,13 +91,13 @@ function Alerts() {
     return (
         <View className = 'bg-white mt-2 mb-2 ml-2 mr-2 rounded-2xl p-5'>
             <ScrollView>
-                {notificationlist.slice(0).reverse().map((item) => (
+                {notificationlist ? notificationlist.slice(0).reverse().map((item) => (
                     <View key={item._id} className = "flex flex-col pb-5 border-b border-gray-100">
                         <Text className = "font-bold mt-5">{item.name}</Text>
                         <Text className = 'text-gray-500 mt-5'>{item.message}</Text>
                         <Text className = 'mt-5'>{convertISOtoString(item.created_date)}</Text>
                     </View>
-                ))}
+                )) : <ActivityIndicator size="large" color="#593EFF" />}
 
             </ScrollView>
         </View>

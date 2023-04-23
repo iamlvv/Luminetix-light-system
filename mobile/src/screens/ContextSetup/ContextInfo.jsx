@@ -9,11 +9,10 @@ import CheckBox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import axios from 'axios';
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 const ContextInfo = ({ route }) => {
   const color = ["Red", "Blue", "Yellow"]
   const repeatList = ["Today", "Everyday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-  const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const id = route.params.id;
@@ -46,7 +45,7 @@ const ContextInfo = ({ route }) => {
   const [dateTime, setDateTime] = React.useState(false);
   useEffect(() => {
     getContextDetail(id);
-  }, [dispatch, id])
+  }, [id])
 
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -96,22 +95,29 @@ const ContextInfo = ({ route }) => {
       };
       const response = await axios.get(`http://${ipaddress}:5000/api/contexts`, config);
       const data = response.data.find(x => x._id == id);
+      //console.log(data.output.active_time.end_time)
       setName(data.name)
       setDescription(data.description)
-      setFromTemp(data.input.active_temperature.min)
-      setToTemp(data.input.active_temperature.max)
-      setFromHum(data.input.active_humidity.min)
-      setToHum(data.input.active_humidity.max)
+      setFromTemp(data.input.active_temperature.min.toString())
+      setToTemp(data.input.active_temperature.max.toString())
+      setFromHum(data.input.active_humidity.min.toString())
+      setToHum(data.input.active_humidity.max.toString())
+      setFromLight(data.input.active_light.min.toString())
+      setToLight(data.input.active_light.max.toString())
       setRepeat(data.output.frequency.today)
       setToggleButtonTemp(data.input.active_temperature.active)
       setToggleButtonHum(data.input.active_humidity.active)
       setToggleButtonHumanDetection(data.input.human_detection.active)
       setToggleButtonLight(data.input.active_light.active)
-      setToggleButtonLED(data.output.control_led[0].status)
-      setToggleButtonFan(data.output.control_fan[0].status)
       setRepeat(data.output.frequency.today ? "Today" : data.output.frequency.repeat.daily ? "Everyday" : data.output.frequency.weekly[0] ? "Monday" : data.output.frequency.weekly[1] ? "Tuesday" : data.output.frequency.weekly[2] ? "Wednesday" : data.output.frequency.weekly[3] ? "Thursday" : data.output.frequency.weekly[4] ? "Friday" : data.output.frequency.weekly[5] ? "Saturday" : data.output.frequency.weekly[6] ? "Sunday" : "")
       setStartTime(data.output.active_time.start_time)
       setEndTime(data.output.active_time.end_time)
+      setToggleButtonLED(data.output.control_led.length > 0 ? data.output.control_led[0].status : false)
+      setToggleButtonFan(data.output.control_fan.length > 0 ? data.output.control_fan[0].status : false)
+      setLEDColor(data.output.control_led.length > 0 ? data.output.control_led[0].value : "")
+      setFanLevel(data.output.control_fan.length > 0 ? data.output.control_fan[0].value : "")
+      setEmail(data.notification.email)
+      setMessage(data.notification.message)
     }
 
     catch (error) {
@@ -119,9 +125,6 @@ const ContextInfo = ({ route }) => {
     }
 
   }
-  useEffect(() => {
-    dispatch(contextDetail(id));
-  }, [dispatch, id])
 
   const handleSubmit = async () => {
     const config = {
@@ -176,7 +179,7 @@ const ContextInfo = ({ route }) => {
         {
           name: 'LED',
           status: toggleButtonLED,
-          value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yello' ? "#ffff00" : "#ffffff",
+          value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#ffffff",
         }
       ],
       control_fan: [
@@ -245,12 +248,14 @@ const ContextInfo = ({ route }) => {
             </View>
             <View className='flex flex-row items-center'>
               <Text>From</Text>
-              <TextInput value={fromTemp || ""} onChangeText={(text) => setFromTemp(text)}
+              <TextInput value={fromTemp ? fromTemp : "" || ""} onChangeText={(text) => setFromTemp(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
               <Text>To</Text>
               <TextInput value={toTemp || ""} onChangeText={(text) => setToTemp(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
             </View>
           </View>
@@ -266,10 +271,12 @@ const ContextInfo = ({ route }) => {
               <Text>From</Text>
               <TextInput value={fromHum || ""} onChangeText={(text) => setFromHum(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
               <Text>To</Text>
               <TextInput value={toHum || ""} onChangeText={(text) => setToHum(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
             </View>
           </View>
@@ -286,10 +293,12 @@ const ContextInfo = ({ route }) => {
               <Text>From</Text>
               <TextInput value={fromLight || ""} onChangeText={(text) => setFromLight(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
               <Text>To</Text>
               <TextInput value={toLight || ""} onChangeText={(text) => setToLight(text)}
                 className='border border-gray-200 rounded-sm mr-1'
+                keyboardType='numeric'
               />
             </View>
           </View>
@@ -297,9 +306,9 @@ const ContextInfo = ({ route }) => {
         <View className='items-center mt-5'>
           <View className='flex flex-row items-center justify-center bg-white rounded-2xl w-2/3 mb-5 ml-5 mr-5 p-5'>
             <Text className=''>Detect People</Text>
-            <Switch value={toggleButtonHumanDetection} onValueChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
+            <Switch value={true} onValueChange={() => setToggleButtonHumanDetection(true)}
               trackColor={{ false: '#E3E5E5', true: '#593EFF' }}
-              thumbColor={toggleButtonHumanDetection ? '#f4f3f4' : '#593EFF'}
+              thumbColor={toggleButtonTemp ? '#f4f3f4' : '#593EFF'}
             />
           </View>
         </View>
@@ -398,6 +407,7 @@ const ContextInfo = ({ route }) => {
               <View className='mt-5'>
                 <TextInput value={fanLevel || ""} onChangeText={(text) => setFanLevel(text)}
                   className='border border-gray-200 rounded-sm mr-1'
+                  keyboardType='numeric'
                 />
               </View>
             </View>
@@ -406,11 +416,12 @@ const ContextInfo = ({ route }) => {
             <View>
               <Text>Message</Text>
               <TextInput value={message || ""} onChangeText={(text) => setMessage(text)}
-                className='border border-gray-200 rounded-2xl mr-1 mt-2 mb-2'
+                className='border border-gray-200 rounded-2xl mr-1 mt-2 mb-2 p-2'
               />
               <Text>Email</Text>
               <TextInput value={email || ""} onChangeText={(text) => setEmail(text)}
-                className='border border-gray-200 rounded-2xl mr-1 mt-2 mb-2'
+                className='border border-gray-200 rounded-2xl mr-1 mt-2 mb-2 p-2'
+                keyboardType='email-address'
               />
               <View className='flex flex-1 gap-5 flex-col'>
                 <View className='flex flex-1 gap-2 flex-row'>

@@ -1,4 +1,4 @@
-import { View, Text, Switch, TouchableOpacity } from 'react-native'
+import { View, Text, Switch, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 
@@ -11,7 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import ContextCreate from './ContextCreate';
 const Stack = createStackNavigator();
-const ipaddress = "10.0.145.226";
+const ipaddress = process.env.IPADDRESS;
 function MyStack() {
   return (
     <Stack.Navigator>
@@ -111,7 +111,7 @@ function ContextHome({ route, navigation }) {
                     <Switch
                       value={scene.active}
                       onValueChange={() => handleToggleContext(scene._id)}
-                      trackColor={{ false: '#767577', true: '#593EFF' }}
+                      trackColor={{ false: '#E3E5E5', true: '#593EFF' }}
                       thumbColor={scene.active ? '#f4f3f4' : '#593EFF'}
                     />
                     <TouchableOpacity
@@ -121,7 +121,7 @@ function ContextHome({ route, navigation }) {
                     </TouchableOpacity>
                   </View>
                 </View>
-              )) : <Text>Loading...</Text>}
+              )) : <ActivityIndicator size="large" color="#593EFF" />}
             </View>
           </ScrollView>
         </View>
