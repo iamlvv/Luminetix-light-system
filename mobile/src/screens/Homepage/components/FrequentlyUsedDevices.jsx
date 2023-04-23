@@ -4,16 +4,7 @@ import Paho from 'paho-mqtt'
 
 //const mqtt = require('mqtt');
 
-const options = {
-    username: 'Tori0802',
-    password: 'aio_cIuj686CteXKup6dz0WwPKcaYjB3'
-};
-
 const client = new Paho.Client('io.adafruit.com', Number(8883), 'clientId-' + Math.round(Math.random(100000000, 1000000000)*1000000000));
-
-const brokerUrl = "mqtt://io.adafruit.com";
-const username = "Tori0802";
-const password = "aio_cIuj686CteXKup6dz0WwPKcaYjB3";
 
 const FrequentlyUsedDevices = () => {
     const [toggleButton1, setToggleButton1] = useState(false);
