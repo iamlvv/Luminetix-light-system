@@ -44,6 +44,7 @@ function ContextCreatePage() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const navigate = useNavigate();
+  const url = process.env.REACT_APP_API_URL;
   const handleSubmit = (e) => {
     e.preventDefault();
     const config = {
@@ -75,10 +76,10 @@ function ContextCreatePage() {
     }
     var output = {
       frequency: {
-        today: repeat === "Today" ? true : false,
+        no_repeat: repeat === "Today" ? true : false,
         repeat: {
           daily: repeat === 'Everyday' ? true : false,
-          weekly: false,
+          weekly: repeat in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] ? true : false,
           adjust_weekly: {
             monday: repeat === 'Monday' ? true : false,
             tuesday: repeat === 'Tuesday' ? true : false,
@@ -96,14 +97,14 @@ function ContextCreatePage() {
       },
       control_led: [
         {
-          name: 'LED',
+          name: 'led',
           status: toggleButtonLED,
           value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yello' ? "#ffff00" : "#ffffff",
         }
       ],
       control_fan: [
         {
-          name: 'Fan',
+          name: 'fan',
           status: toggleButtonFan,
           value: fanSpeed,
         }
@@ -118,7 +119,7 @@ function ContextCreatePage() {
         }
       }
     }
-    fetch('http://localhost:5000/api/contexts', {
+    axios.fetch(`${url}/contexts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
