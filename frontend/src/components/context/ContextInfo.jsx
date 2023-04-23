@@ -1,16 +1,14 @@
-import { Slider } from '@mui/material';
 import Switch from 'react-switch';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useParams } from 'react-router-dom'
-import { contextDetail, listOfContexts } from '../../redux/actions/contextActions'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
-import ContextNextPage from './ContextNextPage';
 import fanicon2 from '../../images/fanicon1.jpg'
 import lighticon2 from '../../images/lighticon2.png'
-import { turnOnLed } from '../../redux/actions/deviceActions';
 import axios from 'axios';
+import TimePicker from 'rc-time-picker';
+import Swal from 'sweetalert2';
 const url = process.env.REACT_APP_API_URL;
 
 function ContextInfo() {
@@ -24,10 +22,11 @@ function ContextInfo() {
 
   const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
   const [toggleButtonHum, setToggleButtonHum] = React.useState(false);
-  const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(false);
+  const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(true);
   const [toggleButtonLED, setToggleButtonLED] = React.useState(false);
   const [toggleButtonFan, setToggleButtonFan] = React.useState(false);
   const [toggleButtonSystem, setToggleButtonSystem] = React.useState(false);
+  const [toggleButtonLight, setToggleButtonLight] = React.useState(false);
 
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -35,11 +34,20 @@ function ContextInfo() {
   const [toTemp, setToTemp] = React.useState("");
   const [fromHum, setFromHum] = React.useState("");
   const [toHum, setToHum] = React.useState("");
+  const [fromLight, setFromLight] = React.useState("");
+  const [toLight, setToLight] = React.useState("");
   const [repeat, setRepeat] = React.useState("");
   const [starttime, setStartTime] = React.useState("");
   const [endtime, setEndTime] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [ledColor, setLEDColor] = React.useState("Yellow");
+  const [fanSpeed, setFanSpeed] = React.useState("");
+  const [fanstatus, setFanStatus] = React.useState("");
+  const [light_status, setLightStatus] = React.useState("");
+  const [date_time, setDateTime] = React.useState("");
+
+  const navigate = useNavigate();
 
   const getContextDetail = async (id) => {
 
@@ -53,30 +61,206 @@ function ContextInfo() {
       const data = response.data.find(x => x._id == id);
       setName(data.name)
       setDescription(data.description)
-      setFromTemp(data.input.active_temperature.min)
-      setToTemp(data.input.active_temperature.max)
-      setFromHum(data.input.active_humidity.min)
-      setToHum(data.input.active_humidity.max)
+      setFromTemp(data.input.active_temperature.min.toString())
+      setToTemp(data.input.active_temperature.max.toString())
+      setFromHum(data.input.active_humidity.min.toString())
+      setToHum(data.input.active_humidity.max.toString())
+      setFromLight(data.input.active_light.min.toString())
+      setToLight(data.input.active_light.max.toString())
       setRepeat(data.output.frequency.today)
+      setStartTime(data.output.active_time.start_time)
+      setEndTime(data.output.active_time.end_time)
       setToggleButtonTemp(data.input.active_temperature.active)
       setToggleButtonHum(data.input.active_humidity.active)
-      setToggleButtonHumanDetection(data.input.human_detection.active)
+      setToggleButtonLight(data.input.active_light.active)
+      //setToggleButtonHumanDetection(data.input.human_detection.active)
+      setToggleButtonLED(data.output.control_led.length > 0 ? data.output.control_led[0].status : false)
+      setToggleButtonFan(data.output.control_fan.length > 0 ? data.output.control_fan[0].status : false)
+      setFanSpeed(data.output.control_fan.length > 0 ? data.output.control_fan[0].value : "0")
+      setEmail(data.notification.email);
+      setMessage(data.notification.message);
+      setFanStatus(data.notification.included_info.fanstatus)
+      setLightStatus(data.notification.included_info.lightstatus)
+      setDateTime(data.notification.included_info.date_time)
     }
 
     catch (error) {
       console.log(error)
     }
-    
+
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name === "") {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please enter name',
+      })
+      return;
+    }
+    if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) == 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
+      Swal.fire({
+        title: 'Oops...',
+        text: 'Please check temperature range',
+      })
+      return;
+    }
+    if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) == 0 || parseInt(toHum) < 0)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check humidity range',
+      })
+      return;
+    }
+    if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) == 0 || parseInt(toLight) < 0)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check light range',
+      })
+      return;
+    }
+    if ((message === "" && email !== "") || (message !== "" && email === "")) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check notification',
+      })
+      return;
+    }
+    if (toggleButtonFan && (fanSpeed === "" || parseInt(fanSpeed) <= 0 || parseInt(fanSpeed) > 100)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check fan speed',
+      })
+      return;
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    var input = {
+      active_temperature: {
+        min: parseInt(fromTemp),
+        max: parseInt(toTemp),
+        active: toggleButtonTemp,
+      },
+      active_light: {
+        min: parseInt(fromLight),
+        max: parseInt(toLight),
+        active: toggleButtonLight,
+      },
+      active_humidity: {
+        min: parseInt(fromHum),
+        max: parseInt(toHum),
+        active: toggleButtonHum,
+      },
+      human_detection: {
+        value: toggleButtonHumanDetection,
+        active: toggleButtonHumanDetection,
+      },
+    }
+    var output = {
+      frequency: {
+        no_repeat: repeat === "Today" ? true : false,
+        repeat: {
+          daily: repeat === 'Everyday' ? true : false,
+          weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
+          adjust_weekly: {
+            monday: repeat === 'Monday' ? true : false,
+            tuesday: repeat === 'Tuesday' ? true : false,
+            wednesday: repeat === 'Wednesday' ? true : false,
+            thursday: repeat === 'Thursday' ? true : false,
+            friday: repeat === 'Friday' ? true : false,
+            saturday: repeat === 'Saturday' ? true : false,
+            sunday: repeat === 'Sunday' ? true : false,
+          }
+        }
+      },
+      active_time: {
+        start_time: starttime,
+        end_time: endtime,
+      },
+      control_led: [
+        {
+          name: 'led',
+          status: toggleButtonLED,
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yello' ? "#ffff00" : "#ffffff",
+        }
+      ],
+      control_fan: [
+        {
+          name: 'fan',
+          status: toggleButtonFan,
+          value: fanSpeed,
+        }
+      ],
+      notification: {
+        email: email,
+        message: message,
+        included_info: {
+          fan_status: fanstatus !== "" ? true : false,
+          light_status: light_status !== "" ? true : false,
+          date_time: date_time !== "" ? true : false,
+        }
+      }
+    }
+    fetch(`${url}/contexts/${id}/edit`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+      body: JSON.stringify({
+        name: name,
+        description: description,
+        input: input,
+        output: output,
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Context has been updated!',
+        })
+        navigate('/contextsetup')
+      }
+      )
+      .catch((error) => {
+        //console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        })
+      }
+      );
   }
   return (
     <div>
       <div>
         <NavBar />
         <div className='ml-28 grid grid-cols-4 gap-9' >
-          <div className='bg-violet-100 rounded-xl col-span-3 p-5 mt-5'>
-            <h1 className='font-bold text-2xl mb-5'>{name}</h1>
+          <form className='bg-violet-100 rounded-xl col-span-3 p-5 mt-5'
+            onSubmit={handleSubmit}
+          >
+            <div className='mb-5'>
+              <input type='text' name='namecontext' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
             <div>
-              <input type='text' name='content' placeholder={description} className='w-full p-3 rounded-xl border border-black' />
+              <input type='text' name='description' placeholder={description} className='w-full p-3 rounded-xl border border-black'
+                onChange={(e) => setDescription(e.target.value)}
+                value={description || ""}
+              />
             </div>
             <div className='bg-white rounded-2xl p-5 mt-10 mb-5'>
               <h1 className='font-bold text-2xl mb-2'>Input</h1>
@@ -94,8 +278,8 @@ function ContextInfo() {
                       <p className=' text-xs text-gray-500'>Choose temperature level that trigger context</p>
                     </div>
                     <Switch
-                      // onChange={() => setToggleButton2(!toggleButton2)}
-                      checked={true}
+                      onChange={() => { setToggleButtonTemp(!toggleButtonTemp) }}
+                      checked={toggleButtonTemp}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -105,12 +289,12 @@ function ContextInfo() {
                   <div className='flex justify-between gap-9 p-5 text-left'>
                     <div>
                       <label className='text-xs font-bold'>From</label>
-                      <input type='text' name='fromtemp' value={fromTemp || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='fromtemp' value={fromTemp || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setFromTemp(e.target.value)} />
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='text' name='totemp' value={toTemp || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='totemp' value={toTemp || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setToTemp(e.target.value)}
                       />
                     </div>
@@ -124,8 +308,8 @@ function ContextInfo() {
                       <p className=' text-xs text-gray-500'>Choose humidity level that trigger context</p>
                     </div>
                     <Switch
-                      // onChange={() => setToggleButton2(!toggleButton2)}
-                      checked={true}
+                      onChange={() => { setToggleButtonHum(!toggleButtonHum) }}
+                      checked={toggleButtonHum}
                       onColor="#593EFF"
                       height={24}
                       width={48}
@@ -135,13 +319,45 @@ function ContextInfo() {
                   <div className='flex justify-between gap-9 p-5 text-left'>
                     <div>
                       <label className='text-xs font-bold'>From</label>
-                      <input type='text' name='fromhumid' value={fromHum || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='fromhumid' value={fromHum || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setFromHum(e.target.value)}
                       />
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='text' name='tohumid' value={toHum || ""} className='w-full p-2 rounded-lg border' />
+                      <input type='number' name='tohumid' value={toHum || ""} className='w-full p-2 rounded-lg border'
+                        onChange={(e) => setToHum(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className='bg-white shadow-sm rounded-xl text-center p-5'>
+                  <div className='grid grid-cols-2'>
+                    <div className='grid grid-rows-2'>
+                      <h1 className='font-bold'>Light</h1>
+                      <p className=' text-xs text-gray-500'>Choose light level that trigger context</p>
+                    </div>
+                    <Switch
+                      onChange={() => { setToggleButtonLight(!toggleButtonLight) }}
+                      checked={toggleButtonLight}
+                      onColor="#593EFF"
+                      height={24}
+                      width={48}
+                      className="react-switch my-auto ml-auto"
+                    />
+                  </div>
+                  <div className='flex justify-between gap-9 p-5 text-left'>
+                    <div>
+                      <label className='text-xs font-bold'>From</label>
+                      <input type='number' name='fromlight' value={fromLight || ""} className='w-full p-2 rounded-lg border'
+                        onChange={(e) => setFromLight(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className='text-xs font-bold'>To</label>
+                      <input type='number' name='tolight' value={toLight || ""} className='w-full p-2 rounded-lg border'
+                        onChange={(e) => setToLight(e.target.value)}
+                      />
                     </div>
                   </div>
                 </div>
@@ -170,17 +386,51 @@ function ContextInfo() {
                   {/* Repeat */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
                     <label className='font-bold col-span-1 my-auto mr-auto'>Repeat</label>
-                    <input type="text" name="day" className='m-auto col-span-2 border mx-3 rounded' value={repeat} />
+                    <div className='m-auto col-span-2'>
+                      <select className='w-full border rounded text-gray-500 px-4 text-xs p-1'
+                        onChange={(e) => setRepeat(e.target.value)}
+                      >
+                        <option>Today</option>
+                        <option>Everyday</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                        <option>Sunday</option>
+                      </select>
+                    </div>
                   </div>
                   {/* Start time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
                     <label className='font-bold col-span-1 my-auto mr-auto'>Start time</label>
-                    <input type="text" name="starttime" className='m-auto col-span-2 border mx-3 rounded' />
+                    <div className='m-auto col-span-2'>
+                      <TimePicker
+                        placeholder="Select Start Time"
+                        use12Hours={false}
+                        showSecond={false}
+                        focusOnOpen={true}
+                        format="hh:mm A"
+                        onChange={e => setStartTime(e.format('LT'))}
+                        defaultValue={starttime}
+                      />
+                    </div>
                   </div>
                   {/* End time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
                     <label className='font-bold col-span-1 my-auto mr-auto'>End time</label>
-                    <input type="text" name="endtime" className='m-auto col-span-2 border mx-3 rounded' />
+                    <div className='m-auto col-span-2'>
+                      <TimePicker
+                        placeholder="Select End Time"
+                        use12Hours={false}
+                        showSecond={false}
+                        focusOnOpen={true}
+                        format="hh:mm A"
+                        onChange={e => setEndTime(e.format('LT'))}
+                        defaultValue={endtime}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -201,8 +451,8 @@ function ContextInfo() {
                             <img src={lighticon2} alt='light' className='mx-auto' />
                           </div>
                           <Switch
-                            // onChange={() => setToggleButton1(!toggleButton1)}
-                            checked={true}
+                            onChange={() => setToggleButtonLED(!toggleButtonLED)}
+                            checked={toggleButtonLED}
                             onColor="#593EFF"
                             height={24}
                             width={48}
@@ -212,10 +462,12 @@ function ContextInfo() {
                         <div className='grid grid-cols-2 row-span-1'>
                           <h1 className='font-bold col-span-1 m-auto'>LED</h1>
                           <div className='my-auto ml-auto'>
-                            <select className='border px-4 py-1 rounded'>
-                              <option>{1}</option>
-                              {/* <option>Red</option>
-                                            <option>Blue</option> */}
+                            <select className='border px-4 py-1 rounded'
+                              onChange={(e) => setLEDColor(e.target.value)}
+                            >
+                              <option>Yellow</option>
+                              <option>Red</option>
+                              <option>Blue</option>
                             </select>
                           </div>
                         </div>
@@ -227,8 +479,8 @@ function ContextInfo() {
                             <img src={fanicon2} alt='fan' className='mx-auto' />
                           </div>
                           <Switch
-                            // onChange={() => setToggleButton2(!toggleButton2)}
-                            checked={true}
+                            onChange={() => setToggleButtonFan(!toggleButtonFan)}
+                            checked={toggleButtonFan}
                             onColor="#593EFF"
                             height={24}
                             width={48}
@@ -237,12 +489,11 @@ function ContextInfo() {
                         </div>
                         <div className='grid grid-cols-2 row-span-1'>
                           <h1 className='font-bold col-span-1 m-auto'>Fan</h1>
-                          <div className='my-auto ml-auto'>
-                            <select className='border px-4 py-1 rounded'>
-                              <option>{1}</option>
-                              {/* <option>Level 2</option>
-                                            <option>Level 3</option> */}
-                            </select>
+                          <div className='my-auto'>
+                            <input type='number' name='fan' className='w-10 border-2'
+                              value={fanSpeed || ""}
+                              onChange={(e) => setFanSpeed(e.target.value)}
+                            />
                           </div>
                         </div>
                       </div>
@@ -251,7 +502,7 @@ function ContextInfo() {
                         <h1 className='font-bold m-auto col-span-3'>Control the whole system</h1>
                         <Switch
                           // onChange={() => setToggleButton3(!toggleButton3)}
-                          checked={false}
+                          checked={true}
                           onColor="#593EFF"
                           height={24}
                           width={48}
@@ -268,30 +519,40 @@ function ContextInfo() {
                         {/* Message */}
                         <div className='mx-3 my-1 col-span-2'>
                           <label className='font-bold text-gray-900 text-sm'>Message</label>
-                          <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5 w-full' />
+                          <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5 w-full'
+                            value={message || ""} onChange={(e) => setMessage(e.target.value)} />
+
                         </div>
                         {/* Email */}
                         <div className='mx-3 my-1 col-span-2'>
                           <label className='font-bold text-gray-900 text-sm'>Email</label>
-                          <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5 w-full' />
+                          <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5 w-full'
+                            value={email || ""} onChange={(e) => setEmail(e.target.value)}
+                          />
                         </div>
                       </div>
                       {/* Include info */}
-                      <div className='py-5 px-10 bg-white rounded-xl shadow-sm'>
-                        <h1 className='font-bold mb-5'>Include information</h1>
-                        <div className='flex flex-col gap-5'>
-                          <div>
-                            <input type='checkbox' className='mr-3 mb-4' />
-                            <label>Fan status</label>
-                          </div>
-                          <div>
-                            <input type='checkbox' className='mr-3 mb-4' />
-                            <label>Light status</label>
-                          </div>
-                          <div>
-                            <input type='checkbox' className='mr-3 mb-4' />
-                            <label>Date and time</label>
-                          </div>
+                      <div className='flex flex-col gap-5'>
+                        <div>
+                          <input type='checkbox' className='mr-3 mb-4' name='fanstatus'
+                            onChange={(e) => setFanStatus(e.target.checked)}
+                            checked={fanstatus}
+                          />
+                          <label>Fan status</label>
+                        </div>
+                        <div>
+                          <input type='checkbox' className='mr-3 mb-4' name='lightstatus'
+                            onChange={(e) => setLightStatus(e.target.checked)}
+                            checked={light_status}
+                          />
+                          <label>Light status</label>
+                        </div>
+                        <div>
+                          <input type='checkbox' className='mr-3 mb-4' name='dateandtime'
+                            onChange={(e) => setDateTime(e.target.checked)}
+                            checked={date_time}
+                          />
+                          <label>Date and time</label>
                         </div>
                       </div>
 
@@ -299,13 +560,13 @@ function ContextInfo() {
                   </div>
                   <div className='flex flex-row justify-between mt-10'>
                     <NavLink to='/contextsetup'><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Back</button></NavLink>
-                    <NavLink to={`/contextsetup/2`}><button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg'>Next</button></NavLink>
+                    <button className='font-bold bg-violet-500 hover:bg-violet-600 transition ease-in text-white py-2 px-5 rounded-lg' type='submit'>Save</button>
                   </div>
                 </div>
               </div>
 
             </div>
-          </div>
+          </form>
           <ContextSideBar />
         </div>
       </div>

@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 function ContextCreatePage() {
   const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
   const [toggleButtonHum, setToggleButtonHum] = React.useState(false);
-  const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(false);
+  const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(true);
   const [toggleButtonLED, setToggleButtonLED] = React.useState(false);
   const [toggleButtonFan, setToggleButtonFan] = React.useState(false);
   const [toggleButtonSystem, setToggleButtonSystem] = React.useState(false);
@@ -47,12 +47,59 @@ function ContextCreatePage() {
   const url = process.env.REACT_APP_API_URL;
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (name === "") {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please enter name',
+      })
+      return;
+    }
+    if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) == 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
+      Swal.fire({
+        title: 'Oops...',
+        text: 'Please check temperature range',
+      })
+      return;
+    }
+    if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) == 0 || parseInt(toHum) < 0)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check humidity range',
+      })
+      return;
+    }
+    if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) == 0 || parseInt(toLight) < 0)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check light range',
+      })
+      return;
+    }
+    if ((message === "" && email !== "") || (message !== "" && email === "")) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check notification',
+      })
+      return;
+    }
+    if (toggleButtonFan && (fanSpeed === "" || parseInt(fanSpeed) <= 0 || parseInt(fanSpeed) > 100)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please check fan speed',
+      })
+      return;
+    }
     const config = {
       headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
-  };
+    };
     var input = {
       active_temperature: {
         min: parseInt(fromTemp),
@@ -79,7 +126,7 @@ function ContextCreatePage() {
         no_repeat: repeat === "Today" ? true : false,
         repeat: {
           daily: repeat === 'Everyday' ? true : false,
-          weekly: repeat in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] ? true : false,
+          weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
           adjust_weekly: {
             monday: repeat === 'Monday' ? true : false,
             tuesday: repeat === 'Tuesday' ? true : false,
@@ -157,12 +204,12 @@ function ContextCreatePage() {
             onSubmit={handleSubmit}
           >
             <div>
-              <input type='text' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='number' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className='mt-5'>
-              <input type='text' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='number' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
@@ -193,12 +240,12 @@ function ContextCreatePage() {
                   <div className='flex justify-between gap-9 p-5 text-left'>
                     <div>
                       <label className='text-xs font-bold'>From</label>
-                      <input type='text' name='fromtemp' value={fromTemp || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='fromtemp' value={fromTemp || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setFromTemp(e.target.value)} />
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='text' name='totemp' value={toTemp || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='totemp' value={toTemp || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setToTemp(e.target.value)}
                       />
                     </div>
@@ -254,12 +301,12 @@ function ContextCreatePage() {
                   <div className='flex justify-between gap-9 p-5 text-left'>
                     <div>
                       <label className='text-xs font-bold'>From</label>
-                      <input type='text' name='fromtemp' value={fromLight || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='fromlight' value={fromLight || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setFromLight(e.target.value)} />
                     </div>
                     <div>
                       <label className='text-xs font-bold'>To</label>
-                      <input type='text' name='totemp' value={toLight || ""} className='w-full p-2 rounded-lg border'
+                      <input type='number' name='tolight' value={toLight || ""} className='w-full p-2 rounded-lg border'
                         onChange={(e) => setToLight(e.target.value)}
                       />
                     </div>
@@ -273,7 +320,7 @@ function ContextCreatePage() {
                       <p className=' text-xs text-gray-500'>Human detection sensor</p>
                     </div>
                     <Switch
-                      onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
+                      //onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
                       checked={toggleButtonHumanDetection}
                       onColor="#593EFF"
                       height={24}
@@ -313,7 +360,7 @@ function ContextCreatePage() {
                     <div className='m-auto col-span-2'>
                       <TimePicker
                         placeholder="Select Start Time"
-                        use12Hours = {false}
+                        use12Hours={false}
                         showSecond={false}
                         focusOnOpen={true}
                         format="hh:mm A"
@@ -327,7 +374,7 @@ function ContextCreatePage() {
                     <div className='m-auto col-span-2'>
                       <TimePicker
                         placeholder="Select End Time"
-                        use12Hours = {false}
+                        use12Hours={false}
                         showSecond={false}
                         focusOnOpen={true}
                         format="hh:mm A"
@@ -403,8 +450,8 @@ function ContextCreatePage() {
                     <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-4'>
                       <h1 className='font-bold m-auto col-span-3'>Control the whole system</h1>
                       <Switch
-                        onChange={() => setToggleButtonSystem(!toggleButtonSystem)}
-                        checked={toggleButtonSystem}
+                        //onChange={() => setToggleButtonSystem(!toggleButtonSystem)}
+                        checked={true}
                         onColor="#593EFF"
                         height={24}
                         width={48}
@@ -421,12 +468,18 @@ function ContextCreatePage() {
                       {/* Message */}
                       <div className='mx-3 my-1 col-span-2'>
                         <label className='font-bold text-gray-900 text-sm'>Message</label>
-                        <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5 w-full' />
+                        <input type='text' placeholder='Enter your message' className='border rounded-xl p-3 mb-5 w-full'
+                          onChange={(e) => setMessage(e.target.value)}
+                          value={message || ""}
+                        />
                       </div>
                       {/* Email */}
                       <div className='mx-3 my-1 col-span-2'>
                         <label className='font-bold text-gray-900 text-sm'>Email</label>
-                        <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5 w-full' />
+                        <input type='text' placeholder='Enter your email' className='border rounded-xl p-3 mb-5 w-full'
+                          onChange={(e) => setEmail(e.target.value)}
+                          value={email || ""}
+                        />
                       </div>
                     </div>
                     {/* Include info */}
@@ -453,7 +506,6 @@ function ContextCreatePage() {
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>

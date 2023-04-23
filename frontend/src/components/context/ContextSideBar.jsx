@@ -66,7 +66,16 @@ function ContextSideBar() {
                 </div>
                 <div className='my-auto'>
                   <Switch
-                    onChange={() => handleToggleContext(scene._id)}
+                    onChange={() => {
+                      dispatch(contextToggle(scene._id, !scene.active));
+                      setStateContext(contextlist.map((item) => {
+                        if (item._id == scene._id) {
+                          item.active = !item.active;
+                        }
+                        return item;
+                      }
+                      ))
+                    }}
                     checked={stateContext !== null ? stateContext.find(x => x._id == scene._id).active : scene.active}
                     onColor="#593EFF"
                     height={24}
