@@ -7,147 +7,6 @@ import axios from 'axios';
 import ChartStats from './components/ChartStats';
 const ipaddress = process.env['IPADDRESS'];
 
-const solveDataDay = (startTime, endTime, dataNeedSolving) => {
-  let dataSolved = [];
-  for (let i = 0; i < dataNeedSolving.length; i++) {
-    if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
-      dataSolved.push(dataNeedSolving[i]);
-    }
-  }
-  let contain = [{}]
-  let labels = []
-  let data = []
-  for (let i = 0; i < 24; i++) {
-    contain[i] = {
-      name: "",
-      value: 0,
-      quantity: 0
-    }
-    labels.push(i + "")
-  }
-  for (let j = 0; j < dataSolved.length; j++) {
-    let temp = dataSolved[j][0].slice(11, 13);
-    for (let i = 0; i < 24; i++) {
-      if (parseInt(temp) === i) {
-        contain[i].value += parseInt(dataSolved[j][1])
-        contain[i].quantity++;
-      }
-    }
-  }
-  for (let i = 0; i < 24; i++) {
-    if (contain[i].value !== 0) {
-      contain[i].value = Math.round(contain[i].value / contain[i].quantity)
-      contain[i].name = i + ""
-    }
-    data.push(contain[i].value)
-  }
-
-  return {
-    labels,
-    datasets: [
-      {
-        data
-      }
-    ]
-  };
-}
-const solveDataWeek = (startTime, endTime, dataNeedSolving) => {
-  let dataSolved = [];
-  let temp = ""
-
-  for (let i = 0; i < dataNeedSolving.length; i++) {
-    if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
-      if (dataNeedSolving[i][0].slice(0, 10) !== temp) {
-        temp = dataNeedSolving[i][0].slice(0, 10)
-      }
-      dataSolved.push(dataNeedSolving[i]);
-    }
-  }
-  let contain = [{}]
-  let labels = []
-  let data = []
-  const now = new Date()
-  for (let i = 0; i < 7; i++) {
-    contain[i] = {
-      name: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6 + i).toISOString().slice(5, 10),
-      value: 0,
-      quantity: 0
-    }
-    labels.push(contain[i].name)
-  }
-  for (let j = 0; j < dataSolved.length; j++) {
-    let temp = dataSolved[j][0].slice(8, 10);
-    for (let i = 0; i < 7; i++) {
-      if (parseInt(temp) === parseInt(contain[i].name.slice(3, 5))) {
-        contain[i].value += parseInt(dataSolved[j][1])
-        contain[i].quantity++;
-      }
-    }
-  }
-  for (let i = 0; i < 7; i++) {
-    if (contain[i].value !== 0) {
-      contain[i].value = Math.round(contain[i].value / contain[i].quantity)
-    }
-    data.push(contain[i].value)
-  }
-  return {
-    labels,
-    datasets: [
-      {
-        data
-      }
-    ]
-  };
-}
-const solveDataMonth = (startTime, endTime, dataNeedSolving) => {
-  let dataSolved = [];
-  let temp = ""
-
-  for (let i = 0; i < dataNeedSolving.length; i++) {
-    if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
-      if (dataNeedSolving[i][0].slice(0, 10) !== temp) {
-        temp = dataNeedSolving[i][0].slice(0, 10)
-      }
-      dataSolved.push(dataNeedSolving[i]);
-    }
-  }
-  let contain = [{}]
-  let labels = []
-  let data = []
-  const now = new Date()
-  for (let i = 0; i < 30; i++) {
-    contain[i] = {
-      name: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29 + i).toISOString().slice(5, 10),
-      value: 0,
-      quantity: 0
-    }
-    labels.push(contain[i].name)
-  }
-  for (let j = 0; j < dataSolved.length; j++) {
-    let temp = dataSolved[j][0].slice(8, 10);
-    for (let i = 0; i < 30; i++) {
-      if (parseInt(temp) === parseInt(contain[i].name.slice(3, 5))) {
-        contain[i].value += parseInt(dataSolved[j][1])
-        contain[i].quantity++;
-      }
-    }
-  }
-  for (let i = 0; i < 30; i++) {
-    if (contain[i].value !== 0) {
-      contain[i].value = Math.round(contain[i].value / contain[i].quantity)
-    }
-    data.push(contain[i].value)
-  }
-  return {
-    labels,
-    datasets: [
-      {
-        data
-      }
-    ]
-  };
-}
-
 const Statistics = () => {
   const styles = {
     maincolorBG: {
@@ -179,6 +38,157 @@ const Statistics = () => {
   const typeofstatsList = ["temperature", "humidity", "light"];
 
   const isFocused = useIsFocused();
+
+  const solveDataDay = (startTime, endTime, dataNeedSolving) => {
+    let dataSolved = [];
+    for (let i = 0; i < dataNeedSolving.length; i++) {
+      if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
+        dataSolved.push(dataNeedSolving[i]);
+      }
+    }
+    let contain = [{}]
+    let labels = []
+    let data = []
+    for (let i = 0; i < 24; i++) {
+      contain[i] = {
+        name: "",
+        value: 0,
+        quantity: 0
+      }
+      if (i % 2 === 0) {
+        labels.push(i + "");
+      }
+      else {
+        labels.push("");
+      }
+    }
+    for (let j = 0; j < dataSolved.length; j++) {
+      let temp = dataSolved[j][0].slice(11, 13);
+      for (let i = 0; i < 24; i++) {
+        if (parseInt(temp) === i) {
+          contain[i].value += parseInt(dataSolved[j][1])
+          contain[i].quantity++;
+        }
+      }
+    }
+    for (let i = 0; i < 24; i++) {
+      if (contain[i].value !== 0) {
+        contain[i].value = Math.round(contain[i].value / contain[i].quantity)
+        contain[i].name = i + ""
+      }
+      data.push(contain[i].value)
+    }
+
+    return {
+      labels,
+      datasets: [
+        {
+          data
+        }
+      ]
+    };
+  }
+  const solveDataWeek = (startTime, endTime, dataNeedSolving) => {
+    let dataSolved = [];
+    let temp = ""
+
+    for (let i = 0; i < dataNeedSolving.length; i++) {
+      if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
+        if (dataNeedSolving[i][0].slice(0, 10) !== temp) {
+          temp = dataNeedSolving[i][0].slice(0, 10)
+        }
+        dataSolved.push(dataNeedSolving[i]);
+      }
+    }
+    let contain = [{}]
+    let labels = []
+    let data = []
+    const now = new Date()
+    for (let i = 0; i < 7; i++) {
+      contain[i] = {
+        name: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6 + i).toISOString().slice(5, 10),
+        value: 0,
+        quantity: 0
+      }
+      labels.push(contain[i].name)
+    }
+    for (let j = 0; j < dataSolved.length; j++) {
+      let temp = dataSolved[j][0].slice(8, 10);
+      for (let i = 0; i < 7; i++) {
+        if (parseInt(temp) === parseInt(contain[i].name.slice(3, 5))) {
+          contain[i].value += parseInt(dataSolved[j][1])
+          contain[i].quantity++;
+        }
+      }
+    }
+    for (let i = 0; i < 7; i++) {
+      if (contain[i].value !== 0) {
+        contain[i].value = Math.round(contain[i].value / contain[i].quantity)
+      }
+      data.push(contain[i].value)
+    }
+    return {
+      labels,
+      datasets: [
+        {
+          data
+        }
+      ]
+    };
+  }
+  const solveDataMonth = (startTime, endTime, dataNeedSolving) => {
+    let dataSolved = [];
+    let temp = ""
+
+    for (let i = 0; i < dataNeedSolving.length; i++) {
+      if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
+        if (dataNeedSolving[i][0].slice(0, 10) !== temp) {
+          temp = dataNeedSolving[i][0].slice(0, 10)
+        }
+        dataSolved.push(dataNeedSolving[i]);
+      }
+    }
+    let contain = [{}]
+    let labels = []
+    let data = []
+    const now = new Date()
+    for (let i = 0; i < 30; i++) {
+      contain[i] = {
+        name: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29 + i).toISOString().slice(5, 10),
+        value: 0,
+        quantity: 0
+      }
+      if (i % 5 === 0) {
+        labels.push(contain[i].name)
+      }
+      else {
+        labels.push("");
+      }
+    }
+    for (let j = 0; j < dataSolved.length; j++) {
+      let temp = dataSolved[j][0].slice(8, 10);
+      for (let i = 0; i < 30; i++) {
+        if (parseInt(temp) === parseInt(contain[i].name.slice(3, 5))) {
+          contain[i].value += parseInt(dataSolved[j][1])
+          contain[i].quantity++;
+        }
+      }
+    }
+    for (let i = 0; i < 30; i++) {
+      if (contain[i].value !== 0) {
+        contain[i].value = Math.round(contain[i].value / contain[i].quantity)
+      }
+      data.push(contain[i].value)
+    }
+    return {
+      labels,
+      datasets: [
+        {
+          data
+        }
+      ]
+    };
+  }
 
   const getTempStatDay = async () => {
     const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
@@ -260,35 +270,8 @@ const Statistics = () => {
     getTempStatMonth();
     getHumidStatMonth();
     getLightStatMonth();
-  }, [period, typeofstats, isFocused])
+  }, [isFocused])
 
-  if (typeofstats === "temperature" && period === "day") {
-    data = tempDataDay;
-  }
-  else if (typeofstats === "humidity" && period === "day") {
-    data = humiDataDay;
-  }
-  else if (typeofstats === "light" && period === "day") {
-    data = lightDataDay;
-  }
-  else if (typeofstats === "temperature" && period === "week") {
-    data = tempDataWeek;
-  }
-  else if (typeofstats === "humidity" && period === "week") {
-    data = humiDataWeek;
-  }
-  else if (typeofstats === "light" && period === "week") {
-    data = lightDataWeek;
-  }
-  else if (typeofstats === "temperature" && period === "month") {
-    data = tempDataMonth;
-  }
-  else if (typeofstats === "humidity" && period === "month") {
-    data = humiDataMonth;
-  }
-  else if (typeofstats === "light" && period === "month") {
-    data = lightDataMonth;
-  }
   const [active, setActive] = useState(0);
   const dayActive = 'bg-violet-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
   const dayInactive = 'bg-gray-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
@@ -437,17 +420,47 @@ const Statistics = () => {
           <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
             <Text className='text-base font-semibold text-white'>Today data</Text>
           </View>
-          <ChartStats data={data} typeofstats={typeofstats} period={"day"} />
-          
+          {
+            typeofstats === "temperature" ? (
+              <ChartStats data={tempDataDay} typeofstats={typeofstats} period={"day"} />
+            ) : (
+              period === "humidity" ? (
+                <ChartStats data={humiDataDay} typeofstats={typeofstats} period={"day"} />
+              ) : (
+                <ChartStats data={lightDataDay} typeofstats={typeofstats} period={"day"} />
+              )
+            )
+          }
+
           <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
             <Text className='text-base font-semibold text-white'>This week data</Text>
           </View>
-          <ChartStats data={data} typeofstats={typeofstats} period={"week"} />
+          {
+            typeofstats === "temperature" ? (
+              <ChartStats data={tempDataWeek} typeofstats={typeofstats} period={"week"} />
+            ) : (
+              period === "humidity" ? (
+                <ChartStats data={humiDataWeek} typeofstats={typeofstats} period={"week"} />
+              ) : (
+                <ChartStats data={lightDataWeek} typeofstats={typeofstats} period={"week"} />
+              )
+            )
+          }
 
           <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
             <Text className='text-base font-semibold text-white'>This month data</Text>
           </View>
-          <ChartStats data={data} typeofstats={typeofstats} period={"month"} />
+          {
+            typeofstats === "temperature" ? (
+              <ChartStats data={tempDataMonth} typeofstats={typeofstats} period={"month"} />
+            ) : (
+              period === "humidity" ? (
+                <ChartStats data={humiDataMonth} typeofstats={typeofstats} period={"month"} />
+              ) : (
+                <ChartStats data={lightDataMonth} typeofstats={typeofstats} period={"month"} />
+              )
+            )
+          }
         </View>
       </ScrollView>
     </View>
