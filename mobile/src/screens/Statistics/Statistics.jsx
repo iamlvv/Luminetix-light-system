@@ -148,8 +148,18 @@ const solveDataMonth = (startTime, endTime, dataNeedSolving) => {
   };
 }
 
-
 const Statistics = () => {
+  const styles = {
+    maincolorBG: {
+      backgroundColor: '#5E44FF',
+    },
+    maincolorTXT: {
+      color: '#5E44FF',
+    },
+    secondarycolorBG: {
+      backgroundColor: '#DFDAFF',
+    },
+  }
   const [tempDataDay, setTempDataDay] = React.useState([]);
   const [humiDataDay, setHumiDataDay] = React.useState([]);
   const [lightDataDay, setLightDataDay] = React.useState([]);
@@ -169,6 +179,7 @@ const Statistics = () => {
   const typeofstatsList = ["temperature", "humidity", "light"];
 
   const isFocused = useIsFocused();
+
   const getTempStatDay = async () => {
     const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
     const endTime = new Date().toISOString();
@@ -190,7 +201,6 @@ const Statistics = () => {
     var result = solveDataDay(startTime, endTime, response.data.data);
     setLightDataDay(result);
   }
-
   const getTempStatWeek = async () => {
     const now = new Date();
     const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString().slice(0, 11) + "00:00:00Z";
@@ -215,7 +225,6 @@ const Statistics = () => {
     var result = solveDataWeek(startTimeISO, endTime, response.data.data);
     setLightDataWeek(result);
   }
-
   const getTempStatMonth = async () => {
     const now = new Date();
     const startTimeISO = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29).toISOString().slice(0, 11) + "00:00:00Z";
@@ -253,7 +262,6 @@ const Statistics = () => {
     getLightStatMonth();
   }, [period, typeofstats, isFocused])
 
-
   if (typeofstats === "temperature" && period === "day") {
     data = tempDataDay;
   }
@@ -282,84 +290,164 @@ const Statistics = () => {
     data = lightDataMonth;
   }
   const [active, setActive] = useState(0);
-  const dayActive = 'bg-violet-200 text-violet-500 rounded-2xl p-2';
-  const dayInactive = 'bg-white text-violet-500 rounded-2xl p-2';
-  const weekActive = 'bg-violet-200 text-violet-500 rounded-2xl p-2';
-  const weekInactive = 'bg-white text-violet-500 rounded-2xl p-2';
-  const monthActive = 'bg-violet-200 text-violet-500 rounded-2xl p-2';
-  const monthInactive = 'bg-white text-violet-500 rounded-2xl p-2';
+  const dayActive = 'bg-violet-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+  const dayInactive = 'bg-gray-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+  const weekActive = 'bg-violet-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+  const weekInactive = 'bg-gray-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+  const monthActive = 'bg-violet-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+  const monthInactive = 'bg-gray-200 text-violet-500 rounded-xl px-5 py-1 mx-1';
+
   return (
     <View className=''>
       <ScrollView>
+
         <View className="items-center mt-10">
           <Text className="font-bold text-2xl">Statistics</Text>
         </View>
-          <View className='flex flex-1 flex-row justify-center gap-9 mb-10 mt-5'>
-            <View className='flex-1 flex flex-col bg-white rounded-2xl p-2 ml-5'>
-              <View className='items-center'>
-                <Text className='font-bold text-violet-500'>Average Figure</Text>
+
+        <View style={styles.secondarycolorBG} className='flex flex-col m-3 p-5 rounded-xl'>
+          <View className='flex flex-row justify-center items-center'>
+            {/* Average figure */}
+            <View className='flex flex-col bg-white rounded-md px-3 mx-3 py-2 shadow-xs shadow-black'>
+              <View className=''>
+                <Text className='text-xl mb-3 font-bold text-center' style={styles.maincolorTXT}>Average Figure</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Temperature</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Temperature</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Humidity</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Humidity</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Light</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Light</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
             </View>
-            <View className='flex-1 flex flex-col bg-white rounded-2xl p-2'>
-              <View className='items-center'>
-                <Text className='font-bold text-violet-500'>Current Figure</Text>
+            {/* Current figure */}
+            <View className='flex flex-col bg-white rounded-lg px-3 mx-3 py-2 shadow-xs shadow-black'>
+              <View className=''>
+                <Text className='text-xl mb-3 font-bold text-center' style={styles.maincolorTXT}>Current status</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Temperature</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Temperature</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Humidity</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Humidity</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
-              <View className='flex flex-row justify-between gap-5'>
-                <Text>Light</Text>
-                <Text>{31.2}</Text>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Light</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
               </View>
             </View>
           </View>
-          <View className='flex flex-row mb-5 items-center justify-center gap-9'>
-            {periodList.map((item, index) => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  setPeriod(item.toLowerCase());
-                  setActive(index + 1);
-                }} key={index}
-                  className={item === 'Day' ? active === 1 ? dayActive : dayInactive : item === 'Week' ? active === 2 ? weekActive : weekInactive : active === 3 ? monthActive : monthInactive}
-                >
-                  <Text className="font-bold text-xl">{item}</Text>
-                </TouchableOpacity>
-              )
-            })
+          {/* Export title */}
+          <View className='flex flex-col mt-5'>
+            <Text className='text-xl font-bold' style={styles.maincolorTXT}>Export data</Text>
+            <Text className='text-sm italic text-gray-500'>Please select the time before you export data</Text>
+          </View>
+          {/* Export */}
+          <View className='flex flex-row mt-5 items-center justify-between'>
+            <View className='flex flex-row bg-white justify-center p-2 rounded-xl shadow-lg shadow-black'>
+              {
+                periodList.map((item, index) => {
+                  return (
+                    <TouchableOpacity onPress={() => {
+                      setPeriod(item.toLowerCase());
+                      setActive(index + 1);
+                    }}
+                      key={index}
+                      style={styles.secondarycolorBG}
+                      className={item === 'Day' ? (active === 1 ? dayActive : dayInactive) : item === 'Week' ? (active === 2 ? weekActive : weekInactive) : active === 3 ? monthActive : monthInactive}
+                    >
+                      <Text className="font-semibold text-sm" style={styles.maincolorTXT}>{item}</Text>
+                    </TouchableOpacity>
+                  )
+                })
+              }
+            </View>
+            {/* Export button */}
+            <View className='py-2 px-4 rounded-xl' style={styles.maincolorBG}>
+              <TouchableOpacity onPress={() => { }}>
+                <Text className='text-md font-bold text-white'>Export</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        {/* Graph option */}
+        <View className='flex flex-row justify-between items-center mx-3 mt-3'>
+          <View className='mx-1'>
+            <Text className='text-base font-bold' style={styles.maincolorTXT}>Type of graph</Text>
+          </View>
+          <View className='flex flex-row justify-between bg-white rounded-xl p-2'>
+            {
+              typeofstatsList.map((item, index) => {
+                return (
+                  <TouchableOpacity onPress={() => setTypeofstats(item)} key={index}
+                    className={
+                      typeofstats === item ?
+                        item === 'temperature'
+                          ?
+                          'py-1 mx-3 border-b-4 border-red-500'
+                          :
+                          item === 'humidity'
+                            ?
+                            'py-1 mx-3 border-b-4 border-blue-500'
+                            :
+                            item === 'light'
+                              ?
+                              'py-1 mx-3 border-b-4 border-yellow-500'
+                              :
+                              'py-1 mx-3'
+                        :
+                        'py-1 mx-3'
+                    }
+                  >
+                    <Text className={
+                      typeofstats === item
+                        ?
+                        item === 'temperature'
+                          ?
+                          'font-bold text-base text-red-500 '
+                          :
+                          item === 'humidity'
+                            ?
+                            'font-bold text-base text-blue-500'
+                            :
+                            item === 'light'
+                              ?
+                              'font-bold text-base text-yellow-500'
+                              :
+                              'font-bold text-base'
+                        :
+                        'font-bold text-base text-gray-300'
+                    }
+                    >{item}</Text>
+                  </TouchableOpacity>
+                )
+              })
             }
           </View>
-        <View className='flex flex-row gap-9 justify-center'>
-          {typeofstatsList.map((item, index) => {
-            return (
-              <TouchableOpacity onPress={() => setTypeofstats(item)} key={index}
-                className={typeofstats === item ? item === 'temperature' ? 'bg-violet-50 text-white rounded-2xl p-2' : item === 'humidity' ? 'bg-violet-50 text-white rounded-2xl p-2' : item === 'light' ? 'bg-violet-50 text-white rounded-2xl p-2' : 'bg-violet-50 text-white rounded-2xl p-2' : 'bg-white text-violet-500 rounded-2xl p-2'}
-              >
-                <Text className={typeofstats === item ? item === 'temperature' ? 'font-bold text-xl text-red-500 ' : item === 'humidity' ? 'font-bold text-xl text-blue-500' : item === 'light' ? 'font-bold text-xl text-yellow-500' : 'font-bold text-xl' : 'font-bold text-xl'}
-                >{item}</Text>
-              </TouchableOpacity>
-            )
-          })
-          }
         </View>
-        <View className='mt-10'>
-          <ChartStats data={data} typeofstats={typeofstats} />
+
+        <View className='items-center mx-5 flex flex-col justify-around'>
+          <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
+            <Text className='text-base font-semibold text-white'>Today data</Text>
+          </View>
+          <ChartStats data={data} typeofstats={typeofstats} period={"day"} />
+          
+          <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
+            <Text className='text-base font-semibold text-white'>This week data</Text>
+          </View>
+          <ChartStats data={data} typeofstats={typeofstats} period={"week"} />
+
+          <View className='rounded-full px-3 my-4' style={styles.maincolorBG}>
+            <Text className='text-base font-semibold text-white'>This month data</Text>
+          </View>
+          <ChartStats data={data} typeofstats={typeofstats} period={"month"} />
         </View>
       </ScrollView>
     </View>

@@ -13,6 +13,17 @@ import axios from 'axios';
 const ipaddress = process.env.IPADDRESS;
 
 const ContextInfo = ({ route, navigation }) => {
+  const styles = {
+    maincolorBG: {
+      backgroundColor: '#5E44FF',
+    },
+    maincolorTXT: {
+      color: '#5E44FF',
+    },
+    secondarycolorBG: {
+      backgroundColor: '#DFDAFF',
+    },
+  }
   const color = ["Red", "Blue", "Yellow"]
   const repeatList = ["Today", "Everyday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
   const userLogin = useSelector((state) => state.userLogin);
@@ -261,8 +272,8 @@ const ContextInfo = ({ route, navigation }) => {
         </View>
         {/* Input heading*/}
         <View className='flex flex-row justify-between mx-5 mt-3 mb-1'>
-          <View className='bg-purple-200 rounded-2xl px-5 py-1'>
-            <Text className='font-bold text-xl rounded-xl text-purple-600'>Input information</Text>
+          <View className=' rounded-2xl px-5 py-1' style={styles.secondarycolorBG}>
+            <Text className='font-bold text-xl rounded-xl' style={styles.maincolorTXT}>Input information</Text>
           </View>
         </View>
         {/* Sensor setting */}
@@ -437,8 +448,8 @@ const ContextInfo = ({ route, navigation }) => {
 
         {/* Output heading*/}
         <View className='flex flex-row justify-between mx-5 mt-3 mb-1'>
-          <View className='bg-purple-200 rounded-2xl px-5 py-1'>
-            <Text className='font-bold text-xl rounded-xl text-purple-600'>Output information</Text>
+          <View className='rounded-2xl px-5 py-1' style={styles.secondarycolorBG}>
+            <Text className='font-bold text-xl rounded-xl' style={styles.maincolorTXT}>Output information</Text>
           </View>
         </View>
 
@@ -543,10 +554,11 @@ const ContextInfo = ({ route, navigation }) => {
         </View>
         {/* Save button */}
         <View className='flex flex-row items-center justify-center'>
-          <TouchableOpacity className='bg-violet-500 py-2 px-10 rounded-xl'
+          <TouchableOpacity className='py-2 px-10 rounded-xl'
             onPress={handleSubmit}
+            style={styles.maincolorBG}
           >
-            <Text className='text-white text-xl'>Save</Text>
+            <Text className='font-bold text-xl text-white' style={styles.maincolorBG}>Save</Text>
           </TouchableOpacity>
         </View>
 

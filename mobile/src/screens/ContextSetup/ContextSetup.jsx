@@ -36,6 +36,17 @@ function MyStack() {
   );
 }
 function ContextHome({ route, navigation }) {
+    const styles = {
+    maincolorBG: {
+      backgroundColor: '#5E44FF',
+    },
+    maincolorTXT: {
+      color: '#5E44FF',
+    },
+    secondarycolorBG: {
+      backgroundColor: '#DFDAFF',
+    },
+  }
   const dispatch = useDispatch();
   const contextList = useSelector((state) => state.contextList);
   const { loading, error, contextlist } = contextList;
@@ -122,53 +133,49 @@ function ContextHome({ route, navigation }) {
         <View>
           <ScrollView>
 
-            {
-              contextList ? contextlist.map((context) => (
-                <View className='m-1 flex flex-row mb-5 items-center' key={scene._id}>
-                  {/* Item */}
-                  <View className='bg-white flex flex-row justify-between items-center mx-auto rounded-2xl py-2 active:bg-violet-500'>
-                    {/* Delete button */}
-                    <View className='ml-3 justify-center bg-red-200 rounded-xl p-2'>
-                      <TouchableOpacity
-                        onPress={() => handleDeleteContext(scene._id)}
-                      >
-                        <MaterialIcons name="delete-outline" size={24} color="#fc5162" />
-                      </TouchableOpacity>
-                    </View>
-                    {/* Touchable area */}
-                    <TouchableOpacity
-                      onPress={() => {
-                        console.log(scene._id)
-                        navigation.navigate("ContextInfo", { id: scene._id })
-                      }}
-                    >
-                      <View className='mx-3'>
-                        {/* Context name and button */}
-                        <View className='h-auto flex flex-row justify-between items-center'>
-                          <View className='bg-purple-200 rounded-lg w-56'>
-                            <Text className='font-bold mx-2 text-base text-purple-600' numberOfLines={1}>{context.name}</Text>
-                          </View>
-                          <View className=''>
-                            <Switch
-                              value={scene.active}
-                              onValueChange={() => { }}
-                              trackColor={{ false: '#767577', true: '#593EFF' }}
-                              thumbColor={scene.active ? '#f4f3f4' : '#593EFF'}
-                            />
-                          </View>
-                        </View>
-                        {/*  Description */}
-                        <View className='items-center w-72 mb-2'>
-                          <Text className='text-gray-500 text-left text-xs' numberOfLines={3}>{context.description}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+            {/* Paste contextList */}
+            
+            {/* Mock data item */}
+            <View className='m-1 flex flex-row mb-5 items-center'>
+              {/* Item */}
+              <View className='bg-white flex flex-row justify-between items-center mx-auto rounded-2xl py-2 active:bg-violet-500'>
+                {/* Delete button */}
+                <View className='ml-3 justify-center bg-red-200 rounded-xl p-2'>
+                  <TouchableOpacity
+                    onPress={() => { }}
+                  >
+                    <MaterialIcons name="delete-outline" size={24} color="#fc5162" />
+                  </TouchableOpacity>
                 </View>
-              )) : (
-                <ActivityIndicator size="large" color="#593EFF" />
-              )
-            }
+                {/* Touchable area */}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ContextInfo", { id: 0 })
+                  }}
+                >
+                  <View className='mx-3'>
+                    {/* Context name and button */}
+                    <View className='h-auto flex flex-row justify-between items-center'>
+                      <View className='bg-purple-200 rounded-lg w-56' style={styles.secondarycolorBG}>
+                        <Text className='font-bold mx-2 text-base text-purple-600' numberOfLines={1} style={styles.secondarycolorBG}>Context Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum explicabo, corrupti sit nobis eos distinctio. Magni, voluptatibus. Facere culpa aperiam dolor, perspiciatis quae itaque, illo eius vel quasi animi suscipit? name xyz lorem</Text>
+                      </View>
+                      <View className=''>
+                        <Switch
+                          value={true}
+                          onValueChange={() => { }}
+                          trackColor={{ false: '#767577', true: '#593EFF' }}
+                          thumbColor={true ? '#f4f3f4' : '#593EFF'}
+                        />
+                      </View>
+                    </View>
+                    {/*  Description */}
+                    <View className='items-center w-72 mb-2'>
+                      <Text className='text-gray-500 text-left text-xs' numberOfLines={3}>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorem, sint? Beatae itaque architecto, quas mollitia at inventore repellendus excepturi numquam veritatis neque, labore dolore saepe nesciunt incidunt odio vitae eum.</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
 
           </ScrollView>
         </View>
