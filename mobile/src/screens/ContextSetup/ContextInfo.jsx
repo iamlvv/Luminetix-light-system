@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import axios from 'axios';
 const ipaddress = process.env.IPADDRESS;
-
+const url = process.env.REACT_APP_API_URL;
 const ContextInfo = ({ route, navigation }) => {
   const styles = {
     maincolorBG: {
@@ -212,7 +212,7 @@ const ContextInfo = ({ route, navigation }) => {
         }
       }
     }
-    fetch(`http://${ipaddress}:5000/api/contexts`, {
+    fetch(`${url}/contexts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

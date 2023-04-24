@@ -159,6 +159,7 @@ const ChartStats = ({ data, typeofstats, period }) => {
                                     // borderColor: "#000000",
                                     // borderWidth: 1,
                                 }}
+                                className = ''
                             />
                             : <ActivityIndicator size="large" color="#593EFF" />
                     ) : (

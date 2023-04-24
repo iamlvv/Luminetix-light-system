@@ -166,7 +166,7 @@ function ContextCreatePage() {
         }
       }
     }
-    axios.fetch(`${url}/contexts`, {
+    fetch(`${url}/contexts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -181,11 +181,12 @@ function ContextCreatePage() {
     })
       .then(response => response.json())
       .then(data => {
-        navigate('/contextsetup/createnew/finish')
+        console.log("Scuess", data)
+        //navigate('/contextsetup/createnew/finish')
       }
       )
       .catch((error) => {
-        //console.error('Error:', error);
+        console.error('Error:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -204,12 +205,12 @@ function ContextCreatePage() {
             onSubmit={handleSubmit}
           >
             <div>
-              <input type='number' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='text' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className='mt-5'>
-              <input type='number' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='text' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
