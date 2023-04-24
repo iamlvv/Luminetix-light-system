@@ -22,7 +22,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ipaddress = process.env.IPADDRESS;
-
+const url = process.env.REACT_APP_API_URL;
 const storeData = async (data) => {
     try {
         await AsyncStorage.setItem('userInfo', JSON.stringify(data))
@@ -54,11 +54,11 @@ export const login = (email, password, navigation) => async (dispatch) => {
         };
 
         const { data } = await axios.post(
-            `http://${ipaddress}:5000/api/users/login`,
+            `${url}/users/login`,
             { email, password },
             config
         );
-
+        console.log(data)
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data,
@@ -103,7 +103,7 @@ export const register =
             };
 
             const { data } = await axios.post(
-                `http://${ipaddress}:5000/api/users`,
+                `${url}/users`,
                 { fullname, username, email, password, phone },
                 config
             );
@@ -148,7 +148,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.get(`http://${ipaddress}:5000/api/users/${id}`, config);
+        const { data } = await axios.get(`${url}/users/${id}`, config);
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -186,7 +186,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.put(`http://${ipaddress}:5000/api/users/profile`, user, config);
+        const { data } = await axios.put(`${url}/users/profile`, user, config);
         console.log(data);
         dispatch({
             type: USER_UPDATE_PROFILE_SUCCESS,
@@ -229,7 +229,7 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const { data } = await axios.put(`http://${ipaddress}:5000/api/users/password`, user, config);
+        const { data } = await axios.put(`${url}/users/password`, user, config);
         alert("Password Updated Successfully");
         dispatch({
             type: USER_UPDATE_PASSWORD_SUCCESS,

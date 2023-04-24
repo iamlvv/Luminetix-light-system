@@ -10,6 +10,7 @@ import NotificationsBar from "../components/homepage/NotificationsBar";
 import FrequentlyUsedDevices from "../components/homepage/FrequentlyUsedDevices";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "../redux/actions/userActions";
+import axios from 'axios'
 
 const HomePage = () => {
   //Get user Info
@@ -20,6 +21,7 @@ const HomePage = () => {
   const userDetails = useSelector((state) => state.userDetails);
   const { user } = userDetails;
   const dispatch2 = useDispatch();
+
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserDetails("profile"));
