@@ -129,7 +129,7 @@ const ChartStats = ({ data, typeofstats, period }) => {
                     (
                         dataChart.length !== 0 ?
                             <LineChart
-                                data={mdt_month}
+                                data={data}
                                 width={Dimensions.get("window").width - 10}
                                 height={300}
                                 yAxisLabel=""
@@ -159,14 +159,13 @@ const ChartStats = ({ data, typeofstats, period }) => {
                                     // borderColor: "#000000",
                                     // borderWidth: 1,
                                 }}
-                                className = ''
                             />
-                            : <ActivityIndicator size="large" color="#593EFF" />
+                            : <ActivityIndicator size="large" color="#593EFF" className='mb-8 ml-5'/>
                     ) : (
                         period === "day" ? (
                             dataChart.length !== 0 ?
                                 <LineChart
-                                    data={mdt_day}
+                                    data={data}
                                     width={Dimensions.get("window").width - 10}
                                     height={300}
                                     yAxisLabel=""
@@ -196,12 +195,12 @@ const ChartStats = ({ data, typeofstats, period }) => {
                                         // borderWidth: 1,
                                     }}
                                 />
-                                : <ActivityIndicator size="large" color="#593EFF" />
+                                : <ActivityIndicator size="large" color="#593EFF" className='mb-8 ml-5'/>
                         ) : (
                             period === "week" ? (
                                 dataChart.length !== 0 ?
                                     <LineChart
-                                        data={mdt_week}
+                                        data={data}
                                         width={Dimensions.get("window").width - 10}
                                         height={300}
                                         yAxisLabel=""
@@ -231,14 +230,13 @@ const ChartStats = ({ data, typeofstats, period }) => {
                                             // borderWidth: 1,
                                         }}
                                     />
-                                    : <ActivityIndicator size="large" color="#593EFF" />
+                                    : <ActivityIndicator size="large" color="#593EFF" className='mb-8 ml-5' />
                             ) : (
                                 <View></View>
                             )
                         )
                     )
             }
-
         </View>
     )
 }
