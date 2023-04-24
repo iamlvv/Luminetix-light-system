@@ -3,8 +3,17 @@ const Humidity = require("../../models/deviceModel/humidityModel");
 const Temperature = require("../../models/deviceModel/temperatureModel");
 const Fan = require("../../models/deviceModel/fanModel");
 const LED = require("../../models/deviceModel/LEDModel");
-const client = require("./connectMQTT");
+const mqtt = require("mqtt");
 
+const credentials = {
+  username: process.env.ADAFRUIT_USERNAME,
+  password: process.env.ADAFRUIT_KEY,
+};
+
+const client = mqtt.connect("mqtt://io.adafruit.com", {
+  username: credentials.username,
+  password: credentials.password,
+});
 
 const controlDevice = async (deviceType, deviceName, message) => {
   try {

@@ -61,5 +61,4 @@ const handleMQTT = client.on("message", async (topicReceived, message) => {
   }
 });
 
-module.exports = client;
-module.exports = {handleMQTT};
+module.exports = {client,handleMQTT};
