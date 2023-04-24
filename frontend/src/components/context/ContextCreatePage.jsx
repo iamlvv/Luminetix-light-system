@@ -47,6 +47,7 @@ function ContextCreatePage() {
   const url = process.env.REACT_APP_API_URL;
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(email, message)
     if (name === "") {
       Swal.fire({
         icon: 'error',
@@ -155,15 +156,14 @@ function ContextCreatePage() {
           status: toggleButtonFan,
           value: fanSpeed,
         }
-      ],
-      notification: {
-        email: email,
-        message: message,
-        included_info: {
-          fan_status: fanstatus !== "" ? true : false,
-          light_status: light_status !== "" ? true : false,
-          date_time: date_time !== "" ? true : false,
-        }
+      ]
+    }
+    var notification = {
+      email, message,
+      included_info: {
+        fan_status: fanstatus !== "" ? true : false,
+        light_status: light_status !== "" ? true : false,
+        date_time: date_time !== "" ? true : false,
       }
     }
     fetch(`${url}/contexts`, {
@@ -173,16 +173,13 @@ function ContextCreatePage() {
         Authorization: `Bearer ${userInfo.token}`,
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
-        input: input,
-        output: output,
+        name, description, input, output, notification
       })
     })
       .then(response => response.json())
       .then(data => {
-        console.log("Scuess", data)
-        //navigate('/contextsetup/createnew/finish')
+        console.log("Success", data)
+        navigate('/contextsetup/createnew/finish')
       }
       )
       .catch((error) => {
@@ -321,7 +318,7 @@ function ContextCreatePage() {
                       <p className=' text-xs text-gray-500'>Human detection sensor</p>
                     </div>
                     <Switch
-                      //onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
+                      onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
                       checked={toggleButtonHumanDetection}
                       onColor="#593EFF"
                       height={24}
