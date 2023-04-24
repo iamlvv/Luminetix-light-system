@@ -11,7 +11,7 @@ import { Link } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 const ipaddress = process.env.IPADDRESS;
-
+const url = process.env.REACT_APP_API_URL;
 const ContextCreate = ({ navigation }) => {
     const styles = {
         maincolorBG: {
@@ -209,7 +209,7 @@ const ContextCreate = ({ navigation }) => {
                 }
             }
         }
-        fetch(`http://${ipaddress}:5000/api/contexts`, {
+        fetch(`${url}/contexts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ import ContextCreate from './ContextCreate';
 
 const Stack = createStackNavigator();
 const ipaddress = process.env.IPADDRESS;
-
+const url = process.env.REACT_APP_API_URL;
 function MyStack() {
   return (
     <Stack.Navigator>
@@ -56,7 +56,7 @@ function ContextHome({ route, navigation }) {
   const [id, setId] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
   const isFocused = useIsFocused();
-
+  console.log(contextlist)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -87,7 +87,7 @@ function ContextHome({ route, navigation }) {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const response = await axios.delete(`http://${ipaddress}:5000/api/contexts/${id}`, config);
+      const response = await axios.delete(`${url}/contexts/${id}`, config);
       const { data } = response;
       dispatch(listOfContexts());
     } catch (error) {
@@ -135,7 +135,7 @@ function ContextHome({ route, navigation }) {
 
             {/* Paste contextList */}
             {
-              contextList ? contextlist.map((context) => (
+              contextList ? contextlist.map((scene) => (
                 <View className='m-1 flex flex-row mb-5 items-center' key={scene._id}>
                   {/* Item */}
                   <View className='bg-white flex flex-row justify-between items-center mx-auto rounded-2xl py-2 active:bg-violet-500'>
@@ -158,7 +158,7 @@ function ContextHome({ route, navigation }) {
                         {/* Context name and button */}
                         <View className='h-auto flex flex-row justify-between items-center'>
                           <View className='rounded-lg w-56' style={styles.secondarycolorBG}>
-                            <Text className='font-bold mx-2 text-base' numberOfLines={1} style={styles.maincolorTXT}>{context.name}</Text>
+                            <Text className='font-bold mx-2 text-base' numberOfLines={1} style={styles.maincolorTXT}>{scene.name}</Text>
                           </View>
                           <View className=''>
                             <Switch
@@ -170,8 +170,8 @@ function ContextHome({ route, navigation }) {
                           </View>
                         </View>
                         {/*  Description */}
-                        <View className='items-center w-72 mb-2'>
-                          <Text className='text-gray-500 text-left text-xs' numberOfLines={3}>{context.description}</Text>
+                        <View className='w-72 mb-2'>
+                          <Text className='text-gray-500 text-xs text-left' numberOfLines={3}>{scene.description}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>

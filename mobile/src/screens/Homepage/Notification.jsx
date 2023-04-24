@@ -7,6 +7,7 @@ import axios from "axios";
 
 const Tab = createMaterialTopTabNavigator();
 const ipaddress = process.env.IPADDRESS;
+const url = process.env.REACT_APP_API_URL;
 function MyTabs() {
     return (
         <Tab.Navigator>
@@ -38,7 +39,7 @@ function All() {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         }
-        const { data } = await axios.get(`http://${ipaddress}:5000/api/users/noti`, config);
+        const { data } = await axios.get(`${url}/users/noti`, config);
         const { notifications } = data;
         setNotificationList(notifications);
     }
@@ -77,7 +78,7 @@ function Alerts() {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         }
-        const { data } = await axios.get(`http://${ipaddress}:5000/api/users/noti`, config);
+        const { data } = await axios.get(`${url}/users/noti`, config);
         const { notifications } = data;
         setNotificationList(notifications.filter(notification => notification.type === 'alert'));
     }
@@ -117,7 +118,7 @@ function Contexts() {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         }
-        const { data } = await axios.get(`http://${ipaddress}:5000/api/users/noti`, config);
+        const { data } = await axios.get(`${url}/users/noti`, config);
         const { notifications } = data;
         setNotificationList(notifications.filter(notification => notification.type === 'context'));
     }

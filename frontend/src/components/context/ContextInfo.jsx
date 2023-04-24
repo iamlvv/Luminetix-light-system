@@ -59,8 +59,11 @@ function ContextInfo() {
       };
       const response = await axios.get(`${url}/contexts`, config);
       const data = response.data.find(x => x._id == id);
+      console.log(data)
       setName(data.name)
       setDescription(data.description)
+      setEmail(data.notification.email);
+      setMessage(data.notification.message);
       setFromTemp(data.input.active_temperature.min.toString())
       setToTemp(data.input.active_temperature.max.toString())
       setFromHum(data.input.active_humidity.min.toString())
@@ -77,8 +80,6 @@ function ContextInfo() {
       setToggleButtonLED(data.output.control_led.length > 0 ? data.output.control_led[0].status : false)
       setToggleButtonFan(data.output.control_fan.length > 0 ? data.output.control_fan[0].status : false)
       setFanSpeed(data.output.control_fan.length > 0 ? data.output.control_fan[0].value : "0")
-      setEmail(data.notification.email);
-      setMessage(data.notification.message);
       setFanStatus(data.notification.included_info.fanstatus)
       setLightStatus(data.notification.included_info.lightstatus)
       setDateTime(data.notification.included_info.date_time)

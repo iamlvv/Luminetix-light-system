@@ -47,6 +47,7 @@ function ContextCreatePage() {
   const url = process.env.REACT_APP_API_URL;
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(email, message)
     if (name === "") {
       Swal.fire({
         icon: 'error',
@@ -155,37 +156,34 @@ function ContextCreatePage() {
           status: toggleButtonFan,
           value: fanSpeed,
         }
-      ],
-      notification: {
-        email: email,
-        message: message,
-        included_info: {
-          fan_status: fanstatus !== "" ? true : false,
-          light_status: light_status !== "" ? true : false,
-          date_time: date_time !== "" ? true : false,
-        }
+      ]
+    }
+    var notification = {
+      email, message,
+      included_info: {
+        fan_status: fanstatus !== "" ? true : false,
+        light_status: light_status !== "" ? true : false,
+        date_time: date_time !== "" ? true : false,
       }
     }
-    axios.fetch(`${url}/contexts`, {
+    fetch(`${url}/contexts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
-        input: input,
-        output: output,
+        name, description, input, output, notification
       })
     })
       .then(response => response.json())
       .then(data => {
+        console.log("Success", data)
         navigate('/contextsetup/createnew/finish')
       }
       )
       .catch((error) => {
-        //console.error('Error:', error);
+        console.error('Error:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -204,12 +202,12 @@ function ContextCreatePage() {
             onSubmit={handleSubmit}
           >
             <div>
-              <input type='number' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='text' name='content' value={name || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className='mt-5'>
-              <input type='number' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
+              <input type='text' name='description' value={description || ""} className='w-full p-3 rounded-2xl border border-black'
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
@@ -320,7 +318,7 @@ function ContextCreatePage() {
                       <p className=' text-xs text-gray-500'>Human detection sensor</p>
                     </div>
                     <Switch
-                      //onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
+                      onChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
                       checked={toggleButtonHumanDetection}
                       onColor="#593EFF"
                       height={24}
