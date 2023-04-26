@@ -3,8 +3,9 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { register } from '../../redux/actions/userActions'
-
-const Signup = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native'
+const Signup = () => {
+    const navigation = useNavigation();
     const [fullname, setFullname] = React.useState('')
     const [username, setUsername] = React.useState('')
     const [email, setEmail] = React.useState('')
@@ -13,7 +14,7 @@ const Signup = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = React.useState('')
     const dispatch = useDispatch();
     const userRegister = useSelector((state) => state.userRegister);
-    const { userInfo, error, loading } = userRegister;
+    const { userInfo } = userRegister;
 
     useEffect(() => {
         if (userInfo) {

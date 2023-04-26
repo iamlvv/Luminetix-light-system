@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import FrequentlyUsedDevices from './components/FrequentlyUsedDevices';
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../redux/actions/userActions';
 import { createStackNavigator } from '@react-navigation/stack';
 import Notification from './Notification';
-
+import { useNavigation } from '@react-navigation/native';
 const Stack = createStackNavigator();
 function MyStack() {
   return (
@@ -19,7 +19,8 @@ function MyStack() {
     </Stack.Navigator>
   );
 }
-function HomepageHome({ navigation }) {
+function HomepageHome() {
+  const navigation = useNavigation();
   const [name, setName] = React.useState("");
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);

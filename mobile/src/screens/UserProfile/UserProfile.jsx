@@ -3,32 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, logout, updateUserPassword, updateUserProfile } from '../../redux/actions/userActions';
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: 'space-around',
-  },
-  header: {
-    fontSize: 36,
-    marginBottom: 48,
-  },
-  textInput: {
-    height: 40,
-    borderColor: '#000000',
-    borderBottomWidth: 1,
-    marginBottom: 36,
-  },
-  btnContainer: {
-    backgroundColor: 'white',
-    marginTop: 12,
-  },
-});
+import { useNavigation } from '@react-navigation/native';
 
-const UserProfile = ({ navigation }) => {
+const UserProfile = () => {
+  const navigation = useNavigation();
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -57,7 +35,8 @@ const UserProfile = ({ navigation }) => {
     }
   }, [dispatch2, user]);
   const handleLogout = () => {
-    dispatch(logout({ navigation }));
+    dispatch(logout());
+    navigation.navigate('Login');
   }
   const handleUpdateInfo = () => {
     dispatch(updateUserProfile({ id: user._id, fullname, username, email, phone }));

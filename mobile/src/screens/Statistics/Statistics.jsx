@@ -1,11 +1,9 @@
 import { View, Text, TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 
 import axios from 'axios';
 import ChartStats from './components/ChartStats';
-const ipaddress = process.env['IPADDRESS'];
 
 const Statistics = () => {
   const styles = {

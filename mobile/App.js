@@ -19,7 +19,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-function Home({ navigation }) {
+function Home() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Homepage" component={Homepage}

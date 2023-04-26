@@ -1,14 +1,11 @@
-import { View, Text, Switch, ScrollView, SafeAreaView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Switch, ScrollView } from 'react-native'
+import React, { useEffect } from 'react'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-//const mimport Paho from 'paho-mqtt';
-import Paho from 'paho-mqtt';
 import client from '../../../mqtt/mqtt';
 import { useIsFocused } from '@react-navigation/native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getHumidityStatFirst, getHumidityStateFirst, getLightStatFirst, getLightStateFirst, getTemperatureStatFirst, getTemperatureStateFirst, turnOffHumidity, turnOffLight, turnOffTemperature, turnOnHumidity, turnOnLight, turnOnTemperature } from '../../../redux/actions/deviceActions';
-// const client = new Paho.Client('io.adafruit.com', Number(8883), 'clientId-' + Math.round(Math.random(100000000, 1000000000)*1000000000));
 const getHumidityStatistics = (handleget) => {
     client.subscribe("Tori0802/feeds/w-humi");
     client.on("message", function (topic, message) {
@@ -108,9 +105,9 @@ const FrequentlyUsedDevices = () => {
     const [toggleButton2, setToggleButton2] = React.useState(false);
     const [toggleButton3, setToggleButton3] = React.useState(false);
 
-    const [lStat, setLStat] = React.useState(lightStatFirst);
-    const [tStat, setTStat] = React.useState(temperatureStatFirst);
-    const [hStat, setHStat] = React.useState(humidityStatFirst);
+    const [lStat, setLStat] = React.useState("0");
+    const [tStat, setTStat] = React.useState("0");
+    const [hStat, setHStat] = React.useState("0");
 
     const [lState, setLState] = React.useState(null);
     const [tState, setTState] = React.useState(null);

@@ -79,14 +79,14 @@ export const login = (email, password, navigation) => async (dispatch) => {
     }
 };
 
-export const logout = ({navigation}) => (dispatch) => {
+export const logout = () => (dispatch) => {
     //localStorage.removeItem("userInfo");
     
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
     //document.location.href = "/";
     removeData();
-    navigation.navigate('Login');
+    
 };
 
 export const register =

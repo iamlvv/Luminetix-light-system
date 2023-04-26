@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux/actions/userActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 const styles = StyleSheet.create({
     containerMain: {
         flex: 1,
@@ -32,7 +32,8 @@ const getData = async () => {
     }
 }
 
-const Login = ({ navigation }) => {
+const Login = () => {
+    const navigation = useNavigation();
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     const dispatch = useDispatch();

@@ -10,6 +10,7 @@ import { ScrollView, RefreshControl } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import ContextCreate from './ContextCreate';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const ipaddress = process.env.IPADDRESS;
@@ -35,7 +36,8 @@ function MyStack() {
     </Stack.Navigator>
   );
 }
-function ContextHome({ route, navigation }) {
+function ContextHome() {
+  const navigation = useNavigation();
   const styles = {
     maincolorBG: {
       backgroundColor: '#5E44FF',
