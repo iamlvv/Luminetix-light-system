@@ -66,18 +66,18 @@ const deleteContext = asyncHandler(async (req, res) => {
     if (!context) {
       return res.status(404).json({ message: "Context not found" });
     }
-    if (!scheduleContext[id]) {
-    }
-    const job = scheduleContext[id];
+    if (scheduleContext[id]) {
+      const job = scheduleContext[id];
 
-    if (job.start) {
-      job.start.stop();
-    }
+      if (job.start) {
+        job.start.stop();
+      }
 
-    if (job.end) {
-      job.end.stop();
+      if (job.end) {
+        job.end.stop();
+      }
+      delete scheduleContext[id];
     }
-    delete scheduleContext[id];
     await context.deleteOne();
     res.status(200).json({ message: "Context deleted successfully" });
     const users = await User.find({});
@@ -104,16 +104,19 @@ const deleteAllContext = asyncHandler(async (req, res) => {
   try {
     try {
       await Context.deleteMany({});
-      for(let id in scheduleContext)
-      {
+      for (let id in scheduleContext) {
         let job = scheduleContext[id];
-        if (job.start) {
-          job.start.stop();
+        if(job)
+        {
+          if (job.start) {
+            job.start.stop();
+          }
+          if (job.end) {
+            job.end.stop();
+          }
+          delete job;
         }
-        if (job.end) {
-          job.end.stop();
-        }
-      delete job;
+        
       }
       res.status(200).json({ message: "All contexts deleted successfully." });
     } catch (err) {
@@ -169,8 +172,15 @@ const updateContext = asyncHandler(async (req, res) => {
 
   const updatedContext = await Context.findByIdAndUpdate(
     id,
-    updatedFields,
-    { new: true } // add this option to get the updated document
+    { 
+      name: name || context.name,
+      description: description || context.description,
+      active: active || context.active,
+      input: input || context.input,
+      output: output || context.output,
+      notification: notification || context.notification
+    },
+    { new: true }
   );
   const outputUpdate = updatedFields.hasOwnProperty("output");
   const activeTimeUpdate =
@@ -312,8 +322,6 @@ const toggleContext = asyncHandler(async (req, res) => {
 // );
 
 async function handleActiveTime(context) {
-
-
   const currentTime = moment();
   if (
     context.output.frequency.no_repeat ||
@@ -377,7 +385,7 @@ async function handleActiveTime(context) {
         );
         job.end = endTime
           ? new CronJob(
-              `${endTime.minutes()} ${endTime.hours()} * * ${daysOfWeekString}`,
+              `${endTime.minutes()} ${endTime.hours()} * * ${dayString}`,
               () => jobLogic(context, false),
               null,
               true
@@ -573,7 +581,7 @@ const trackingContext = async (deviceType, message) => {
         "input.active_humidity.active": true,
       });
     }
-    if (deviceType === "w-human" && message=== "1") {
+    if (deviceType === "w-human" && message === "1") {
       contexts = await Context.find({
         active: true,
         auto_active: true,
