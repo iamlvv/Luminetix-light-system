@@ -370,7 +370,7 @@ async function handleActiveTime(context) {
         const dayString = daysOfWeek.join();
         console.log("Repeat weekly: ", dayString);
         job.start = new CronJob(
-          `${startTime.minutes()} ${startTime.hours()} * * ${daysOfWeekString}`,
+          `${startTime.minutes()} ${startTime.hours()} * * ${dayString}`,
           () => jobLogic(context, true),
           null,
           true
