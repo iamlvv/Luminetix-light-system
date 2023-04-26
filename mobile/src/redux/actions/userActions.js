@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ipaddress = process.env.IPADDRESS;
 const url = process.env.REACT_APP_API_URL;
+console.log(url);
 const storeData = async (data) => {
     try {
         await AsyncStorage.setItem('userInfo', JSON.stringify(data))
@@ -52,13 +53,11 @@ export const login = (email, password, navigation) => async (dispatch) => {
                 "Content-Type": "application/json",
             },
         };
-
         const { data } = await axios.post(
             `${url}/users/login`,
             { email, password },
             config
         );
-        console.log(data)
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data,
@@ -68,6 +67,7 @@ export const login = (email, password, navigation) => async (dispatch) => {
         navigation.navigate('Home');
 
     } catch (error) {
+        console.log(error);
         alert("Login Failed");
         dispatch({
             type: USER_LOGIN_FAIL,

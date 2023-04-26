@@ -38,14 +38,10 @@ const Login = () => {
     const [password, setPassword] = React.useState('')
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
+    const userDetails = useSelector((state) => state.userDetails)
     const { userInfo } = userLogin;
-    //console.log(getData())
-    useEffect(() => {
-        if (userInfo) {
-            navigation.navigate('Home')
-        }
-    }, [userInfo, dispatch, navigation]);
-    //console.log(userInfo)
+    const { user } = userDetails;
+
     const handleSubmit = async () => {
         if (email === '' || password === '') {
             alert('Please fill all the fields')
@@ -71,9 +67,14 @@ const Login = () => {
             //     .catch(err => {
             //         console.log(err);
             //     });
-            dispatch(login(email, password, navigation));
+            dispatch(login(email, password, navigation))
         }
     }
+    useEffect(() => {
+        if (user) {
+            navigation.navigate('Home')
+        }
+    }, [userInfo, dispatch, navigation]);
     return (
         <View className='mt-20 h-full'>
             <ScrollView className='flex-1'>

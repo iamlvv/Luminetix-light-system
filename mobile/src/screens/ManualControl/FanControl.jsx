@@ -6,6 +6,7 @@ import Slider from '@react-native-community/slider';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
+import client from '../../mqtt/mqtt';
 
 const FanControl = ({ navigation }) => {
     // --------------LED STATE--------------
@@ -20,7 +21,7 @@ const FanControl = ({ navigation }) => {
         try {
             const fan_res = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data');
             const fan_data = parseInt(fan_res.data[0].value);
-            console.log(`fetchDevices - FanControl: ${fan_data}`);
+            // console.log(`fetchDevices - FanControl: ${fan_data}`);
 
             if (fan_data === 0) {
                 setFanStat(0);
@@ -34,15 +35,42 @@ const FanControl = ({ navigation }) => {
         }
     }
     // Nhận data qua mqtt và re-render Led State trên UI
+    useEffect(() => {
+        client.on("message", (topic, message) => {
+            if (topic === "Tori0802/feeds/w-fan") {
+                if (message.toString() === "0") {
+                    setFanState("OFF");
+                    setFanStat(0);
+                } else {
+                    setFanState("ON");
+                    setFanStat(parseInt(message.toString()));
+                }
+            } else {
+                // console.log("topic not w-fan");
+            }
+        });
+    });
     // Gửi data qua mqtt và update Led State trên UI (Handle slider change)
     const handleNotiBtn = () => {
 
     }
     const handleFanState = () => {
         if (fanState === "OFF" || fanStat === 0) {
+            if (client) {
+                client.publish(
+                    "Tori0802/feeds/w-fan",
+                    JSON.stringify({ value: 100 })
+                );
+            }
             setFanState("ON");
             setFanStat(100);
         } else {
+            if (client) {
+                client.publish(
+                    "Tori0802/feeds/w-fan",
+                    JSON.stringify({ value: 0 })
+                );
+            }
             setFanState("OFF");
             setFanStat(0);
         }
@@ -77,11 +105,22 @@ const FanControl = ({ navigation }) => {
         return hour + ":" + minute;
     }
 
+    const handleFanStateComplete = (e) => {
+        console.log(fanStat);
+        if (client) {
+            client.publish(
+                "Tori0802/feeds/w-fan",
+                JSON.stringify({ value: fanStat })
+            );
+        }
+
+    }
+
     useEffect(() => {
         fetchDevices();
     }, [isFocused]);
 
-    console.log("Current - fanStat", fanStat, " - fanState: ", fanState);
+    // console.log("Current - fanStat", fanStat, " - fanState: ", fanState);
     return (
         <View className='h-5/6 mt-6 mx-3'>
             {/* Header */}
@@ -140,7 +179,9 @@ const FanControl = ({ navigation }) => {
                                 value={fanState === "OFF" ? 0 : fanStat}
                                 minimumTrackTintColor="#000000"
                                 maximumTrackTintColor="##5E44FF"
-                                onSlidingComplete={value => { setFanStat(value); value === 0 ? setFanState("OFF") : setFanState("ON"); }}
+                                onSlidingComplete={handleFanStateComplete}
+                                // onValueChange={handleFanStateChange}
+                                onValueChange={setFanStat}
                             />
                         </View>
                         <View className='bg-violet-200 ml-3 rounded-full p-2'>

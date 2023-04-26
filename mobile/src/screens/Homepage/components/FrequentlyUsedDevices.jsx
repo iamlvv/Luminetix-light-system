@@ -63,7 +63,6 @@ const getTemperatureState = (handleget) => {
         }
     });
 }
-
 const getLightState = (handleget) => {
     client.subscribe("Tori0802/feeds/w-s-light");
     client.on("message", function (topic, message) {
@@ -78,7 +77,6 @@ const getLightState = (handleget) => {
         }
     });
 }
-
 const FrequentlyUsedDevices = () => {
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
@@ -113,7 +111,6 @@ const FrequentlyUsedDevices = () => {
     const [tState, setTState] = React.useState(null);
     const [hState, setHState] = React.useState(null);
     useEffect(() => {
-
         dispatch(getTemperatureStateFirst());
         dispatch(getTemperatureStatFirst());
         dispatch(getHumidityStatFirst());
@@ -151,36 +148,36 @@ const FrequentlyUsedDevices = () => {
     const handleChangeTempState = () => {
         //Nếu true thì tắt đèn đi (true == sáng)
         if (toggleButton3 === true) {
-          dispatch(turnOffTemperature());
-          setToggleButton3(false);
-    
+            dispatch(turnOffTemperature());
+            setToggleButton3(false);
+
         } else if (toggleButton3 === false) {
-          dispatch(turnOnTemperature());
-          setToggleButton3(true);
+            dispatch(turnOnTemperature());
+            setToggleButton3(true);
         }
-      }
-      const handleChangeHumidState = () => {
+    }
+    const handleChangeHumidState = () => {
         //Nếu true thì tắt cảm biến độ ẩm đi (true == đang bật)
         if (toggleButton1 === true) {
-          dispatch(turnOffHumidity());
-          setToggleButton1(false);
+            dispatch(turnOffHumidity());
+            setToggleButton1(false);
         } else if (toggleButton1 === false) {
-    
-          dispatch(turnOnHumidity());
-          setToggleButton1(true);
+
+            dispatch(turnOnHumidity());
+            setToggleButton1(true);
         }
-      }
-    
-      const handleChangeLightState = () => {
+    }
+
+    const handleChangeLightState = () => {
         //Nếu true thì tắt cảm biến ánh sáng đi (true == đang bật)
         if (toggleButton2 === true) {
-          dispatch(turnOffLight());
-          setToggleButton2(false);
+            dispatch(turnOffLight());
+            setToggleButton2(false);
         } else if (toggleButton2 === false) {
-          dispatch(turnOnLight());
-          setToggleButton2(true);
+            dispatch(turnOnLight());
+            setToggleButton2(true);
         }
-      }
+    }
 
     return (
         <View className='mb-20'>
@@ -197,7 +194,8 @@ const FrequentlyUsedDevices = () => {
                             <AnimatedCircularProgress
                                 size={100}
                                 width={8}
-                                fill={tStat === "0" ? temperatureStatFirst : tStat}
+                                fill={parseInt(tStat)}
+                                // fill={tStat === "0" ? temperatureStatFirst : tStat}
                                 rotation={235}
                                 arcSweepAngle={250}
                                 lineCap="round"
@@ -229,7 +227,8 @@ const FrequentlyUsedDevices = () => {
                             <AnimatedCircularProgress
                                 size={100}
                                 width={8}
-                                fill={hStat === "0" ? humidityStatFirst : hStat}
+                                fill={parseInt(hStat)}
+                                // fill={hStat === "0" ? humidityStatFirst : hStat}
                                 rotation={235}
                                 arcSweepAngle={250}
                                 lineCap="round"
@@ -238,8 +237,8 @@ const FrequentlyUsedDevices = () => {
                                 backgroundColor="#3d5875">
                                 {
                                     () => (
-                                        <View className = 'bg-'>
-                                        <Text className='text-lg px-6 py-5 rounded-full text-blue-500 font-bold' >{hStat === "0" ? humidityStatFirst : hStat}</Text>
+                                        <View className='bg-'>
+                                            <Text className='text-lg px-6 py-5 rounded-full text-blue-500 font-bold' >{hStat === "0" ? humidityStatFirst : hStat}</Text>
                                         </View>
                                     )
                                 }
@@ -263,7 +262,8 @@ const FrequentlyUsedDevices = () => {
                             <AnimatedCircularProgress
                                 size={100}
                                 width={8}
-                                fill={lStat === "0" ? lightStatFirst : lStat}
+                                fill={parseInt(lStat)}
+                                // fill={lStat === "0" ? lightStatFirst : lStat}
                                 rotation={235}
                                 arcSweepAngle={250}
                                 lineCap="round"

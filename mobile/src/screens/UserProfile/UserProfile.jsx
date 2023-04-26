@@ -50,91 +50,100 @@ const UserProfile = () => {
     }
   }
   return (
-    <View className='h-full'>
-      <ScrollView>
+    <View className='h-full mt-6 mx-3'>
       {/* Header */}
-        <View className='flex justify-center flex-row mt-7 items-center'>
-          {/* Profile title */}
-          <View className='mx-auto'>
-            <Text className='font-bold text-xl ml-16'>Profile</Text>
-          </View>
-          {/* Logout button */}
-          <View className='items-center mr-10'>
-            <TouchableOpacity
-              onPress={handleLogout}
-            >
-              <Ionicons name="exit-outline" size={30} color="black" />
-            </TouchableOpacity>
-          </View>
+      <View className='flex flex-row mt-5 justify-center items-center'>
+        <View className='items-center ml-10'>
         </View>
-      {/* Body Profile */}
+        {/* Title */}
+        <View View className='mx-auto' >
+          <Text className='font-semibold text-2xl'>User profile</Text>
+        </View>
+        {/* Noti button */}
+        <View View className='items-center mr-5' >
+          <TouchableOpacity
+            onPress={handleLogout}
+          >
+            <Ionicons name="exit-outline" size={25} color="#5E44FF" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ScrollView className='mb-5'>
+        {/* Body Profile */}
         {/* Fullname */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>Full Name</Text>
-          <TextInput value={fullname || ""} className='border-2  p-2 rounded-2xl border-gray-300'
+          <Text className='mb-2 mt-5 text-sm font-semibold'>Full Name</Text>
+          <TextInput value={fullname || ""} className='border py-2 px-4 rounded-lg bg-white border-gray-200'
             onChangeText={(text) => setFullName(text)}
           />
         </View>
         {/* Username */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>User Name</Text>
-          <TextInput value={username || ""} className='border-2  p-2 rounded-2xl border-gray-300'
+          <Text className='mb-2 mt-5 text-sm font-semibold'>User Name</Text>
+          <TextInput value={username || ""} className='border py-2 px-4 rounded-lg bg-white border-gray-200'
             onChangeText={(text) => setUserName(text)}
           />
         </View>
         {/* Email */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>Email</Text>
-          <TextInput value={email || ""} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='email-address'
+          <Text className='mb-2 mt-5 text-sm font-semibold'>Email</Text>
+          <TextInput value={email || ""} className='border py-2 px-4 rounded-lg bg-white border-gray-200'
+            keyboardType='email-address'
             onChangeText={(text) => setEmail(text)}
           />
         </View>
         {/* Phone number */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>Phone Number</Text>
-          <TextInput value={phone || ""} className='border-2  p-2   rounded-2xl border-gray-300' keyboardType='phone-pad'
+          <Text className='mb-2 mt-5 text-sm font-semibold'>Phone Number</Text>
+          <TextInput value={phone || ""} className='border py-2 px-4 rounded-lg bg-white border-gray-200'
+            keyboardType='phone-pad'
             onChangeText={(text) => setPhone(text)}
           />
         </View>
         {/* Save changes button */}
         <View>
-          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2 mx-auto'
+          <TouchableOpacity className='bg-violet-500 my-5 rounded-xl py-3 px-5 mx-auto'
             onPress={handleUpdateInfo}
+            style={styles.maincolorBG}
           >
             <Text className='text-white text-center font-bold'>Save changes</Text>
           </TouchableOpacity>
         </View>
         {/* Password */}
-        <View className='mx-auto'>
-          <Text className='font-bold text-lg'>Password</Text>
-        </View>
         {/* Current password */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>Current Password</Text>
-          <TextInput className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true}
+          <Text className='mb-2 mt-5 text-sm font-semibold'>Current Password</Text>
+          <TextInput className='border py-2 px-4 rounded-lg bg-white border-gray-200'
+            textContentType='password'
+            secureTextEntry={true}
             value={currentpassword || ""}
             onChangeText={(text) => setCurrentPassword(text)}
           />
         </View>
         {/* New password */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>New Password</Text>
-          <TextInput className='border-2  p-2  rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true}
+          <Text className='mb-2 mt-5 text-sm font-semibold'>New Password</Text>
+          <TextInput className='border py-2 px-4 rounded-lg bg-white border-gray-200'
+            textContentType='password'
+            secureTextEntry={true}
             value={newpassword || ""}
             onChangeText={(text) => setNewPassword(text)}
           />
         </View>
         {/* Confirm new password */}
         <View className='ml-5 mr-5'>
-          <Text className='mb-5 mt-5'>Confirm new password</Text>
-          <TextInput value={confirmpassword || ""} className='border-2  p-2   rounded-2xl border-gray-300' textContentType='password' secureTextEntry={true}
+          <Text className='mb-2 mt-5 text-sm font-semibold'>Confirm new password</Text>
+          <TextInput value={confirmpassword || ""} className='border py-2 px-4 rounded-lg bg-white border-gray-200'
+            textContentType='password'
+            secureTextEntry={true}
             onChangeText={(text) => setConfirmPassword(text)}
           />
         </View>
         {/* Password changes button */}
         <View className='mx-auto'>
-          <TouchableOpacity className='bg-violet-500 mt-5 mb-5 rounded-2xl p-2 w-1/2'
+          <TouchableOpacity className='bg-violet-500 my-5 rounded-xl py-3 px-5 mx-auto'
             onPress={handleUpdatePassword}
+            style={styles.maincolorBG}
           >
             <Text className='text-white text-center font-bold'>Password Changes</Text>
           </TouchableOpacity>
