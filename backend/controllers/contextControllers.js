@@ -15,7 +15,6 @@ const { CronJob } = require("cron");
 const moment = require("moment");
 
 const scheduleContext = {};
-
 // @desc    Create a new context
 // @route   POST /api/contexts
 // @access  Private
@@ -31,7 +30,8 @@ const createContext = asyncHandler(async (req, res) => {
       notification,
     });
     if (
-      (context.output.frequency.repeat.daily || context.output.frequency.repeat.weekly) &&
+      (context.output.frequency.repeat.daily ||
+        context.output.frequency.repeat.weekly) &&
       !context.output.active_time.endTime
     ) {
       context.output.active_time.endTime = "23:59";
@@ -66,14 +66,18 @@ const deleteContext = asyncHandler(async (req, res) => {
     if (!context) {
       return res.status(404).json({ message: "Context not found" });
     }
-    if (context.schedule) {
-      const job = JobContext.findById(context.schedule);
-      job.job.cancel();
-      await job.deleteOne();
-      context.schedule = null;
-      await context.save();
+    if (!scheduleContext[id]) {
+    }
+    const job = scheduleContext[id];
+
+    if (job.start) {
+      job.start.stop();
     }
 
+    if (job.end) {
+      job.end.stop();
+    }
+    delete scheduleContext[id];
     await context.deleteOne();
     res.status(200).json({ message: "Context deleted successfully" });
     const users = await User.find({});
@@ -90,6 +94,34 @@ const deleteContext = asyncHandler(async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error deleting context" });
+  }
+});
+
+// @desc    Delete all context
+// @route   DELETE /api/contexts
+// @access  Private
+const deleteAllContext = asyncHandler(async (req, res) => {
+  try {
+    try {
+      await Context.deleteMany({});
+      for(let id in scheduleContext)
+      {
+        let job = scheduleContext[id];
+        if (job.start) {
+          job.start.stop();
+        }
+        if (job.end) {
+          job.end.stop();
+        }
+      delete job;
+      }
+      res.status(200).json({ message: "All contexts deleted successfully." });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting all context" });
   }
 });
 
@@ -211,96 +243,82 @@ const toggleContext = asyncHandler(async (req, res) => {
   }
 });
 
-// Define the job to run at 12pm every day
-const dailyRepeatContext = new CronJob(
-  "15 02 * * *",
-  async () => {
-    const contexts = await Context.find({ "frequency.repeat.weekly": true });
-    console.log("dailyRepeat");
+// // Define the job to run at 12pm every day
+// const dailyRepeatContext = new CronJob(
+//   "15 02 * * *",
+//   async () => {
+//     const contexts = await Context.find({ "frequency.repeat.weekly": true });
+//     for (const context of contexts) {
+//       const daysOfWeek = [
+//         "sunday",
+//         "monday",
+//         "tuesday",
+//         "wednesday",
+//         "thursday",
+//         "friday",
+//         "saturday",
+//       ];
 
-    for (const context of contexts) {
-      const daysOfWeek = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-      ];
-
-      const currentDayOfWeek = daysOfWeek[moment().get("day")];
-      if (!scheduleContext[context._id]) {
-        scheduleContext[context._id] = {};
-        const job = scheduleContext[context._id];
-        const { active_time } = context.output;
-        const startTime = moment(
-          `${moment().format("YYYY-MM-DD")} ${active_time.start_time}`,
-          "YYYY-MM-DD HH:mm"
-        );
-        const endTime = active_time.end_time
-          ? moment(
-              `${moment().format("YYYY-MM-DD")} ${active_time.end_time}`,
-              "YYYY-MM-DD HH:mm"
-            )
-          : null;
-        job.start = new CronJob(
-          `${startTime.minutes()} ${startTime.hours()} * * *`,
-          () => jobLogic(context, true),
-          null,
-          true
-        );
-        if (endTime) {
-          job.end = new CronJob(
-            `${endTime.minutes()} ${endTime.hours()} * * *`,
-            () => jobLogic(context, false),
-            null,
-            true
-          );
-        } else job.end = null;
-      }
-      if (!context.output.frequency.repeat.adjust_weekly[currentDayOfWeek]) {
-        try {
-          context.auto_active = false;
-          await context.save();
-          if (scheduleContext[context._id].start)
-            scheduleContext[context._id].start.stop();
-          if (scheduleContext[context._id].end)
-            scheduleContext[context._id].end.stop();
-        } catch (err) {
-          console.log(`Error while checking weekly context:`, err);
-        }
-      } else {
-        scheduleContext[context._id].start.start();
-        if (scheduleContext[context._id].end)
-          scheduleContext[context._id].end.start();
-      }
-    }
-  },
-  null,
-  true
-);
+//       const currentDayOfWeek = daysOfWeek[moment().get("day")];
+//       if (!scheduleContext[context._id]) {
+//         scheduleContext[context._id] = {};
+//         const job = scheduleContext[context._id];
+//         const { active_time } = context.output;
+//         const startTime = moment(
+//           `${moment().format("YYYY-MM-DD")} ${active_time.start_time}`,
+//           "YYYY-MM-DD HH:mm"
+//         );
+//         const endTime = active_time.end_time
+//           ? moment(
+//               `${moment().format("YYYY-MM-DD")} ${active_time.end_time}`,
+//               "YYYY-MM-DD HH:mm"
+//             )
+//           : null;
+//         job.start = new CronJob(
+//           `${startTime.minutes()} ${startTime.hours()} * * *`,
+//           () => jobLogic(context, true),
+//           null,
+//           true
+//         );
+//         if (endTime) {
+//           job.end = new CronJob(
+//             `${endTime.minutes()} ${endTime.hours()} * * *`,
+//             () => jobLogic(context, false),
+//             null,
+//             true
+//           );
+//         } else job.end = null;
+//       }
+//       if (!context.output.frequency.repeat.adjust_weekly[currentDayOfWeek]) {
+//         try {
+//           context.auto_active = false;
+//           await context.save();
+//           if (scheduleContext[context._id].start)
+//             scheduleContext[context._id].start.stop();
+//           if (scheduleContext[context._id].end)
+//             scheduleContext[context._id].end.stop();
+//         } catch (err) {
+//           console.log(`Error while checking weekly context:`, err);
+//         }
+//       } else {
+//         scheduleContext[context._id].start.start();
+//         if (scheduleContext[context._id].end)
+//           scheduleContext[context._id].end.start();
+//       }
+//     }
+//   },
+//   null,
+//   true
+// );
 
 async function handleActiveTime(context) {
-  const daysOfWeek = [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    
 
-  ];
 
   const currentTime = moment();
-  const currentDayOfWeek = daysOfWeek[moment().get("day")];
   if (
     context.output.frequency.no_repeat ||
     context.output.frequency.repeat.daily ||
-    (context.output.frequency.repeat.weekly &&
-      context.output.frequency.repeat.adjust_weekly[currentDayOfWeek])
+    context.output.frequency.repeat.weekly //&& context.output.frequency.repeat.adjust_weekly[currentDayOfWeek])
   ) {
     const startTime = moment(
       `${currentTime.format("YYYY-MM-DD")} ${
@@ -318,7 +336,11 @@ async function handleActiveTime(context) {
         )
       : null;
     if (startTime <= currentTime) {
-      if (!endTime || endTime >= currentTime) handleContext(context);
+      if (!endTime || endTime >= currentTime) {
+        context.auto_active = true;
+        await context.save();
+        handleContext(context);
+      }
     } else {
       try {
         context.auto_active = false;
@@ -335,15 +357,27 @@ async function handleActiveTime(context) {
         if (job.end) {
           job.end.stop();
         }
+        const daysOfWeek = [];
+        if (context.output.frequency.repeat.weekly) {
+          if (frequency.adjust_weekly.monday) daysOfWeek.push(1);
+          if (frequency.adjust_weekly.tuesday) daysOfWeek.push(2);
+          if (frequency.adjust_weekly.wednesday) daysOfWeek.push(3);
+          if (frequency.adjust_weekly.thursday) daysOfWeek.push(4);
+          if (frequency.adjust_weekly.friday) daysOfWeek.push(5);
+          if (frequency.adjust_weekly.saturday) daysOfWeek.push(6);
+          if (frequency.adjust_weekly.sunday) daysOfWeek.push(0);
+        }
+        const dayString = daysOfWeek.join();
+        console.log("Repeat weekly: ", dayString);
         job.start = new CronJob(
-          `${startTime.minutes()} ${startTime.hours()} * * *`,
+          `${startTime.minutes()} ${startTime.hours()} * * ${daysOfWeekString}`,
           () => jobLogic(context, true),
           null,
           true
         );
         job.end = endTime
           ? new CronJob(
-              `${endTime.minutes()} ${endTime.hours()} * * *`,
+              `${endTime.minutes()} ${endTime.hours()} * * ${daysOfWeekString}`,
               () => jobLogic(context, false),
               null,
               true
@@ -442,21 +476,20 @@ const handleContext = async (context) => {
         controlDevice("w-led", led.name, led.value);
       });
     }
+
     //message
     let message = context.notification.message
       ? context.notification.message
       : context.description;
     if (context.notification.included_info.fan_status) {
       message += "\nFan status:";
-      actualFans = await Fan.find({});
-      actualFans.forEach((fan) => {
+      fans.forEach((fan) => {
         message += `\n${fan.name} value: ${fan.value}`;
       });
     }
     if (context.notification.included_info.light_status) {
       message += "\nLED status:";
-      actualLEDs = await LED.find({});
-      actualLED.forEach((led) => {
+      leds.forEach((led) => {
         message += `\n${led.name} value: ${led.value}`;
       });
     }
@@ -540,6 +573,13 @@ const trackingContext = async (deviceType, message) => {
         "input.active_humidity.active": true,
       });
     }
+    if (deviceType === "w-human" && message=== "1") {
+      contexts = await Context.find({
+        active: true,
+        auto_active: true,
+        "input.active_human.active": true,
+      });
+    }
     if (deviceType == "w-s-temp" && message == "T_OFF") {
       contexts = await Context.find({
         active: true,
@@ -574,9 +614,9 @@ const trackingContext = async (deviceType, message) => {
 module.exports = {
   createContext,
   deleteContext,
+  deleteAllContext,
   getAllContexts,
   updateContext,
   toggleContext,
   trackingContext,
-  dailyRepeatContext,
 };

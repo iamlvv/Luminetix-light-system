@@ -6,7 +6,7 @@ const contextSchema = mongoose.Schema(
     created_at: { type: Date, default: Date.now, required: true },
     description: { type: String, required: false },
     active: { type: Boolean, required: true, default: true },
-    auto_active: { type: Boolean, required: true, default: true },
+    auto_active: { type: Boolean, required: true, default: false },
     input: {
       active_temperature: {
         min: {
