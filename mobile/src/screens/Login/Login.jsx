@@ -77,19 +77,19 @@ const Login = () => {
     }, [userInfo, dispatch, navigation]);
     return (
         <View className='mt-20 h-full'>
-            <ScrollView className='flex-1'>
+            <ScrollView className='flex flex-col'>
                 <View className='items-center'>
-                    <Text className="text-4xl text-violet-500 font-bold mb-5">Login</Text>
+                    <Text className="text-4xl text-violet-500 font-bold mb-5">LOGIN</Text>
                     <Text className='mb-20 font-bold'>Let's start our journey</Text>
                 </View>
                 <Pressable>
-                    <View className='mb-10 mr-5 ml-5'>
-                        <TextInput placeholder="Email" className='border-2 p-2 border-gray-300 rounded-2xl w-full mx-auto'
+                    <View className='mb-10 mr-5 ml-5 '>
+                        <TextInput placeholder="Email" className='border p-2 border-gray-300 w-full mx-auto bg-white rounded-xl'
                             onChangeText={(text) => setEmail(text)}
                         />
                     </View>
-                    <View className='mb-10 mr-5 ml-5'>
-                        <TextInput placeholder="Password" className='border-2 p-2 border-gray-300 rounded-2xl w-full mx-auto' secureTextEntry={true}
+                    <View className='mb-10 mr-5 ml-5 '>
+                        <TextInput placeholder="Password" className='border p-2 border-gray-300 w-full mx-auto bg-white rounded-xl' secureTextEntry={true}
                             onChangeText={(text) => setPassword(text)}
                         />
                     </View>
@@ -112,11 +112,10 @@ const Login = () => {
                         </TouchableOpacity>
                     </View>
                 </Pressable>
-                <View className='flex-1 mt-72'>
+                <View className='mt-80'>
                     <Image source={require('../../images/login.png')} style={styles.bottomView} className='' />
                 </View>
             </ScrollView>
-
         </View>
     )
 }

@@ -103,9 +103,9 @@ const FrequentlyUsedDevices = () => {
     const [toggleButton2, setToggleButton2] = React.useState(false);
     const [toggleButton3, setToggleButton3] = React.useState(false);
 
-    const [lStat, setLStat] = React.useState("0");
-    const [tStat, setTStat] = React.useState("0");
-    const [hStat, setHStat] = React.useState("0");
+    const [lStat, setLStat] = React.useState(lightStatFirst);
+    const [tStat, setTStat] = React.useState(temperatureStatFirst);
+    const [hStat, setHStat] = React.useState(humidityStatFirst);
 
     const [lState, setLState] = React.useState(null);
     const [tState, setTState] = React.useState(null);

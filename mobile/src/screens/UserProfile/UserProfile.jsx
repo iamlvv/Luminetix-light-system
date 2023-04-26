@@ -6,6 +6,17 @@ import { getUserDetails, logout, updateUserPassword, updateUserProfile } from '.
 import { useNavigation } from '@react-navigation/native';
 
 const UserProfile = () => {
+  const styles = {
+    maincolorBG: {
+      backgroundColor: '#5E44FF',
+    },
+    maincolorTXT: {
+      color: '#5E44FF',
+    },
+    secondarycolorBG: {
+      backgroundColor: '#DFDAFF',
+    },
+  }
   const navigation = useNavigation();
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
