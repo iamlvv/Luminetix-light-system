@@ -6,10 +6,14 @@ import { useEffect } from 'react';
 import client from '../../mqtt/mqtt';
 import Slider from "@mui/material/Slider";
 import axios from 'axios';
-
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFanStatFirst } from '../../redux/actions/deviceActions';
-
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Swal from 'sweetalert2';
 
 const getFanStat = async (setFanStat, setisFanOn) => {
     const { data } = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data");
@@ -21,9 +25,16 @@ const getFanStat = async (setFanStat, setisFanOn) => {
         setisFanOn(true);
     }
 }
+const url = process.env.REACT_APP_API_URL;
+
 function LightControl() {
     // const [device, setDevice] = React.useState([]);
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
+
     const [isFanOn, setisFanOn] = React.useState(true);
+    const [starttime, setStartTime] = React.useState("");
+    const [endtime, setEndTime] = React.useState("");
 
     const dispatch = useDispatch();
     const FanStatFirst = useSelector((state) => state.fanStatFirst)
@@ -85,10 +96,62 @@ function LightControl() {
             setisFanOn(false);
         }
     }
-
-    const [isSchedule, setisSchedule] = React.useState(false);
     const handleSchedule = () => {
-        setisSchedule(!isSchedule);
+        if (starttime === "" || endtime === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please check time range',
+            })
+            return;
+        }
+        var name = "Fan Scheduling";
+        var description = "";
+        var output = {
+            active_time: {
+                start_time: starttime,
+                end_time: endtime
+            },
+            control_fan : [
+                {
+                    name: "Fan",
+                    value: fanStat,
+                    status: isFanOn
+                }
+            ],
+            control_led : [
+                {
+                    name: "LED",
+                    value: "#000000",
+                    status: false
+                }
+            ]
+        }
+        fetch(`${url}/contexts`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify({
+              name, description, output
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log("Success", data)
+            }
+            )
+            .catch((error) => {
+              console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+              })
+            }
+            );
+
     }
 
     const handleFanOnChange = (e) => {
@@ -144,61 +207,53 @@ function LightControl() {
                 }
             </div>
             {/* Schedule */}
-            {
-                isSchedule ? (
-                    <div className='row-span-1 border rounded-3xl px-8 py-5'>
-                        <div className='grid grid-rows-3'>
-                            <div className='row-span-1 grid grid-cols-2'>
-                                <p className='col-span-1 text-xl font-bold'>Schedule</p>
-                                <button className='w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule}><span className='text-red-500 font-bold text-mono'>DELETE</span></button>
-                            </div>
-                            <div className='row-span-2 grid grid-cols-4'>
-                                <div className='col-span-1 m-1'>
-                                    <p className='text-sm font-bold text-gray-400'>Start time</p>
-                                    <div className='border rounded-2xl text-center py-2'>
-                                        <input type="startTime" className='w-24' defaultValue={"10:00 AM"} />
-                                    </div>
-                                </div>
-                                <div className='col-span-2'>
-                                    <img src={arrow} alt="" className='pt-2 px-2' />
-                                </div>
-                                <div className='col-span-1 m-1'>
-                                    <p className='text-sm font-bold text-gray-400'>End time</p>
-                                    <div className='border rounded-2xl text-center py-2'>
-                                        <input type="endTime" className='w-24' defaultValue={"10:00 AM"} />
-                                    </div>
-                                </div>
-                            </div>
+
+
+            <div className='row-span-1 border rounded-3xl px-8 py-5'>
+                <div className='grid grid-rows-3'>
+                    <div className='row-span-1 grid grid-cols-2'>
+                        <p className='col-span-1 text-xl font-bold'>Schedule</p>
+                        <button className='w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule}><span className='text-red-500 font-bold text-mono'>ADD</span></button>
+                    </div>
+                    <div className='row-span-2 grid grid-cols-4'>
+                        <div className='col-span-1 m-1'>
+                            <p className='text-sm font-bold text-gray-400'>Start time</p>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker']}>
+                                    <TimePicker
+                                        label="Start time"
+                                        value={starttime || null}
+                                        ampm={false}
+                                        defaultValue={starttime}
+                                        className=''
+                                        onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                        </div>
+                        <div className='col-span-2'>
+                            <img src={arrow} alt="" className='pt-2 px-2' />
+                        </div>
+                        <div className='col-span-1 m-1'>
+                            <p className='text-sm font-bold text-gray-400'>End time</p>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker']}>
+                                    <TimePicker
+                                        label="End time"
+                                        value={endtime || null}
+                                        ampm={false}
+                                        defaultValue={endtime}
+                                        className=''
+                                        onChange={(newValue) => setEndTime(dayjs(newValue).format('HH:mm'))}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
                         </div>
                     </div>
-                ) : (
-                    <div className='row-span-1 border rounded-3xl px-8 py-5'>
-                        <div className='grid grid-rows-3'>
-                            <div className='row-span-1 grid grid-cols-2'>
-                                <p className='col-span-1 text-xl font-bold'>Schedule</p>
-                                <button className='w-20 pr-3 pl-2 mb-2 border border-green-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule}><span className='text-green-500 font-bold text-mono'>ADD</span></button>
-                            </div>
-                            <div className='row-span-2 grid grid-cols-4'>
-                                <div className='col-span-1 m-1'>
-                                    <p className='text-sm font-bold text-gray-400'>Start time</p>
-                                    <div className='border rounded-2xl text-center py-2'>
-                                        <input type="startTime" className='w-24' defaultValue={"10:00 AM"} />
-                                    </div>
-                                </div>
-                                <div className='col-span-2'>
-                                    <img src={arrow} alt="" className='pt-2 px-2' />
-                                </div>
-                                <div className='col-span-1 m-1'>
-                                    <p className='text-sm font-bold text-gray-400'>End time</p>
-                                    <div className='border rounded-2xl text-center py-2'>
-                                        <input type="endTime" className='w-24' defaultValue={"10:00 AM"} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
+                </div>
+            </div>
+
+
             {/* Control button */}
             <div className='row-span-1 grid grid-cols-4'>
                 <div className='col-span-3 bg-purple-50 m-10 rounded-full p-3'>

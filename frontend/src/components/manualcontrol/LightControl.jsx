@@ -9,6 +9,14 @@ import client from "../../mqtt/mqtt";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getLedStateFirst } from "../../redux/actions/deviceActions";
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Swal from 'sweetalert2';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { useSelector } from "react-redux";
+const url = process.env.REACT_APP_API_URL;
 
 // Nhận data qua database/AIO để render lần đầu tiên
 const getLedState = async (setisBlueLight, setisYellowLight, setisRedLight, setisLightOn) => {
@@ -46,8 +54,10 @@ function LightControl() {
     const [isBlueLight, setisBlueLight] = React.useState(false);
     const [isYellowLight, setisYellowLight] = React.useState(false);
     const [isLightOn, setisLightOn] = React.useState(true);
-    const [isSchedule, setisSchedule] = React.useState(false);
-
+    const [starttime, setStartTime] = React.useState("");
+    const [endtime, setEndTime] = React.useState("");
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
     const dispatch = useDispatch();
 
     // Nhận data qua mqtt và re-render Led State trên UI
@@ -155,7 +165,61 @@ function LightControl() {
         setisLightOn(!isLightOn);
     };
     const handleSchedule = () => {
-        setisSchedule(!isSchedule);
+        if (starttime === "" || endtime === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please check time range',
+            })
+            return;
+        }
+        var name = "LED Scheduling";
+        var description = "";
+        var output = {
+            active_time: {
+                start_time: starttime,
+                end_time: endtime
+            },
+            control_fan: [
+                {
+                    name: "Fan",
+                    value: 0,
+                    status: false
+                }
+            ],
+            control_led: [
+                {
+                    name: "LED",
+                    value: isBlueLight ? "#0000ff" : isYellowLight ? "#ffff00" : "#ff0000",
+                    status: isLightOn
+                }
+            ]
+        }
+        fetch(`${url}/contexts`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify({
+                name, description, output
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Success", data)
+            }
+            )
+            .catch((error) => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            }
+            );
+
     };
     return (
         <div className="col-span-2 grid grid-rows-5 p-10 h-screen">
@@ -211,97 +275,60 @@ function LightControl() {
                 )}
             </div>
             {/* Schedule */}
-            {isSchedule ? (
-                <div className="row-span-1 border rounded-3xl px-8 py-5">
-                    <div className="grid grid-rows-3">
-                        <div className="row-span-1 grid grid-cols-2">
-                            <p className="col-span-1 text-xl font-bold">Schedule</p>
-                            <button
-                                className="w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end"
-                                onClick={handleSchedule}
-                            >
-                                <span className="text-red-500 font-bold text-mono">
-                                    DELETE
-                                </span>
-                            </button>
+            <div className="row-span-1 border rounded-3xl px-8 py-5">
+                <div className="grid grid-rows-3">
+                    <div className="row-span-1 grid grid-cols-2">
+                        <p className="col-span-1 text-xl font-bold">Schedule</p>
+                        <button
+                            className="w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end"
+                            onClick={handleSchedule}
+                        >
+                            <span className="text-red-500 font-bold text-mono">
+                                ADD
+                            </span>
+                        </button>
+                    </div>
+                    <div className="row-span-2 grid grid-cols-4">
+                        <div className="col-span-1 m-1">
+                            <p className="text-sm font-bold text-gray-400">
+                                Start time
+                            </p>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker']}>
+                                    <TimePicker
+                                        label="Start time"
+                                        value={starttime || null}
+                                        ampm={false}
+                                        defaultValue={starttime}
+                                        className=''
+                                        onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
                         </div>
-                        <div className="row-span-2 grid grid-cols-4">
-                            <div className="col-span-1 m-1">
-                                <p className="text-sm font-bold text-gray-400">
-                                    Start time
-                                </p>
-                                <div className="border rounded-2xl text-center py-2">
-                                    <input
-                                        type="startTime"
-                                        className="w-24"
-                                        defaultValue={"10:00 AM"}
+                        <div className="col-span-2">
+                            <img src={arrow} alt="" className="pt-2 px-2" />
+                        </div>
+                        <div className="col-span-1 m-1">
+                            <p className="text-sm font-bold text-gray-400">
+                                End time
+                            </p>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker']}>
+                                    <TimePicker
+                                        label="End time"
+                                        value={endtime || null}
+                                        ampm={false}
+                                        defaultValue={endtime}
+                                        className=''
+                                        onChange={(newValue) => setEndTime(dayjs(newValue).format('HH:mm'))}
                                     />
-                                </div>
-                            </div>
-                            <div className="col-span-2">
-                                <img src={arrow} alt="" className="pt-2 px-2" />
-                            </div>
-                            <div className="col-span-1 m-1">
-                                <p className="text-sm font-bold text-gray-400">
-                                    End time
-                                </p>
-                                <div className="border rounded-2xl text-center py-2">
-                                    <input
-                                        type="endTime"
-                                        className="w-24"
-                                        defaultValue={"10:00 AM"}
-                                    />
-                                </div>
-                            </div>
+                                </DemoContainer>
+                            </LocalizationProvider>
                         </div>
                     </div>
                 </div>
-            ) : (
-                <div className="row-span-1 border rounded-3xl px-8 py-5">
-                    <div className="grid grid-rows-3">
-                        <div className="row-span-1 grid grid-cols-2">
-                            <p className="col-span-1 text-xl font-bold">Schedule</p>
-                            <button
-                                className="w-20 pr-3 pl-2 mb-2 border border-green-500 rounded-lg col-span-1 justify-self-end"
-                                onClick={handleSchedule}
-                            >
-                                <span className="text-green-500 font-bold text-mono">
-                                    ADD
-                                </span>
-                            </button>
-                        </div>
-                        <div className="row-span-2 grid grid-cols-4">
-                            <div className="col-span-1 m-1">
-                                <p className="text-sm font-bold text-gray-400">
-                                    Start time
-                                </p>
-                                <div className="border rounded-2xl text-center py-2">
-                                    <input
-                                        type="startTime"
-                                        className="w-24"
-                                        defaultValue={"10:00 AM"}
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-span-2">
-                                <img src={arrow} alt="" className="pt-2 px-2" />
-                            </div>
-                            <div className="col-span-1 m-1">
-                                <p className="text-sm font-bold text-gray-400">
-                                    End time
-                                </p>
-                                <div className="border rounded-2xl text-center py-2">
-                                    <input
-                                        type="endTime"
-                                        className="w-24"
-                                        defaultValue={"10:00 AM"}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
             {/* Control button */}
             <div className="row-span-1 grid grid-cols-4">
                 <div className="col-span-3 grid grid-cols-3 bg-purple-50 m-10 rounded-full">

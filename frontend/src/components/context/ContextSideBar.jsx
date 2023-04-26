@@ -3,7 +3,7 @@ import Switch from "react-switch";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai"
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { contextToggle, listOfContexts } from '../../redux/actions/contextActions';
+import { contextDelete, contextToggle, listOfContexts } from '../../redux/actions/contextActions';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 const url = process.env.REACT_APP_API_URL;
@@ -57,20 +57,20 @@ function ContextSideBar() {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
-      // if (result.isConfirmed) {
-      //   const config = {
-      //     headers: {
-      //       Authorization: `Bearer ${userInfo.token}`,
-      //     },
-      //   }
-      //   axios.delete(`${url}/users/noti`, config);
-      //   setFilteredList([]);
-      //   Swal.fire(
-      //     'Deleted!',
-      //     'Your notifications has been deleted.',
-      //     'success'
-      //   )
-      // }
+      if (result.isConfirmed) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+        dispatch(contextDelete());
+        dispatch(listOfContexts())
+        Swal.fire(
+          'Deleted!',
+          'Your notifications has been deleted.',
+          'success'
+        )
+      }
     })
   }
   return (

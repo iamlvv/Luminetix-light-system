@@ -103,13 +103,23 @@ export const contextUpdate = (contextId) => async (dispatch) => {
     }
 }
 
-export const contextDelete = (contextId) => async (dispatch) => {
+export const contextDelete = (contextId) => async (dispatch, getState) => {
     try {
         dispatch({ type: CONTEXT_DELETE_REQUEST });
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        const response = await axios.delete(`${url}/contexts`);
+        console.log(response);
         dispatch({ type: CONTEXT_DELETE_SUCCESS, payload: contextId });
     } catch (error) {
         dispatch({ type: CONTEXT_DELETE_FAIL, payload: error.message });
     }
 }
-
 

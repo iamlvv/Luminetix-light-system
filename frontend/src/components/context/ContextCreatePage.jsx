@@ -145,14 +145,14 @@ function ContextCreatePage() {
         {
           name: 'led',
           status: toggleButtonLED,
-          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#ffffff",
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#000000",
         }
       ],
       control_fan: [
         {
           name: 'fan',
           status: toggleButtonFan,
-          value: fanSpeed,
+          value: fanSpeed !== "" ? parseInt(fanSpeed) : 0,
         }
       ]
     }
