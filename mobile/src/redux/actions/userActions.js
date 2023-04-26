@@ -20,7 +20,6 @@ import {
 
 } from "../../constants/userConstants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const ipaddress = process.env.IPADDRESS;
 const url = process.env.REACT_APP_API_URL;
 console.log(url);
@@ -79,14 +78,14 @@ export const login = (email, password, navigation) => async (dispatch) => {
     }
 };
 
-export const logout = () => (dispatch) => {
+export const logout = ({ navigation }) => (dispatch) => {
     //localStorage.removeItem("userInfo");
     
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
     //document.location.href = "/";
     removeData();
-    
+    navigation.navigate('Login');
 };
 
 export const register =

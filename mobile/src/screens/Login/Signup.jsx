@@ -51,6 +51,7 @@ const Signup = () => {
                 <View className='mb-5 mr-5 ml-5'>
                     <TextInput placeholder="Email" className='border-2 py-2 px-4 border-gray-300 rounded-xl  bg-white w-full mx-auto'
                         onChangeText={(text) => setEmail(text)}
+                        keyboardType='email-address'
                     />
                 </View>
                 <View className='mb-5 mr-5 ml-5'>

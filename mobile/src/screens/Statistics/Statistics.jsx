@@ -1,11 +1,81 @@
 import { View, Text, TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-
+import client from '../../mqtt/mqtt';
 import axios from 'axios';
 import ChartStats from './components/ChartStats';
-
+import { useSelector, useDispatch } from "react-redux";
+import { getHumanFoundState, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../../redux/actions/deviceActions';
+const solveDataDay = (startTime, endTime, dataNeedSolving) => {
+  let dataSolved = [];
+  for (let i = 0; i < dataNeedSolving.length; i++) {
+    if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
+      dataSolved.push(dataNeedSolving[i]);
+    }
+  }
+  let contain = [{}]
+  for (let i = 0; i < 24; i++) {
+    contain[i] = {
+      name: "",
+      value: 0,
+      quantity: 0
+    }
+  }
+  for (let j = 0; j < dataSolved.length; j++) {
+    let temp = dataSolved[j][0].slice(11, 13);
+    for (let i = 0; i < 24; i++) {
+      if (parseInt(temp) === i) {
+        contain[i].value += parseInt(dataSolved[j][1])
+        contain[i].quantity++;
+      }
+    }
+  }
+  for (let i = 0; i < 24; i++) {
+    if (contain[i].value !== 0) {
+      contain[i].value = Math.round(contain[i].value / contain[i].quantity)
+      contain[i].name = i + ""
+    }
+  }
+  let sum = 0;
+  let count = 0;
+  for (let i = 0; i < 24; i++) {
+    if (contain[i].value !== 0) {
+      sum += contain[i].value;
+      count++;
+    }
+  }
+  let average = sum / count;
+  return average;
+}
+const getHumidityStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-humi");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-humi") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getTemperatureStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-temp");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-temp") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
+const getLightStatistics = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-light");
+  client.on("message", function (topic, message) {
+    if (topic === "Tori0802/feeds/w-light") {
+      const value = JSON.parse(message.toString());
+      handleget(value);
+    }
+  });
+}
 const Statistics = () => {
+  const dispatch = useDispatch();
   const styles = {
     maincolorBG: {
       backgroundColor: '#5E44FF',
@@ -17,6 +87,67 @@ const Statistics = () => {
       backgroundColor: '#DFDAFF',
     },
   }
+  const HumanFoundStat = useSelector((state) => state.humanDetectionState);
+
+  const { humanFoundState } = HumanFoundStat;
+  // Get Real time Stat using MQTT
+  const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
+  const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
+  const LightStatFirst = useSelector((state) => state.lightStatFirst);
+
+  const { temperatureStatFirst } = TempStatFirst;
+  const { humidityStatFirst } = HumidStatFirst;
+  const { lightStatFirst } = LightStatFirst;
+
+  const [lStat, setLStat] = React.useState(lightStatFirst);
+  const [tStat, setTStat] = React.useState(temperatureStatFirst);
+  const [hStat, setHStat] = React.useState(humidityStatFirst);
+  useEffect(() => {
+
+    dispatch(getTemperatureStatFirst());
+    dispatch(getHumidityStatFirst());
+    dispatch(getLightStatFirst());
+    // Get Stat and State using MQTT
+    getHumidityStatistics(setHStat);
+    getTemperatureStatistics(setTStat);
+    getLightStatistics(setLStat);
+    dispatch(getHumanFoundState())
+  }, []);
+  // Get average figures
+  const [tempAverage, setTempAverage] = React.useState(0);
+  const [humidAverage, setHumidAverage] = React.useState(0);
+  const [lightAverage, setLightAverage] = React.useState(0);
+
+
+  
+  const getTempStatDayAverage = async () => {
+    const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
+    const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+    const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-temp/data/chart');
+    var result = solveDataDayAverage("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+    setTempAverage(result);
+  }
+  const getHumidStatDayAverage = async () => {
+    const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
+    const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+    const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-humi/data/chart');
+    var result = solveDataDayAverage("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+    setHumidAverage(result);
+  }
+  const getLightStatDayAverage = async () => {
+    const startTime = new Date().toISOString().slice(0, 11) + "00:00:00Z";
+    const endTime = new Date().toISOString().slice(0, 11) + "23:59:59Z";
+    const response = await axios.get('https://io.adafruit.com/api/v2/Tori0802/feeds/w-light/data/chart');
+    var result = solveDataDayAverage("2023-04-06T00:00:00Z", "2023-04-06T23:23:595Z", response.data.data);
+    setLightAverage(result);
+  }
+  useEffect(() => {
+    getTempStatDayAverage();
+    getHumidStatDayAverage();
+    getLightStatDayAverage();
+  }, []);
+
+  // Get data for chart
   const [tempDataDay, setTempDataDay] = React.useState([]);
   const [humiDataDay, setHumiDataDay] = React.useState([]);
   const [lightDataDay, setLightDataDay] = React.useState([]);
@@ -36,7 +167,47 @@ const Statistics = () => {
   const typeofstatsList = ["temperature", "humidity", "light"];
 
   const isFocused = useIsFocused();
-
+  const solveDataDayAverage = (startTime, endTime, dataNeedSolving) => {
+    let dataSolved = [];
+    for (let i = 0; i < dataNeedSolving.length; i++) {
+      if (dataNeedSolving[i][0] >= startTime && dataNeedSolving[i][0] <= endTime) {
+        dataSolved.push(dataNeedSolving[i]);
+      }
+    }
+    let contain = [{}]
+    for (let i = 0; i < 24; i++) {
+      contain[i] = {
+        name: "",
+        value: 0,
+        quantity: 0
+      }
+    }
+    for (let j = 0; j < dataSolved.length; j++) {
+      let temp = dataSolved[j][0].slice(11, 13);
+      for (let i = 0; i < 24; i++) {
+        if (parseInt(temp) === i) {
+          contain[i].value += parseInt(dataSolved[j][1])
+          contain[i].quantity++;
+        }
+      }
+    }
+    for (let i = 0; i < 24; i++) {
+      if (contain[i].value !== 0) {
+        contain[i].value = Math.round(contain[i].value / contain[i].quantity)
+        contain[i].name = i + ""
+      }
+    }
+      let sum = 0;
+      let count = 0;
+      for (let i = 0; i < 24; i++) {
+          if (contain[i].value !== 0) {
+              sum += contain[i].value;
+              count++;
+          }
+      }
+      let average = sum / count;
+      return average;
+  }
   const solveDataDay = (startTime, endTime, dataNeedSolving) => {
     let dataSolved = [];
     for (let i = 0; i < dataNeedSolving.length; i++) {
@@ -268,6 +439,9 @@ const Statistics = () => {
     getTempStatMonth();
     getHumidStatMonth();
     getLightStatMonth();
+    getTempStatDayAverage();
+    getHumidStatDayAverage();
+    getLightStatDayAverage();
   }, [isFocused])
 
   const [active, setActive] = useState(0);
@@ -295,15 +469,15 @@ const Statistics = () => {
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Temperature</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{tempAverage}</Text>
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Humidity</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{humidAverage}</Text>
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Light</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{lightAverage}</Text>
               </View>
             </View>
             {/* Current figure */}
@@ -313,15 +487,15 @@ const Statistics = () => {
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Temperature</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{tStat === "0" ? temperatureStatFirst : tStat}</Text>
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Humidity</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{hStat === "0" ? humidityStatFirst : hStat}</Text>
               </View>
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Light</Text>
-                <Text className='text-md font-bold' style={styles.maincolorTXT}>{31.2}</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{lStat === "0" ? lightStatFirst : lStat}</Text>
               </View>
             </View>
           </View>

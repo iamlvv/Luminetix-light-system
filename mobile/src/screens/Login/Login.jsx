@@ -86,6 +86,7 @@ const Login = () => {
                     <View className='mb-10 mr-5 ml-5 '>
                         <TextInput placeholder="Email" className='border p-2 border-gray-300 w-full mx-auto bg-white rounded-xl'
                             onChangeText={(text) => setEmail(text)}
+                            keyboardType='email-address'
                         />
                     </View>
                     <View className='mb-10 mr-5 ml-5 '>
