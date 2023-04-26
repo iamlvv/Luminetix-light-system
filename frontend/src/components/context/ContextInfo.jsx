@@ -7,11 +7,17 @@ import ContextSideBar from './ContextSideBar';
 import fanicon2 from '../../images/fanicon1.jpg'
 import lighticon2 from '../../images/lighticon2.png'
 import axios from 'axios';
-import TimePicker from 'rc-time-picker';
+//import TimePicker from 'rc-time-picker';
 import Swal from 'sweetalert2';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 const url = process.env.REACT_APP_API_URL;
 
 function ContextInfo() {
+  // Get userInfo, id and detail of a specific context
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -20,6 +26,7 @@ function ContextInfo() {
     getContextDetail(id);
   }, [dispatch, id])
 
+  // Intial state of switch buttons and input fields
   const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
   const [toggleButtonHum, setToggleButtonHum] = React.useState(false);
   const [toggleButtonHumanDetection, setToggleButtonHumanDetection] = React.useState(true);
@@ -38,14 +45,16 @@ function ContextInfo() {
   const [toLight, setToLight] = React.useState("");
   const [repeat, setRepeat] = React.useState("");
   const [starttime, setStartTime] = React.useState("");
+  const [showStartTime, setShowStartTime] = React.useState(false);
+  const [showEndTime, setShowEndTime] = React.useState(false);
   const [endtime, setEndTime] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [ledColor, setLEDColor] = React.useState("Yellow");
   const [fanSpeed, setFanSpeed] = React.useState("");
-  const [fanstatus, setFanStatus] = React.useState("");
-  const [light_status, setLightStatus] = React.useState("");
-  const [date_time, setDateTime] = React.useState("");
+  const [fanstatus, setFanStatus] = React.useState(false);
+  const [light_status, setLightStatus] = React.useState(false);
+  const [date_time, setDateTime] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -58,38 +67,43 @@ function ContextInfo() {
         },
       };
       const response = await axios.get(`${url}/contexts`, config);
-      const data = response.data.find(x => x._id == id);
+      const data = response.data.find(x => x._id === id);
       console.log(data)
       setName(data.name)
       setDescription(data.description)
-      setEmail(data.notification.email);
-      setMessage(data.notification.message);
-      setFromTemp(data.input.active_temperature.min.toString())
-      setToTemp(data.input.active_temperature.max.toString())
-      setFromHum(data.input.active_humidity.min.toString())
-      setToHum(data.input.active_humidity.max.toString())
-      setFromLight(data.input.active_light.min.toString())
-      setToLight(data.input.active_light.max.toString())
-      setRepeat(data.output.frequency.today)
+      setEmail(data.notification.email ? data.notification.email : "")
+      setMessage(data.notification.message ? data.notification.message : "")
+      setLEDColor(data.output.control_led.length > 0 ? data.output.control_led[0].value : false)
+      setFromTemp(data.input.active_temperature.min ? data.input.active_temperature.min.toString() : "")
+      setToTemp(data.input.active_temperature.max ? data.input.active_temperature.max.toString() : "")
+      setFromHum(data.input.active_humidity.min ? data.input.active_humidity.min.toString() : "")
+      setToHum(data.input.active_humidity.max ? data.input.active_humidity.max.toString() : "")
+      setFromLight(data.input.active_light.min ? data.input.active_light.min.toString() : "")
+      setToLight(data.input.active_light.max ? data.input.active_light.max.toString() : "")
+      setRepeat(data.output.frequency.no_repeat ? "Today" : data.output.frequency.repeat.daily ? "Everyday" : 
+      data.output.frequency.repeat.adjust_weekly.monday ? "Monday" : data.output.frequency.repeat.adjust_weekly.tuesday ? "Tuesday" : 
+      data.output.frequency.repeat.adjust_weekly.wednesday ? "Wednesday" : data.output.frequency.repeat.adjust_weekly.thursday ? "Thursday" : 
+      data.output.frequency.repeat.adjust_weekly.friday ? "Friday" : data.output.frequency.repeat.adjust_weekly.saturday ? "Saturday" : data.output.frequency.repeat.adjust_weekly.sunday ? "Sunday" : "")
       setStartTime(data.output.active_time.start_time)
       setEndTime(data.output.active_time.end_time)
       setToggleButtonTemp(data.input.active_temperature.active)
       setToggleButtonHum(data.input.active_humidity.active)
       setToggleButtonLight(data.input.active_light.active)
-      //setToggleButtonHumanDetection(data.input.human_detection.active)
+      setFanSpeed(data.output.control_fan.length > 0 ? data.output.control_fan[0].value.toString() : "0")
+      setFanStatus(data.notification.included_info.fan_status)
+      setLightStatus(data.notification.included_info.light_status)
+      setDateTime(data.notification.included_info.date_time)
+      setToggleButtonHumanDetection(data.input.human_detection.active)
       setToggleButtonLED(data.output.control_led.length > 0 ? data.output.control_led[0].status : false)
       setToggleButtonFan(data.output.control_fan.length > 0 ? data.output.control_fan[0].status : false)
-      setFanSpeed(data.output.control_fan.length > 0 ? data.output.control_fan[0].value : "0")
-      setFanStatus(data.notification.included_info.fanstatus)
-      setLightStatus(data.notification.included_info.lightstatus)
-      setDateTime(data.notification.included_info.date_time)
+      
     }
-
     catch (error) {
       console.log(error)
     }
 
   }
+  // function handle submit. First, check if user input is valid. Then send them. If response is successful, redirect to context page, otherwise, show error message
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name === "") {
@@ -191,7 +205,7 @@ function ContextInfo() {
         {
           name: 'led',
           status: toggleButtonLED,
-          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yello' ? "#ffff00" : "#ffffff",
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#ffffff",
         }
       ],
       control_fan: [
@@ -201,14 +215,15 @@ function ContextInfo() {
           value: fanSpeed,
         }
       ],
-      notification: {
-        email: email,
-        message: message,
-        included_info: {
-          fan_status: fanstatus !== "" ? true : false,
-          light_status: light_status !== "" ? true : false,
-          date_time: date_time !== "" ? true : false,
-        }
+
+    }
+    var notification = {
+      email: email,
+      message: message,
+      included_info: {
+        fan_status: fanstatus ? true : false,
+        light_status: light_status ? true : false,
+        date_time: date_time ? true : false,
       }
     }
     fetch(`${url}/contexts/${id}/edit`, {
@@ -218,10 +233,7 @@ function ContextInfo() {
         Authorization: `Bearer ${userInfo.token}`,
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
-        input: input,
-        output: output,
+        name, description, input, output, notification
       })
     })
       .then(response => response.json())
@@ -244,6 +256,7 @@ function ContextInfo() {
       }
       );
   }
+
   return (
     <div>
       <div>
@@ -390,6 +403,7 @@ function ContextInfo() {
                     <div className='m-auto col-span-2'>
                       <select className='w-full border rounded text-gray-500 px-4 text-xs p-1'
                         onChange={(e) => setRepeat(e.target.value)}
+                        value={repeat}
                       >
                         <option>Today</option>
                         <option>Everyday</option>
@@ -405,9 +419,12 @@ function ContextInfo() {
                   </div>
                   {/* Start time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
-                    <label className='font-bold col-span-1 my-auto mr-auto'>Start time</label>
+                    <div className='font-bold col-span-1 my-auto mr-auto flex flex-col'>
+                    <label>Start time</label>
+                    <p className='text-center'>{starttime}</p>
+                    </div>
                     <div className='m-auto col-span-2'>
-                      <TimePicker
+                      {/* <TimePicker
                         placeholder="Select Start Time"
                         use12Hours={false}
                         showSecond={false}
@@ -415,14 +432,28 @@ function ContextInfo() {
                         format="hh:mm A"
                         onChange={e => setStartTime(e.format('LT'))}
                         defaultValue={starttime}
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                          <TimePicker
+                            label="Start time"
+                            value={starttime || null}
+                            ampm = {false}
+                            className=''
+                            onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
                     </div>
                   </div>
                   {/* End time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
-                    <label className='font-bold col-span-1 my-auto mr-auto'>End time</label>
+                  <div className='font-bold col-span-1 my-auto mr-auto flex flex-col'>
+                    <label>End time</label>
+                    <p className='text-center'>{endtime}</p>
+                    </div>
                     <div className='m-auto col-span-2'>
-                      <TimePicker
+                      {/* <TimePicker
                         placeholder="Select End Time"
                         use12Hours={false}
                         showSecond={false}
@@ -430,7 +461,18 @@ function ContextInfo() {
                         format="hh:mm A"
                         onChange={e => setEndTime(e.format('LT'))}
                         defaultValue={endtime}
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                          <TimePicker
+                            label="End time"
+                            value={endtime || null}
+                            ampm = {false}
+                            className=''
+                            onChange={(newValue) => setEndTime(dayjs(newValue).format('HH:mm'))}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
                     </div>
                   </div>
                 </div>
@@ -465,10 +507,11 @@ function ContextInfo() {
                           <div className='my-auto ml-auto'>
                             <select className='border px-4 py-1 rounded'
                               onChange={(e) => setLEDColor(e.target.value)}
+                              value={ledColor === "#ffff00" ? "Yellow" : ledColor === "#ff0000" ? "Red" : ledColor === "#0000ff" ? "Blue" : "Yellow"}
                             >
-                              <option>Yellow</option>
-                              <option>Red</option>
-                              <option>Blue</option>
+                              <option value="Yellow">Yellow</option>
+                              <option value = "Red">Red</option>
+                              <option value = "Blue">Blue</option>
                             </select>
                           </div>
                         </div>
@@ -502,7 +545,7 @@ function ContextInfo() {
                       <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-4'>
                         <h1 className='font-bold m-auto col-span-3'>Control the whole system</h1>
                         <Switch
-                          // onChange={() => setToggleButton3(!toggleButton3)}
+                          onChange={() => setToggleButtonSystem(true)}
                           checked={true}
                           onColor="#593EFF"
                           height={24}

@@ -53,10 +53,8 @@ function ContextHome({ route, navigation }) {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [stateContext, setStateContext] = useState(null)
-  const [id, setId] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
   const isFocused = useIsFocused();
-  console.log(contextlist)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -66,8 +64,6 @@ function ContextHome({ route, navigation }) {
 
   useEffect(() => {
     dispatch(listOfContexts());
-    console.log(`listOfContext - Contextsetup: ${contextlist}`);
-    console.log(`ipaddress: ${ipaddress}`);
   }, [isFocused]);
 
   const handleToggleContext = async (id) => {
@@ -150,7 +146,6 @@ function ContextHome({ route, navigation }) {
                     {/* Touchable area */}
                     <TouchableOpacity
                       onPress={() => {
-                        console.log(scene._id)
                         navigation.navigate("ContextInfo", { id: scene._id })
                       }}
                     >
@@ -163,7 +158,16 @@ function ContextHome({ route, navigation }) {
                           <View className=''>
                             <Switch
                               value={scene.active}
-                              onValueChange={() => { }}
+                              onValueChange={() => {
+                                dispatch(contextToggle(scene._id, !scene.active));
+                                setStateContext(contextlist.map((item) => {
+                                  if (item._id == scene._id) {
+                                    item.active = !item.active;
+                                  }
+                                  return item;
+                                }
+                                ))
+                              }}
                               trackColor={{ false: '#767577', true: '#593EFF' }}
                               thumbColor={scene.active ? '#f4f3f4' : '#593EFF'}
                             />

@@ -42,6 +42,7 @@
     "react-time-picker": "^6.0.4",
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
+    "sp-react-native-mqtt": "^0.5.1",
     "tailwindcss": "^3.3.1"
   },
   "devDependencies": {

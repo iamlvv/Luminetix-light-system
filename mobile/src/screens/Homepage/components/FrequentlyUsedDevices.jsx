@@ -1,29 +1,56 @@
 import { View, Text, Switch, ScrollView, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Paho from 'paho-mqtt'
-
-//const mqtt = require('mqtt');
+//const mimport Paho from 'paho-mqtt';
+import Paho from 'paho-mqtt';
 
 // const client = new Paho.Client('io.adafruit.com', Number(8883), 'clientId-' + Math.round(Math.random(100000000, 1000000000)*1000000000));
+
+
 
 const FrequentlyUsedDevices = () => {
     const [toggleButton1, setToggleButton1] = useState(false);
     const [toggleButton2, setToggleButton2] = useState(false);
     const [toggleButton3, setToggleButton3] = useState(false);
-    // useEffect(() => {
-    //     client.connect({
-    //         onSuccess: () => {
-    //             console.log('connected')
-    //             client.subscribe('Tori0802/feeds/w-s-humi')
-    //             client.onMessageArrived = onMessage
-    //         },
-    //         // userName: options.username,
-    //         // password: options.password,
-    //         onFailure: (errorMessage) => {
-    //             console.log('Connection failed: ' + errorMessage.errorMessage);
-    //         }
-    //     })
-    // }, [])
+    useEffect(() => {
+        var client = new Paho.Client(
+            'io.adafruit.com',
+            Number(8883),
+            '/',
+            'clientId-' + Math.round(Math.random() * 1000000000)
+        );
+        client.onMessageArrived = function (message) {
+            console.log('Topic: ' + message.destinationName + ", Message: " + message.payloadString)
+        }
+        client.connect({
+            onSuccess: function () {
+                console.log('connected');
+            },
+            userName: process.env.REACT_APP_ADAFRUIT_USERNAME,
+            password: process.env.REACT_APP_ADAFRUIT_KEY,
+            useSSL: true,
+            onFailure: function (error) {
+                console.log(error);
+            }
+        });
+        // var ws = new WebSocket(`wss://io.adafruit.com:443/mqtt/${process.env.REACT_APP_ADAFRUIT_USERNAME}/w-humi`);
+        // ws.onopen = function () {
+        //     console.log('WebSocket Client Connected');
+        //     ws.send('Hi this is web client.');
+        // }
+        // ws.addEventListener("message", (event) => {
+        //     console.log("message")
+        //     console.log("Message from server ", event.data);
+        // });
+        // ws.onmessage = function (e) {
+        //     console.log("Received: '" + e.data + "'");
+        // }
+        // // ws.onclose = function () {
+        // //     console.log('WebSocket Client Closed');
+        // // }
+        // ws.onerror = function (e) {
+        //     console.log("Error: '" + e.data + "'");
+        // }
+    }, [])
 
     const handleHumidityChange = () => {
         setToggleButton1(!toggleButton1)

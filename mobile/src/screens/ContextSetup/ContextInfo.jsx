@@ -106,31 +106,36 @@ const ContextInfo = ({ route, navigation }) => {
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const response = await axios.get(`http://${ipaddress}:5000/api/contexts`, config);
+      const response = await axios.get(`${url}/contexts`, config);
       const data = response.data.find(x => x._id == id);
-      //console.log(data.output.active_time.end_time)
       setName(data.name)
       setDescription(data.description)
-      setFromTemp(data.input.active_temperature.min.toString())
-      setToTemp(data.input.active_temperature.max.toString())
-      setFromHum(data.input.active_humidity.min.toString())
-      setToHum(data.input.active_humidity.max.toString())
-      setFromLight(data.input.active_light.min.toString())
-      setToLight(data.input.active_light.max.toString())
-      setRepeat(data.output.frequency.today)
+      setLEDColor(data.output.control_led.length > 0 ? data.output.control_led[0].value.toString() : "")
+      setFanLevel(data.output.control_fan.length > 0 ? data.output.control_fan[0].value.toString() : "")
+      setEmail(data.notification.email ? data.notification.email : "")
+      setMessage(data.notification.message ? data.notification.message : "")
+      setFanStatus(data.notification.included_info.fan_status)
+      setLEDStatus(data.notification.included_info.light_status)
+      setDateTime(data.notification.included_info.date_time)
+      setFromTemp(data.input.active_temperature.min ? data.input.active_temperature.min.toString() : "")
+      setToTemp(data.input.active_temperature.max ? data.input.active_temperature.max.toString() : "")
+      setFromHum(data.input.active_humidity.min ? data.input.active_humidity.min.toString() : "")
+      setToHum(data.input.active_humidity.max ? data.input.active_humidity.max.toString() : "")
+      setFromLight(data.input.active_light.min ? data.input.active_light.min.toString() : "")
+      setToLight(data.input.active_light.max ? data.input.active_light.max.toString() : "")
       setToggleButtonTemp(data.input.active_temperature.active)
       setToggleButtonHum(data.input.active_humidity.active)
       setToggleButtonHumanDetection(data.input.human_detection.active)
       setToggleButtonLight(data.input.active_light.active)
-      setRepeat(data.output.frequency.today ? "Today" : data.output.frequency.repeat.daily ? "Everyday" : data.output.frequency.weekly[0] ? "Monday" : data.output.frequency.weekly[1] ? "Tuesday" : data.output.frequency.weekly[2] ? "Wednesday" : data.output.frequency.weekly[3] ? "Thursday" : data.output.frequency.weekly[4] ? "Friday" : data.output.frequency.weekly[5] ? "Saturday" : data.output.frequency.weekly[6] ? "Sunday" : "")
+      setRepeat(data.output.frequency.no_repeat ? "Today" : data.output.frequency.repeat.daily ? "Everyday" : 
+      data.output.frequency.repeat.adjust_weekly.monday ? "Monday" : data.output.frequency.repeat.adjust_weekly.tuesday ? "Tuesday" : 
+      data.output.frequency.repeat.adjust_weekly.wednesday ? "Wednesday" : data.output.frequency.repeat.adjust_weekly.thursday ? "Thursday" : 
+      data.output.frequency.repeat.adjust_weekly.friday ? "Friday" : data.output.frequency.repeat.adjust_weekly.saturday ? "Saturday" : data.output.frequency.repeat.adjust_weekly.sunday ? "Sunday" : "")
       setStartTime(data.output.active_time.start_time)
       setEndTime(data.output.active_time.end_time)
       setToggleButtonLED(data.output.control_led.length > 0 ? data.output.control_led[0].status : false)
       setToggleButtonFan(data.output.control_fan.length > 0 ? data.output.control_fan[0].status : false)
-      setLEDColor(data.output.control_led.length > 0 ? data.output.control_led[0].value : "")
-      setFanLevel(data.output.control_fan.length > 0 ? data.output.control_fan[0].value : "")
-      setEmail(data.notification.email)
-      setMessage(data.notification.message)
+      
     }
 
     catch (error) {
@@ -140,6 +145,30 @@ const ContextInfo = ({ route, navigation }) => {
   }
 
   const handleSubmit = async () => {
+    if (name === "") {
+      alert("Please fill in the name");
+      return;
+    }
+    if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) == 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
+      alert("Please check temperature range");
+      return;
+    }
+    if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) == 0 || parseInt(toHum) < 0)) {
+      alert("Please check humidity range");
+      return;
+    }
+    if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) == 0 || parseInt(toLight) < 0)) {
+      alert("Please check light range");
+      return;
+    }
+    if ((message === "" && email !== "") || (message !== "" && email === "")) {
+      alert("Please fill in both email and message");
+      return;
+    }
+    if (toggleButtonFan && (fanLevel === "" || parseInt(fanLevel) <= 0 || parseInt(fanLevel) > 100)) {
+      alert("Please check fan speed");
+      return;
+    }
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -199,17 +228,17 @@ const ContextInfo = ({ route, navigation }) => {
         {
           name: 'Fan',
           status: toggleButtonFan,
-          value: fanSpeed,
+          value: fanLevel,
         }
-      ],
-      notification: {
-        email: email,
-        message: message,
-        included_info: {
-          fan_status: fanStatus !== "" ? true : false,
-          light_status: LEDStatus !== "" ? true : false,
-          date_time: dateTime !== "" ? true : false,
-        }
+      ]
+    }
+    var notification = {
+      email: email,
+      message: message,
+      included_info: {
+        fan_status: fanStatus !== "" ? true : false,
+        light_status: LEDStatus !== "" ? true : false,
+        date_time: dateTime !== "" ? true : false,
       }
     }
     fetch(`${url}/contexts`, {
@@ -219,10 +248,7 @@ const ContextInfo = ({ route, navigation }) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
-        input: input,
-        output: output,
+        name, description, input, output, notification
       })
     })
       .then(response => response.json())
@@ -434,6 +460,7 @@ const ContextInfo = ({ route, navigation }) => {
               onSelect={(selectedItem, index) => {
                 setRepeat(selectedItem)
               }}
+              defaultValue={repeat}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem
               }}
@@ -473,6 +500,7 @@ const ContextInfo = ({ route, navigation }) => {
                 onSelect={(selectedItem, index) => {
                   setLEDColor(selectedItem)
                 }}
+                defaultValue={LEDColor}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem
                 }}

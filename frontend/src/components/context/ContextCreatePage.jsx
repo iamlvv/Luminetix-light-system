@@ -1,8 +1,8 @@
 import Switch from 'react-switch';
 import React from 'react'
-import TimePicker from "rc-time-picker";
+//import TimePicker from "rc-time-picker";
 import 'rc-time-picker/assets/index.css';
-
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { NavLink, useNavigate } from 'react-router-dom'
 import NavBar from '../NavBar';
 import ContextSideBar from './ContextSideBar';
@@ -12,6 +12,10 @@ import "react-step-progress-bar/styles.css";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function ContextCreatePage() {
   const [toggleButtonTemp, setToggleButtonTemp] = React.useState(false);
@@ -37,9 +41,9 @@ function ContextCreatePage() {
   const [email, setEmail] = React.useState("");
   const [ledColor, setLEDColor] = React.useState("");
   const [fanSpeed, setFanSpeed] = React.useState("");
-  const [fanstatus, setFanStatus] = React.useState("");
-  const [light_status, setLightStatus] = React.useState("");
-  const [date_time, setDateTime] = React.useState("");
+  const [fanstatus, setFanStatus] = React.useState(false);
+  const [light_status, setLightStatus] = React.useState(false);
+  const [date_time, setDateTime] = React.useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -56,14 +60,14 @@ function ContextCreatePage() {
       })
       return;
     }
-    if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) == 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
+    if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) === 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
       Swal.fire({
         title: 'Oops...',
         text: 'Please check temperature range',
       })
       return;
     }
-    if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) == 0 || parseInt(toHum) < 0)) {
+    if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) === 0 || parseInt(toHum) < 0)) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -71,7 +75,7 @@ function ContextCreatePage() {
       })
       return;
     }
-    if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) == 0 || parseInt(toLight) < 0)) {
+    if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) === 0 || parseInt(toLight) < 0)) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -95,12 +99,6 @@ function ContextCreatePage() {
       })
       return;
     }
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
     var input = {
       active_temperature: {
         min: parseInt(fromTemp),
@@ -147,7 +145,7 @@ function ContextCreatePage() {
         {
           name: 'led',
           status: toggleButtonLED,
-          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yello' ? "#ffff00" : "#ffffff",
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#ffffff",
         }
       ],
       control_fan: [
@@ -161,9 +159,9 @@ function ContextCreatePage() {
     var notification = {
       email, message,
       included_info: {
-        fan_status: fanstatus !== "" ? true : false,
-        light_status: light_status !== "" ? true : false,
-        date_time: date_time !== "" ? true : false,
+        fan_status: fanstatus ? true : false,
+        light_status: light_status ? true : false,
+        date_time: date_time ? true : false,
       }
     }
     fetch(`${url}/contexts`, {
@@ -192,7 +190,7 @@ function ContextCreatePage() {
       }
       );
   }
-
+  console.log(dayjs(starttime).format('HH:mm'))
   return (
     <div>
       <div>
@@ -354,30 +352,56 @@ function ContextCreatePage() {
                   </div>
                   {/* Start time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
-                    <label className='font-bold col-span-1 my-auto mr-auto'>Start time</label>
+                    <div className='font-bold col-span-1 my-auto mr-auto flex flex-col'>
+                      <label>Start time</label>
+                      <p className='text-center'>{starttime}</p>
+                    </div>
                     <div className='m-auto col-span-2'>
-                      <TimePicker
+                      {/* <TimePicker 
                         placeholder="Select Start Time"
-                        use12Hours={false}
-                        showSecond={false}
-                        focusOnOpen={true}
-                        format="hh:mm A"
+                        ampm = {false}
+                        defaultValue = {starttime}
                         onChange={e => setStartTime(e.format('LT'))}
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                          <TimePicker
+                            label="Start time"
+                            value={starttime || null}
+                            ampm={false}
+                            defaultValue={starttime}
+                            className=''
+                            onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
                     </div>
                   </div>
                   {/* End time */}
                   <div className='bg-white shadow-sm rounded-xl p-5 grid grid-cols-3'>
-                    <label className='font-bold col-span-1 my-auto mr-auto'>End time</label>
+                    <div className='font-bold col-span-1 my-auto mr-auto flex flex-col'>
+                      <label>End time</label>
+                      <p className='text-center'>{endtime}</p>
+                    </div>
                     <div className='m-auto col-span-2'>
-                      <TimePicker
+                      {/* <TimePicker
                         placeholder="Select End Time"
-                        use12Hours={false}
-                        showSecond={false}
-                        focusOnOpen={true}
-                        format="hh:mm A"
+                        ampm={false}
+                        defaultValue={endtime}
                         onChange={e => setEndTime(e.format('LT'))}
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                          <TimePicker
+                            label="End time"
+                            value={endtime || null}
+                            ampm={false}
+                            defaultValue={endtime}
+                            className=''
+                            onChange={(newValue) => setEndTime(dayjs(newValue).format('HH:mm'))}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
                     </div>
                   </div>
                 </div>
@@ -487,18 +511,21 @@ function ContextCreatePage() {
                         <div>
                           <input type='checkbox' className='mr-3 mb-4' name='fanstatus'
                             onChange={(e) => setFanStatus(e.target.checked)}
+                            checked={fanstatus}
                           />
                           <label>Fan status</label>
                         </div>
                         <div>
                           <input type='checkbox' className='mr-3 mb-4' name='lightstatus'
                             onChange={(e) => setLightStatus(e.target.checked)}
+                            checked={light_status}
                           />
                           <label>Light status</label>
                         </div>
                         <div>
                           <input type='checkbox' className='mr-3 mb-4' name='dateandtime'
                             onChange={(e) => setDateTime(e.target.checked)}
+                            checked={date_time}
                           />
                           <label>Date and time</label>
                         </div>

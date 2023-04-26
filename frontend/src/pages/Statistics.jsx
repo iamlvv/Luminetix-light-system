@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import axios from "axios";
 import StatisticsSum from "../components/statistics/StatisticsSum";
-import StatisticsHeader from "../components/statistics/StatisticsHeader";
-import RealtimeStatus from "../components/RealtimeStatus";
 import AverageFigure from "../components/statistics/AverageFigure";
 import Header from "../components/Header";
 

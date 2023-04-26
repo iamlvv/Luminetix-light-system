@@ -95,47 +95,29 @@ const ContextCreate = ({ navigation }) => {
         showMode2('time');
     }
     const handleSubmit = () => {
-        if (toggleButtonTemp) {
-            if (fromTemp == "" || toTemp == "") {
-                alert("Please enter temperature range")
-                return
-            }
+        if (name === "") {
+            alert("Please fill in the name");
+            return;
         }
-        if (toggleButtonHum) {
-            if (fromHum == "" || toHum == "") {
-                alert("Please enter humidity range")
-                return
-            }
+        if (toggleButtonTemp && (fromTemp === "" || toTemp === "" || parseInt(fromTemp) > parseInt(toTemp) || parseInt(toTemp) == 0 || parseInt(fromTemp) < 0 || parseInt(toTemp) > 100 || parseInt(toTemp) < 0)) {
+            alert("Please check temperature range");
+            return;
         }
-        if (toggleButtonLight) {
-            if (fromLight == "" || toLight == "") {
-                alert("Please enter light range")
-                return
-            }
+        if (toggleButtonHum && (fromHum === "" || toHum === "" || parseInt(fromHum) > parseInt(toHum) || parseInt(fromHum) < 0 || parseInt(toHum) > 100 || parseInt(toHum) == 0 || parseInt(toHum) < 0)) {
+            alert("Please check humidity range");
+            return;
         }
-        if (!name) {
-            alert("Please enter context name")
-            return
+        if (toggleButtonLight && (fromLight === "" || toLight === "" || parseInt(fromLight) > parseInt(toLight) || parseInt(fromLight) < 0 || parseInt(toLight) > 100 || parseInt(toLight) == 0 || parseInt(toLight) < 0)) {
+            alert("Please check light range");
+            return;
         }
-        if (!starttime || !endtime) {
-            alert("Please choose start time and end time")
-            return
+        if ((message === "" && email !== "") || (message !== "" && email === "")) {
+            alert("Please fill in both email and message");
+            return;
         }
-        if (!repeat) {
-            alert("Please choose repeat")
-            return
-        }
-        if (toggleButtonLED) {
-            if (!LEDColor) {
-                alert("Please choose LED color")
-                return
-            }
-        }
-        if (toggleButtonFan) {
-            if (!fanSpeed) {
-                alert("Please choose fan level")
-                return
-            }
+        if (toggleButtonFan && (fanSpeed === "" || parseInt(fanSpeed) <= 0 || parseInt(fanSpeed) > 100)) {
+            alert("Please check fan speed");
+            return;
         }
         const config = {
             headers: {
@@ -166,10 +148,10 @@ const ContextCreate = ({ navigation }) => {
         }
         var output = {
             frequency: {
-                today: repeat === "Today" ? true : false,
+                no_repeat: repeat === "Today" ? true : false,
                 repeat: {
                     daily: repeat === 'Everyday' ? true : false,
-                    weekly: false,
+                    weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
                     adjust_weekly: {
                         monday: repeat === 'Monday' ? true : false,
                         tuesday: repeat === 'Tuesday' ? true : false,
@@ -187,26 +169,26 @@ const ContextCreate = ({ navigation }) => {
             },
             control_led: [
                 {
-                    name: 'LED',
+                    name: 'led',
                     status: toggleButtonLED,
-                    value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yello' ? "#ffff00" : "#ffffff",
+                    value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#ffffff",
                 }
             ],
             control_fan: [
                 {
-                    name: 'Fan',
+                    name: 'fan',
                     status: toggleButtonFan,
                     value: fanSpeed,
                 }
-            ],
-            notification: {
-                email: email,
-                message: message,
-                included_info: {
-                    fan_status: fanStatus !== "" ? true : false,
-                    light_status: LEDStatus !== "" ? true : false,
-                    date_time: dateTime !== "" ? true : false,
-                }
+            ]
+        }
+        var notification = {
+            email: email,
+            message: message,
+            included_info: {
+                fan_status: fanStatus ? true : false,
+                light_status: LEDStatus ? true : false,
+                date_time: dateTime ? true : false,
             }
         }
         fetch(`${url}/contexts`, {
@@ -216,10 +198,7 @@ const ContextCreate = ({ navigation }) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
             body: JSON.stringify({
-                name: name,
-                description: description,
-                input: input,
-                output: output,
+                name, description, input, output, notification
             })
         })
             .then(response => response.json())
@@ -375,7 +354,7 @@ const ContextCreate = ({ navigation }) => {
                         <View className='bg-white rounded-xl p-2 m-2 py-14'>
                             <View className='flex flex-row items-center justify-between'>
                                 <Text className='m-2 text-base font-semibold'>Detect People</Text>
-                                <Switch value={true} onValueChange={() => setToggleButtonHumanDetection(true)}
+                                <Switch value={toggleButtonHumanDetection} onValueChange={() => setToggleButtonHumanDetection(!toggleButtonHumanDetection)}
                                     trackColor={{ false: '#E3E5E5', true: '#593EFF' }}
                                     thumbColor={toggleButtonHumanDetection ? '#f4f3f4' : '#593EFF'}
                                 />

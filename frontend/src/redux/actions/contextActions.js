@@ -59,7 +59,7 @@ export const contextDetail = (id) => async (dispatch, getState) => {
         const response = await axios.get(`${url}/contexts`, config);
         const { data } = response;
         console.log(data)
-        dispatch({ type: CONTEXT_DETAIL_SUCCESS, payload: data.find(x => x._id == id) });
+        dispatch({ type: CONTEXT_DETAIL_SUCCESS, payload: data.find(x => x._id === id) });
     } catch (error) {
         dispatch({ type: CONTEXT_DETAIL_FAIL, payload: error.message });
     }
