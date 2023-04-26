@@ -15,7 +15,6 @@ const { CronJob } = require("cron");
 const moment = require("moment");
 
 const scheduleContext = {};
-
 // @desc    Create a new context
 // @route   POST /api/contexts
 // @access  Private
@@ -78,7 +77,7 @@ const deleteContext = asyncHandler(async (req, res) => {
     if (job.end) {
       job.end.stop();
     }
-    scheduleContext.slice(indexOf(job), 1);
+    delete scheduleContext[id];
     await context.deleteOne();
     res.status(200).json({ message: "Context deleted successfully" });
     const users = await User.find({});
@@ -105,16 +104,17 @@ const deleteAllContext = asyncHandler(async (req, res) => {
   try {
     try {
       await Context.deleteMany({});
-      scheduleContext.forEach((job) => {
+      for(let id in scheduleContext)
+      {
+        let job = scheduleContext[id];
         if (job.start) {
           job.start.stop();
         }
-
         if (job.end) {
           job.end.stop();
         }
-      });
-      scheduleContext.slice(0, scheduleContext.length);
+      delete job;
+      }
       res.status(200).json({ message: "All contexts deleted successfully." });
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -312,18 +312,9 @@ const toggleContext = asyncHandler(async (req, res) => {
 // );
 
 async function handleActiveTime(context) {
-  // const daysOfWeek = [
-  //   "sunday",
-  //   "monday",
-  //   "tuesday",
-  //   "wednesday",
-  //   "thursday",
-  //   "friday",
-  //   "saturday",
-  // ];
+
 
   const currentTime = moment();
-  // const currentDayOfWeek = daysOfWeek[moment().get("day")];
   if (
     context.output.frequency.no_repeat ||
     context.output.frequency.repeat.daily ||
@@ -377,6 +368,7 @@ async function handleActiveTime(context) {
           if (frequency.adjust_weekly.sunday) daysOfWeek.push(0);
         }
         const dayString = daysOfWeek.join();
+        console.log("Repeat weekly: ", dayString);
         job.start = new CronJob(
           `${startTime.minutes()} ${startTime.hours()} * * ${daysOfWeekString}`,
           () => jobLogic(context, true),
@@ -579,6 +571,13 @@ const trackingContext = async (deviceType, message) => {
         active: true,
         auto_active: true,
         "input.active_humidity.active": true,
+      });
+    }
+    if (deviceType === "w-human" && message=== "1") {
+      contexts = await Context.find({
+        active: true,
+        auto_active: true,
+        "input.active_human.active": true,
       });
     }
     if (deviceType == "w-s-temp" && message == "T_OFF") {
