@@ -19,7 +19,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-function Home({ navigation }) {
+function Home() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Homepage" component={Homepage}
@@ -75,22 +75,27 @@ function Home({ navigation }) {
     </Tab.Navigator>
   )
 }
+
 export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          initialRouteName='Login' // the name of the initial screen
+          screenOptions={{
+            headerShown: false,
+          }}>
           <Stack.Screen name="Login" component={Login}
             options={{
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Signup" component={Signup}
+          <Stack.Screen name="Home" component={Home}
             options={{
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Home" component={Home}
+          <Stack.Screen name="Signup" component={Signup}
             options={{
               headerShown: false,
             }}

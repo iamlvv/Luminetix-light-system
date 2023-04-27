@@ -39,6 +39,7 @@ export const listOfContexts = () => async (dispatch, getState) => {
         };
         const response = await axios.get(`${url}/contexts`, config);
         const { data } = response;
+        console.log("ContextList: ", data);
         dispatch({ type: CONTEXT_LIST_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: CONTEXT_LIST_FAIL, payload: error.message });

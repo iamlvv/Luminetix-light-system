@@ -8,6 +8,7 @@ import FanControl from './FanControl';
 import { createStackNavigator } from '@react-navigation/stack';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
+import client from '../../mqtt/mqtt';
 
 const ipaddress = process.env['IPADDRESS'];
 const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ function ManualControlHome({ navigation }) {
   const isFocused = useIsFocused(); 
 
   const [ledState, setLedState] = useState('#000000');
+  const [prevLedState, setPrevLedState] = useState('#000000');
   const [fanState, setFanState] = useState('OFF');
   const [fanStat, setFanStat] = useState('0');
   const [toggleLed, setToggleLed] = useState(false);
@@ -45,9 +47,49 @@ function ManualControlHome({ navigation }) {
     }
   }
   const handleLedToggle = () => {
+    if (ledState !== "#000000") {
+      if (client) {
+          client.publish(
+              "Tori0802/feeds/w-led",
+              JSON.stringify({ value: "#000000" })
+          );
+      }
+      setPrevLedState(ledState);
+      setLedState("#000000");
+      console.log(`prevLedState: ${prevLedState}`)
+  }
+  else {
+      if (client) {
+          client.publish(
+              "Tori0802/feeds/w-led",
+              JSON.stringify({ value: prevLedState })
+          );
+      }
+      setLedState(prevLedState);
+  }
     setToggleLed(!toggleLed);
   };
+
   const handleFanToggle = () => {
+    if (fanState === "OFF" || fanStat === 0) {
+      if (client) {
+          client.publish(
+              "Tori0802/feeds/w-fan",
+              JSON.stringify({ value: 100 })
+          );
+      }
+      setFanState("ON");
+      setFanStat(100);
+  } else {
+      if (client) {
+          client.publish(
+              "Tori0802/feeds/w-fan",
+              JSON.stringify({ value: 0 })
+          );
+      }
+      setFanState("OFF");
+      setFanStat(0);
+  }
     setToggleFan(!toggleFan);
   };
 
@@ -58,7 +100,7 @@ function ManualControlHome({ navigation }) {
       const fan_res = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-fan/data")
       const led_data = led_res.data[0].value;
       const fan_data = fan_res.data[0].value;
-      console.log(`fetchDevices: led_data ${convertLedState(led_data)} - fan_data ${fan_data}`);
+      // console.log(`fetchDevices: led_data ${convertLedState(led_data)} - fan_data ${fan_data}`);
 
       // Set state cho đèn theo dữ liệu từ server
       if (led_data !== "#000000") {

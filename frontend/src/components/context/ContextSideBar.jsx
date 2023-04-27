@@ -73,6 +73,7 @@ function ContextSideBar() {
       }
     })
   }
+  console.log(userInfo.token)
   return (
     <div className='mt-5 mr-9'>
       <div className='flex justify-between flex-row'>
@@ -112,7 +113,7 @@ function ContextSideBar() {
                         }
                         ))
                       }}
-                      checked={stateContext !== null ? stateContext.find(x => x._id == scene._id).active : scene.active}
+                      checked={stateContext !== null ? stateContext.find(x => x._id === scene._id).active : scene.active}
                       onColor="#593EFF"
                       height={24}
                       width={48}

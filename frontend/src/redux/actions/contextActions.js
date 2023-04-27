@@ -115,7 +115,7 @@ export const contextDelete = (contextId) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        const response = await axios.delete(`${url}/contexts`);
+        const response = await axios.delete(`${url}/contexts`, config);
         console.log(response);
         dispatch({ type: CONTEXT_DELETE_SUCCESS, payload: contextId });
     } catch (error) {

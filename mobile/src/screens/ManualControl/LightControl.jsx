@@ -4,11 +4,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import client from '../../mqtt/mqtt.js';
 
 const LightControl = ({ navigation }) => {
     // ------------------LED STATE------------------
     const [ledState, setLedState] = React.useState("#ff0000");
-    const [prevLedState, setPrevLedState]  = React.useState(ledState);
+    const [prevLedState, setPrevLedState] = React.useState(ledState);
 
     const isFocused = useIsFocused();
 
@@ -28,7 +29,7 @@ const LightControl = ({ navigation }) => {
         try {
             const led_res = await axios.get("https://io.adafruit.com/api/v2/Tori0802/feeds/w-led/data")
             const led_data = led_res.data[0].value;
-            console.log(`fetchDevices - LightControl: ${led_data}`);
+            // console.log(`fetchDevices - LightControl: ${led_data}`);
 
             (led_data !== "#000000")
                 ? setLedState(led_data)
@@ -38,19 +39,75 @@ const LightControl = ({ navigation }) => {
         }
     }
     // Nhận data qua mqtt và re-render Led State trên UI
+    useEffect(() => {
+        client.on("message", (topic, message) => {
+            if (topic === "Tori0802/feeds/w-led") {
+                // console.log("Led Stat: ", message.toString());
+                if (message.toString() === "#000000") {
+                    setLedState("#000000");
+                } else {
+                    if (message.toString() === "#ff0000") {
+                        setLedState("#ff0000");
+                    } else if (message.toString() === "#ffff00") {
+                        setLedState("#ffff00");
+                    } else if (message.toString() === "#0000ff") {
+                        setLedState("#0000ff");
+                    }
+                }
+            } else {
+                console.log("topic not w-led");
+            }
+        });
+    });
     // Gửi data qua mqtt và update Led State trên UI
     const handleRedLed = () => {
+        if (client) {
+            client.publish(
+                "Tori0802/feeds/w-led",
+                JSON.stringify({ value: "#ff0000" })
+            );
+        }
         setLedState("#ff0000");
     }
     const handleBlueLed = () => {
+        if (client) {
+            client.publish(
+                "Tori0802/feeds/w-led",
+                JSON.stringify({ value: "#0000ff" })
+            );
+        }
         setLedState("#0000ff");
     }
     const handleYellowLed = () => {
+        if (client) {
+            client.publish(
+                "Tori0802/feeds/w-led",
+                JSON.stringify({ value: "#ffff00" })
+            );
+        }
         setLedState("#ffff00");
     }
     const handleLightState = () => {
-        setPrevLedState(ledState);
-        !(ledState === "#000000") ? setLedState("#000000") : setLedState(prevLedState);
+        if (ledState !== "#000000") {
+            if (client) {
+                client.publish(
+                    "Tori0802/feeds/w-led",
+                    JSON.stringify({ value: "#000000" })
+                );
+            }
+            setPrevLedState(ledState);
+            setLedState("#000000");
+            console.log(`prevLedState: ${prevLedState}`)
+        }
+        else {
+            if (client) {
+                client.publish(
+                    "Tori0802/feeds/w-led",
+                    JSON.stringify({ value: prevLedState })
+                );
+            }
+            setLedState(prevLedState);
+        }
     }
     const handleNotiBtn = () => {
 
@@ -88,7 +145,7 @@ const LightControl = ({ navigation }) => {
     useEffect(() => {
         fetchDevices();
     }, [isFocused]);
-    
+
     console.log("Current LedState: ", convertLedState(ledState));
     return (
         <View className='h-5/6 mt-6 mx-3'>

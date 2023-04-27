@@ -190,6 +190,7 @@ function ContextCreatePage() {
       }
       );
   }
+  console.log(ledColor)
   return (
     <div>
       <div>

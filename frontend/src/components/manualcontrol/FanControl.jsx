@@ -112,14 +112,14 @@ function LightControl() {
                 start_time: starttime,
                 end_time: endtime
             },
-            control_fan : [
+            control_fan: [
                 {
                     name: "Fan",
                     value: fanStat,
                     status: isFanOn
                 }
             ],
-            control_led : [
+            control_led: [
                 {
                     name: "LED",
                     value: "#000000",
@@ -130,25 +130,25 @@ function LightControl() {
         fetch(`${url}/contexts`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userInfo.token}`,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
             },
             body: JSON.stringify({
-              name, description, output
+                name, description, output
             })
-          })
+        })
             .then(response => response.json())
             .then(data => {
-              console.log("Success", data)
+                console.log("Success", data)
             }
             )
             .catch((error) => {
-              console.error('Error:', error);
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-              })
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
             }
             );
 

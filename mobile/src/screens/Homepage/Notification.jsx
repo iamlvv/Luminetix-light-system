@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
 const Tab = createMaterialTopTabNavigator();
-const ipaddress = process.env.IPADDRESS;
 const url = process.env.REACT_APP_API_URL;
 function MyTabs() {
     return (

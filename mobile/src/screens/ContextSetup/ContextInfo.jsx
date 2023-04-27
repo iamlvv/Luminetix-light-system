@@ -1,18 +1,17 @@
 import { View, Text, Image, TouchableOpacity, Button } from 'react-native'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { contextDetail } from '../../redux/actions/contextActions';
 import { ScrollView, Switch, TextInput } from 'react-native-gesture-handler';
 import SelectDropdown from 'react-native-select-dropdown'
 import CheckBox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-const ipaddress = process.env.IPADDRESS;
 const url = process.env.REACT_APP_API_URL;
-const ContextInfo = ({ route, navigation }) => {
+const ContextInfo = ({ route }) => {
+  const navigation = useNavigation();
   const styles = {
     maincolorBG: {
       backgroundColor: '#5E44FF',
