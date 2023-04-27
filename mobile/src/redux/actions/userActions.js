@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ipaddress = process.env.IPADDRESS;
 const url = process.env.REACT_APP_API_URL;
 console.log(url);
-const storeData = async (data) => {
+export const storeData = async (data) => {
     try {
         await AsyncStorage.setItem('userInfo', JSON.stringify(data))
     } catch (e) {
@@ -32,7 +32,7 @@ const storeData = async (data) => {
     }
 }
 
-const removeData = async () => {
+export const removeData = async () => {
     try {
         await AsyncStorage.removeItem('userInfo')
     } catch (e) {

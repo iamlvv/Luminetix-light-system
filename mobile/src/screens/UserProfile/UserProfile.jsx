@@ -2,9 +2,10 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingVi
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDetails, logout, updateUserPassword, updateUserProfile } from '../../redux/actions/userActions';
+import { getUserDetails, logout, removeData, updateUserPassword, updateUserProfile } from '../../redux/actions/userActions';
 import { useNavigation } from '@react-navigation/native';
-
+import axios from 'axios';
+const url = process.env.REACT_APP_API_URL;
 const UserProfile = () => {
   const styles = {
     maincolorBG: {
@@ -36,6 +37,9 @@ const UserProfile = () => {
     if (userInfo) {
       dispatch(getUserDetails("profile"));
     }
+    else {
+      navigation.navigate('Login');
+    }
   }, []);
   useEffect(() => {
     if (user) {
@@ -52,12 +56,39 @@ const UserProfile = () => {
   const handleUpdateInfo = () => {
     dispatch(updateUserProfile({ id: user._id, fullname, username, email, phone }));
   }
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     if (newpassword !== confirmpassword) {
       alert("New password and confirm password do not match!");
     }
     else {
-      dispatch(updateUserPassword({ id: user._id, currentpassword, newpassword }));
+      //dispatch(updateUserPassword({ id: user._id, currentpassword, newpassword }));
+      //dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
+      try {
+        const config = {
+          headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+          },
+      };
+        const { data } = await axios.put(`${url}/users/password`, {currentpassword, newpassword}, config);
+        alert("Password Updated Successfully");
+        removeData();
+        navigation.navigate('Login');
+      }
+      catch (error) {
+        alert("Password Update Failed");
+        console.log(error)
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+        if (message === "Not authorized, token failed") {
+          dispatch(logout());
+        }
+      }
+      // dispatch({
+      //   type: USER_UPDATE_PASSWORD_SUCCESS,
+      //   payload: true,
+      // });
     }
   }
   return (

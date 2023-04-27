@@ -25,7 +25,7 @@ const ContextHomeScreen = () => {
           <h1 className='font-bold mb-3 text-2xl'>Tutorial</h1>
           <div className='text-gray-500'>
             <ul>
-              <li>First, <span className='font-bold hover:text-gray-900'>Create new scene </span> or <span className='font-bold hover:text-gray-900'>Modify available scene</span>.</li>
+              <li>First, <span className='font-bold hover:text-gray-900'>Create new context </span> or <span className='font-bold hover:text-gray-900'>Modify available scene</span>.</li>
               <li>Second, <span className='font-bold hover:text-gray-900'>Modify condition </span>to trigger the context.</li>
               <li>Then, <span className='font-bold hover:text-gray-900'>Decide what to do</span> with your device.</li>
             </ul>
@@ -35,9 +35,9 @@ const ContextHomeScreen = () => {
           <h1 className='font-bold mb-3 text-2xl'>Next step</h1>
           <div className='text-gray-500'>
             <ul>
-              <li>Choose a scene to modify on <span className='font-bold hover:text-gray-900'>List of scenes</span></li>
+              <li>Choose a context to modify on <span className='font-bold hover:text-gray-900'>List of contexts</span></li>
               <li>OR</li>
-              <li><span className='font-bold hover:text-gray-900'>Create a new scene</span></li>
+              <li><span className='font-bold hover:text-gray-900'>Create a new context</span></li>
             </ul>
           </div>
         </div>
@@ -54,7 +54,7 @@ const ContextHomeScreen = () => {
                 <input type="text" name="name" className='border-black border py-1 px-2 rounded-2xl' id='nameofnewscene'/>
               </div> */}
               <NavLink to='/contextsetup/createnew'><button className='bg-violet-500 text-white py-2 px-5 font-bold rounded-2xl hover:bg-violet-600 transition ease-in '
-              >Create new scene</button></NavLink>
+              >Create new context</button></NavLink>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@ const ContextHomeScreen = () => {
             <img src={contextsetupicon} alt="contextsetupicon" />
           </div>
           <div className='col-span-3'>
-            <h1 className='font-bold text-xl'>Choose a scene to modify</h1>
+            <h1 className='font-bold text-xl'>Choose a context to modify</h1>
             <div>
               <div className='my-3'>
                 <select id='contextlistoptions' className='w-full text-md border border-solid rounded-lg p-2'>

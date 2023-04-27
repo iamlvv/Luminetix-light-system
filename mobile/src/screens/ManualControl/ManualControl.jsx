@@ -141,7 +141,7 @@ function ManualControlHome({ navigation }) {
       {/* Header */}
       <View className='flex flex-row mt-5 justify-center items-center'>
         {/* Back button */}
-        <View className='items-center ml-10'>
+        <View className='items-center'>
           {/* <TouchableOpacity
             onPress={handleBackBtn}
           >
@@ -153,12 +153,12 @@ function ManualControlHome({ navigation }) {
           <Text className='font-semibold text-2xl'>Manual control</Text>
         </View>
         {/* Noti button */}
-        <View className='items-center mr-5' >
-          <TouchableOpacity
+        <View className='items-center' >
+          {/* <TouchableOpacity
             onPress={handleNotiBtn}
           >
             <Ionicons name="notifications-outline" size={25} color="#5E44FF" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

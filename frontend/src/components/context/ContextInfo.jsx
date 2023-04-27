@@ -182,9 +182,9 @@ function ContextInfo() {
     }
     var output = {
       frequency: {
-        no_repeat: repeat === "Today" ? true : false,
+        no_repeat: (repeat === "Today" || !repeat)? true : false,
         repeat: {
-          daily: repeat === 'Everyday' ? true : false,
+          daily: (repeat === 'Everyday' ) ? true : false,
           weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
           adjust_weekly: {
             monday: repeat === 'Monday' ? true : false,
@@ -205,7 +205,7 @@ function ContextInfo() {
         {
           name: 'led',
           status: toggleButtonLED,
-          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#ffffff",
+          value: ledColor === 'Red' ? "#ff0000" : ledColor === 'Blue' ? "#0000ff" : ledColor === 'Yellow' ? "#ffff00" : "#000000",
         }
       ],
       control_fan: [

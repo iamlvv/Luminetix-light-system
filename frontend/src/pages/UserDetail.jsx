@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails, updateUserPassword, updateUserProfile } from "../redux/actions/userActions";
+import { getUserDetails, logout, updateUserPassword, updateUserProfile } from "../redux/actions/userActions";
 import Swal from "sweetalert2";
-
+import axios from "axios";
+const url = process.env.REACT_APP_API_URL;
 export default function UserDetail() {
 	const dispatch = useDispatch();
 	const userLogin = useSelector((state) => state.userLogin);
@@ -39,8 +40,8 @@ export default function UserDetail() {
 		e.preventDefault();
 		dispatch2(updateUserProfile({ id: user._id, fullname, username, email, phone }))
 	}
-	const handleChangePassword = (e) => {
-		
+	const handleChangePassword = async (e) => {
+		e.preventDefault()
 		if (newpassword !== confirmpassword) {
 			Swal.fire({
 				icon: "error",
@@ -49,7 +50,47 @@ export default function UserDetail() {
 			});
 		}
 		else {
-			dispatch(updateUserPassword({ id: user._id, currentpassword, newpassword }));
+			//dispatch(updateUserPassword({ id: user._id, currentpassword, newpassword }));
+			try {
+				//dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
+		
+				const config = {
+					headers: {
+						Authorization: `Bearer ${userInfo.token}`,
+					},
+				};
+				const { data } = await axios.put(`${url}/users/password`, {currentpassword, newpassword}, config);
+				console.log(data)
+				Swal.fire({
+					icon: "success",
+					title: "Success",
+					text: "Password changed successfully!",
+				})
+				dispatch(logout());
+				// dispatch({
+				// 	type: USER_UPDATE_PASSWORD_SUCCESS,
+				// 	payload: true,
+				// });
+			}
+			catch (error) {
+				console.log(error)
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "Something went wrong!",
+				});
+				const message =
+					error.response && error.response.data.message
+						? error.response.data.message
+						: error.message;
+				if (message === "Not authorized, token failed") {
+					dispatch(logout());
+				}
+				// dispatch({
+				// 	type: USER_UPDATE_PASSWORD_FAIL,
+				// 	payload: message,
+				// });
+			}
 		}
 		e.preventDefault();
 	}

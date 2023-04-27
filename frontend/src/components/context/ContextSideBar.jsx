@@ -67,7 +67,7 @@ function ContextSideBar() {
         dispatch(listOfContexts())
         Swal.fire(
           'Deleted!',
-          'Your notifications has been deleted.',
+          'Your contexts has been deleted.',
           'success'
         )
       }
@@ -76,7 +76,7 @@ function ContextSideBar() {
   return (
     <div className='mt-5 mr-9'>
       <div className='flex justify-between flex-row'>
-      <h1 className='text-2xl font-bold'>List of scenes</h1>
+      <h1 className='text-2xl font-bold'>List of contexts</h1>
       <button className="bg-red-300 font-bold rounded-2xl py-1 px-2 hover:bg-red-400 transition ease-in"
           onClick={handleDeleteAll}>
           Delete all

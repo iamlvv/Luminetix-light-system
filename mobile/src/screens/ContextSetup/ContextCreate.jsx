@@ -145,7 +145,7 @@ const ContextCreate = () => {
         }
         var output = {
             frequency: {
-                no_repeat: repeat === "Today" ? true : false,
+                no_repeat: (repeat === "Today" || !repeat) ? true : false,
                 repeat: {
                     daily: repeat === 'Everyday' ? true : false,
                     weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
@@ -168,14 +168,14 @@ const ContextCreate = () => {
                 {
                     name: 'led',
                     status: toggleButtonLED,
-                    value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#ffffff",
+                    value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#000000",
                 }
             ],
             control_fan: [
                 {
                     name: 'fan',
                     status: toggleButtonFan,
-                    value: fanSpeed,
+                    value: fanSpeed !== "" ? parseInt(fanSpeed) : 0,
                 }
             ]
         }
@@ -200,6 +200,7 @@ const ContextCreate = () => {
         })
             .then(response => response.json())
             .then(data => {
+                console.log("Success", data)
                 alert("Create context successfully")
                 navigation.navigate('ContextHome', { id: Math.random() })
             }

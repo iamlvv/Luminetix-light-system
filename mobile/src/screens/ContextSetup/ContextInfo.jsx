@@ -197,10 +197,10 @@ const ContextInfo = ({ route }) => {
     }
     var output = {
       frequency: {
-        today: repeat === "Today" ? true : false,
+        today: (repeat === "Today" || !repeat) ? true : false,
         repeat: {
           daily: repeat === 'Everyday' ? true : false,
-          weekly: false,
+          weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
           adjust_weekly: {
             monday: repeat === 'Monday' ? true : false,
             tuesday: repeat === 'Tuesday' ? true : false,
@@ -220,7 +220,7 @@ const ContextInfo = ({ route }) => {
         {
           name: 'LED',
           status: toggleButtonLED,
-          value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#ffffff",
+          value: LEDColor === 'Red' ? "#ff0000" : LEDColor === 'Blue' ? "#0000ff" : LEDColor === 'Yellow' ? "#ffff00" : "#000000",
         }
       ],
       control_fan: [

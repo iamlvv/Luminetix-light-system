@@ -127,19 +127,19 @@ function ContextHome() {
       >
         {/* Header */}
         <View className='flex flex-row mt-5 justify-center items-center'>
-          <View className='items-center ml-10'>
+          <View className='items-center'>
           </View>
           {/* Title */}
           <View View className='mx-auto' >
             <Text className='font-semibold text-2xl'>Context setup</Text>
           </View>
           {/* Noti button */}
-          <View View className='items-center mr-5' >
-            <TouchableOpacity
-              onPress={() => { }}
+          <View View className='items-center' >
+            {/* <TouchableOpacity
+              onPress={() => {}}
             >
               <Ionicons name="notifications-outline" size={25} color="#5E44FF" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 

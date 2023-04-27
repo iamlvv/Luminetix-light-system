@@ -435,6 +435,7 @@ function ContextCreatePage() {
                         <h1 className='font-bold col-span-1 m-auto'>LED</h1>
                         <div className='my-auto ml-auto'>
                           <select className='border px-4 py-1 rounded'
+                            defaultValue={ledColor}
                             onChange={(e) => setLEDColor(e.target.value)}
                           >
                             <option>Yellow</option>
