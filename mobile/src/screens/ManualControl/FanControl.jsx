@@ -7,8 +7,49 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import client from '../../mqtt/mqtt';
+import { useState } from 'react';
 
 const FanControl = ({ navigation }) => {
+    const [show1, setShow1] = useState(false);
+    const [show2, setShow2] = useState(false);
+    const [date1, setDate1] = useState(new Date());
+    const [date2, setDate2] = useState(new Date());
+    const [mode1, setMode1] = useState('date');
+    const [mode2, setMode2] = useState('date');
+    const [starttime, setStartTime] = React.useState("");
+    const [endtime, setEndTime] = React.useState("");
+    const onChangeStartTime = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShow1(false);
+        setDate1(currentDate);
+        temp = new Date(currentDate);
+        setStartTime(temp.getUTCHours() + 7 + ":" + temp.getUTCMinutes())
+    };
+    const onChangeEndTime = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShow2(false);
+        setDate2(currentDate);
+        temp = new Date(currentDate);
+        setEndTime(temp.getUTCHours() + 7 + ":" + temp.getUTCMinutes())
+    };
+    const showMode1 = (currentMode) => {
+        if (Platform.OS === 'android') {
+            setShow1(true);
+        }
+        setMode1(currentMode);
+    };
+    const showMode2 = (currentMode) => {
+        if (Platform.OS === 'android') {
+            setShow2(true);
+        }
+        setMode2(currentMode);
+    }
+    const showTimepicker1 = () => {
+        showMode1('time');
+    };
+    const showTimepicker2 = () => {
+        showMode2('time');
+    }
     // --------------LED STATE--------------
     const isFocused = useIsFocused();
 
@@ -75,9 +116,55 @@ const FanControl = ({ navigation }) => {
             setFanStat(0);
         }
     }
+    const handleScheduling = () => {
+        if (starttime === "" || endtime === "") {
+            alert("Please choose start time and end time");
+        }
+        var name = "Fan Scheduling";
+        var description = "";
+        var output = {
+            active_time: {
+                start_time: starttime,
+                end_time: endtime
+            },
+            control_fan: [
+                {
+                    name: "Fan",
+                    value: 0,
+                    status: false
+                }
+            ],
+            control_led: [
+                {
+                    name: "LED",
+                    value: ledState,
+                    status: ledState !== "#000000" ? true : false
+                }
+            ]
+        }
+        fetch(`${url}/contexts`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+            body: JSON.stringify({
+                name, description, output
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert("Success")
+                console.log("Success", data)
+            }
+            )
+            .catch((error) => {
+                alert("Error")
+                console.error('Error:', error);
+            }
+            );
+    }
     // --------------TIME IN SCHEDULING--------------
-    const [startTime, setStartTime] = React.useState(new Date());
-    const [endTime, setEndTime] = React.useState(new Date());
     const [mode, setMode] = React.useState('time');
     const [showStartTime, setShowStartTime] = React.useState(false);
     const [showEndTime, setShowEndTime] = React.useState(false);
@@ -193,7 +280,9 @@ const FanControl = ({ navigation }) => {
                         {/* Schedule title */}
                         <View className='flex flex-row justify-between'>
                             <Text className='font-bold text-2xl'>Schedule</Text>
-                            <TouchableOpacity className='py-1 px-2 rounded-2xl border-gray-400 border'>
+                            <TouchableOpacity className='py-1 px-2 rounded-2xl border-gray-400 border'
+                                onPress={handleScheduling}
+                            >
                                 <Ionicons name="add-outline" size={30} color="#593EFF" />
                             </TouchableOpacity>
                         </View>
@@ -202,9 +291,20 @@ const FanControl = ({ navigation }) => {
                             <View>
                                 <Text className='text-lg text-gray-400'>From</Text>
                                 <View>
-                                    <TouchableOpacity onPress={showStartTimePicker} className='my-2 py-2 px-5 rounded-lg border border-gray-300'>
-                                        <Text className='text-lg'>{localTime(startTime.toLocaleTimeString())}</Text>
+                                    <TouchableOpacity onPress={showTimepicker1}>
+                                        <Text className='border rounded-lg w-16 border-gray-200 p-2'>
+                                            {starttime}
+                                        </Text>
                                     </TouchableOpacity>
+                                    {show1 && (
+                                        <DateTimePicker
+                                            testID="dateTimePicker"
+                                            value={date1}
+                                            mode={mode1}
+                                            is24Hour={true}
+                                            onChange={onChangeStartTime}
+                                        />
+                                    )}
                                 </View>
                             </View>
 
@@ -215,9 +315,20 @@ const FanControl = ({ navigation }) => {
                             <View>
                                 <Text className='text-lg text-gray-400'>To</Text>
                                 <View>
-                                    <TouchableOpacity onPress={showEndTimePicker} className='my-2 py-2 px-5 rounded-lg border border-gray-300'>
-                                        <Text className='text-lg'>{localTime(endTime.toLocaleTimeString())}</Text>
+                                    <TouchableOpacity onPress={showTimepicker2}>
+                                        <Text className='border rounded-lg w-16 border-gray-200 p-2'>
+                                            {endtime}
+                                        </Text>
                                     </TouchableOpacity>
+                                    {show2 && (
+                                        <DateTimePicker
+                                            testID="dateTimePicker"
+                                            value={date2}
+                                            mode={mode2}
+                                            is24Hour={true}
+                                            onChange={onChangeEndTime}
+                                        />
+                                    )}
                                 </View>
                             </View>
                         </View>
