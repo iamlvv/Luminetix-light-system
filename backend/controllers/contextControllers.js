@@ -374,8 +374,8 @@ async function handleActiveTime(context) {
       await handleContext(context);
     }
   }
-  context.auto_active = false;
-  await context.save();
+  else {context.auto_active = false;
+  await context.save();}
 }
 
 async function createJob(context) {
@@ -573,6 +573,7 @@ const handleContext = async (context) => {
         }
       });
     }
+    controlDevice("w-alert",null,"ALERT")
     // Send context notification to user
     const users = await User.find({});
     for (const user of users) {
@@ -619,12 +620,13 @@ const trackingContext = async (deviceType, message) => {
         "input.active_humidity.active": true,
       });
     }
-    if (deviceType === "w-human" && message === "1") {
+    if (deviceType === "w-human" && message.toString() === "1") {
       contexts = await Context.find({
         active: true,
         auto_active: true,
-        "input.active_human.active": true,
+        "input.human_detection.active": true,
       });
+      console.log(contexts);
     }
     if (deviceType == "w-s-temp" && message == "T_OFF") {
       contexts = await Context.find({
