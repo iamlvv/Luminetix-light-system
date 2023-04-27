@@ -3,7 +3,7 @@ This project is about managing hardware devices like sensors, LED and fan and se
 As the system's name (Luminetix), it helps user control devices manually in the network, and have a glance at what is going on in the system, including the status of devices, 
 statistics. Especially, this system allows users to set up contexts based on the valued measured by sensors, and automatically triggers LED or Fan and some activities
 like sending an email to users when the contexts happen, and create notifications when any devices are turned on or off, and when contexts are triggered. They can also make a schedule for context.
-# Team size: 4
+## Team size: 4
 - Le Van Vy
 - Huynh Ngoc Nhu
 - Nguyen Tri Hieu
@@ -12,10 +12,15 @@ like sending an email to users when the contexts happen, and create notification
 - Web App: ReactJS, Tailwind CSS, NodeJS, MongoDB, ExpressJS
 - Mobile App: React Native, Tailwind CSS, NodeJS, MongoDB, ExpressJS
 - Gateway: Python
+- Yolo:Bit & AI program: "Drag & Drop" programming is supported on ```app.ohstem.vn``` 
 - Both apps use MQTT to get real time data from server Adafruit, which collects data from gateway, without frequently call API to get data, which may cause Error 429 and
 heavy network traffic.
 # How to run this project:
 - Clone this repo
+- Connect hardware devices according to the connection diagram presented in the "Node Implementation" in the report. Connect Yolo:Bit to the computer using the USB port.
+- Go to ```www.app.ohstem.vn``` website, in "Lap trinh Yolo:Bit" section, import project ```yolobit.json``` which is in the folder ```Yolobit```. Identify and select the USB Serial port before downloading the program to Yolo:Bit.
+- Also on the Ohstem website, but in "Lap trinh AI" section, import project ```AI.json``` which is in the folder ```Yolobit```. Identify and select the Bluetooth port for which Yolo:Bit is connected before running the program.
+- Go to folder ```Gateway``` and run the program ```Gateway.py``` on your PC or Laptop. The program runs successfully when showing on the termial 2 lines: "Connected to Adafruit IO!", "Ket noi thanh cong" and some lines "Subcribe thanh cong" corresponding to the number of connected feeds.
 - Run this in terminal: ```npm install``` in the parent folder, and in mobile and frontend folder to install all dependencies.
 - Paste 3 files .env given by team to parent, frontend and mobile folder.
 - Install, config MQTT in frontend and mobile folder:
