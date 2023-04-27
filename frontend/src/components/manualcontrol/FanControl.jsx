@@ -140,6 +140,11 @@ function LightControl() {
             .then(response => response.json())
             .then(data => {
                 console.log("Success", data)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Schedule Fan Successfully',
+                })
             }
             )
             .catch((error) => {

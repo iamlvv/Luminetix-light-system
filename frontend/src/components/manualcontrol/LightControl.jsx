@@ -105,6 +105,7 @@ function LightControl() {
         setisRedLight(true);
         setisBlueLight(false);
         setisYellowLight(false);
+        setisLightOn(true)
     };
     const handleBlueLight = () => {
         if (client) {
@@ -116,6 +117,7 @@ function LightControl() {
         setisRedLight(false);
         setisBlueLight(true);
         setisYellowLight(false);
+        setisLightOn(true)
     };
     const handleYellowLight = () => {
         if (client) {
@@ -127,6 +129,7 @@ function LightControl() {
         setisRedLight(false);
         setisBlueLight(false);
         setisYellowLight(true);
+        setisLightOn(true)
     };
     // Lưu giữ state của đèn khi tắt và bật
     const handleLightState = () => {
@@ -208,6 +211,11 @@ function LightControl() {
             .then(response => response.json())
             .then(data => {
                 console.log("Success", data)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Schedule successfully!',
+                })
             }
             )
             .catch((error) => {
