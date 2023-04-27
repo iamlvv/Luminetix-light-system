@@ -497,7 +497,7 @@ const checkContext = async (context) => {
       status: true,
       value: context.input.human_detection.value,
     });
-    if (humis.length === 0) {
+    if (humans.length === 0) {
       satisfied = false;
       return satisfied;
     }
