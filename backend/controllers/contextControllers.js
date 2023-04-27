@@ -37,6 +37,7 @@ const scheduleContext = {};
 const createContext = asyncHandler(async (req, res) => {
   const { name, description, input, output, notification } = req.body;
   try {
+    console.log("New context created", name);
     const context = await Context.create({
       name,
       description,
@@ -46,11 +47,12 @@ const createContext = asyncHandler(async (req, res) => {
       output: {
         active_time: {
           start_time: output.active_time.start_time || "00:00",
-          end_time: output.active_time.end_time || "23:59",
+          end_time: (!output.active_time.end_time && !output.frequency.no_repeat)? "23:59": output.active_time.end_time,
         },
         ...output,
       },
     });
+    console.log(context.output);
     await createJob(context);
     await handleActiveTime(context);
     res.status(201).json(context);
@@ -65,7 +67,6 @@ const createContext = asyncHandler(async (req, res) => {
         user,
       });
     }
-    console.log("New context created", context.name);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating context", error });
@@ -240,7 +241,8 @@ const toggleContext = asyncHandler(async (req, res) => {
     await context.save();
 
     if (context.active) {
-      handleContext(context);
+      await handleContext(context);
+      await createJob(context);
     }
 
     const users = await User.find({});
@@ -378,10 +380,14 @@ async function handleActiveTime(context) {
 
 async function createJob(context) {
   try {
+    console.log(context.output.active_time.start_time)
     const { _id, output } = context;
     const {
+      active_time:
+      {
       start_time,
       end_time,
+      },
       frequency: { repeat },
     } = output;
     const currentTime = moment();
@@ -395,6 +401,8 @@ async function createJob(context) {
           "YYYY-MM-DD HH:mm"
         )
       : null;
+    
+    console.log("Create Job at ",startTime);
     const daysOfWeek = [
       "sunday",
       "monday",
@@ -405,6 +413,7 @@ async function createJob(context) {
       "saturday",
     ].filter((day) => repeat.adjust_weekly[day]);
     const dayString = daysOfWeek.length === 0 ? "*" : daysOfWeek.join();
+    console.log(dayString);
     const job = scheduleContext[_id] || {};
     if (job.start) job.start.stop();
     if (job.end) job.end.stop();
