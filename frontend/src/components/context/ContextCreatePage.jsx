@@ -122,7 +122,7 @@ function ContextCreatePage() {
     }
     var output = {
       frequency: {
-        no_repeat: repeat === "Today" ? true : false,
+        no_repeat: (repeat === 'Today' || !repeat) ? true : false,
         repeat: {
           daily: repeat === 'Everyday' ? true : false,
           weekly: repeat in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] ? true : false,
@@ -190,7 +190,6 @@ function ContextCreatePage() {
       }
       );
   }
-  console.log(dayjs(starttime).format('HH:mm'))
   return (
     <div>
       <div>

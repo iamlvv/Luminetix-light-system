@@ -18,7 +18,7 @@ const LEDSchema = mongoose.Schema(
       default: "#000000",
       validate: {
         validator: function(v) {
-          return v !== "#000000" || this.status === false;
+          return !(v === '#000000' && this.status);
         },
         message: "LED status must be false if the value is #000000",
       },

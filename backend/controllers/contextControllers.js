@@ -13,14 +13,29 @@ const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const { CronJob } = require("cron");
 const moment = require("moment");
+const fs = require("fs");
 
 const scheduleContext = {};
+// try {
+//   const data = fs.readFileSync("./scheduleContext.json", "utf8");
+//   scheduleContext = JSON.parse(data);
+// } catch (err) {
+//   console.error(err);
+// }
+
+// Save the scheduleContext to a file when the program exits
+// process.on("exit", () => {
+//   try {
+//     fs.writeFileSync("./scheduleContext.json", JSON.stringify(scheduleContext));
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 // @desc    Create a new context
 // @route   POST /api/contexts
 // @access  Private
 const createContext = asyncHandler(async (req, res) => {
   const { name, description, input, output, notification } = req.body;
-
   try {
     const context = await Context.create({
       name,
@@ -28,16 +43,16 @@ const createContext = asyncHandler(async (req, res) => {
       input,
       output,
       notification,
+      output: {
+        active_time: {
+          start_time: output.active_time.start_time || "00:00",
+          end_time: output.active_time.end_time || "23:59",
+        },
+        ...output,
+      },
     });
-    if (
-      (context.output.frequency.repeat.daily ||
-        context.output.frequency.repeat.weekly) &&
-      !context.output.active_time.endTime
-    ) {
-      context.output.active_time.endTime = "23:59";
-      await context.save();
-    }
-    handleActiveTime(context);
+    await createJob(context);
+    await handleActiveTime(context);
     res.status(201).json(context);
     const users = await User.find({});
     for (const user of users) {
@@ -47,9 +62,10 @@ const createContext = asyncHandler(async (req, res) => {
           type: "context",
           message: `Create new context: ${context.name}`,
         },
-        user: user,
+        user,
       });
     }
+    console.log("New context created", context.name);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating context", error });
@@ -106,8 +122,7 @@ const deleteAllContext = asyncHandler(async (req, res) => {
       await Context.deleteMany({});
       for (let id in scheduleContext) {
         let job = scheduleContext[id];
-        if(job)
-        {
+        if (job) {
           if (job.start) {
             job.start.stop();
           }
@@ -116,7 +131,6 @@ const deleteAllContext = asyncHandler(async (req, res) => {
           }
           delete job;
         }
-        
       }
       res.status(200).json({ message: "All contexts deleted successfully." });
     } catch (err) {
@@ -172,13 +186,13 @@ const updateContext = asyncHandler(async (req, res) => {
 
   const updatedContext = await Context.findByIdAndUpdate(
     id,
-    { 
+    {
       name: name || context.name,
       description: description || context.description,
       active: active || context.active,
       input: input || context.input,
       output: output || context.output,
-      notification: notification || context.notification
+      notification: notification || context.notification,
     },
     { new: true }
   );
@@ -188,6 +202,7 @@ const updateContext = asyncHandler(async (req, res) => {
 
   if (activeTimeUpdate) {
     console.log("The active_time was changed!");
+    await createJob(updatedContext);
     await handleActiveTime(updatedContext);
   }
 
@@ -323,92 +338,106 @@ const toggleContext = asyncHandler(async (req, res) => {
 
 async function handleActiveTime(context) {
   const currentTime = moment();
+  const {
+    frequency: { no_repeat, repeat },
+    active_time: { start_time, end_time },
+  } = context.output;
+  const daysOfWeek = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
   if (
-    context.output.frequency.no_repeat ||
-    context.output.frequency.repeat.daily ||
-    context.output.frequency.repeat.weekly //&& context.output.frequency.repeat.adjust_weekly[currentDayOfWeek])
+    no_repeat ||
+    repeat.daily ||
+    (repeat.adjust_weekly[daysOfWeek] && repeat.weekly)
   ) {
     const startTime = moment(
-      `${currentTime.format("YYYY-MM-DD")} ${
-        context.output.active_time.start_time
-      }`,
+      `${currentTime.format("YYYY-MM-DD")} ${start_time}`,
       "YYYY-MM-DD HH:mm"
     );
-
-    const endTime = context.output.active_time.end_time
+    const endTime = end_time
       ? moment(
-          `${currentTime.format("YYYY-MM-DD")} ${
-            context.output.active_time.end_time
-          }`,
+          `${currentTime.format("YYYY-MM-DD")} ${end_time}`,
           "YYYY-MM-DD HH:mm"
         )
       : null;
-    if (startTime <= currentTime) {
-      if (!endTime || endTime >= currentTime) {
-        context.auto_active = true;
-        await context.save();
-        handleContext(context);
-      }
-    } else {
-      try {
-        context.auto_active = false;
-        await context.save();
-        if (!scheduleContext[context._id]) {
-          scheduleContext[context._id] = {};
-        }
-        const job = scheduleContext[context._id];
-
-        if (job.start) {
-          job.start.stop();
-        }
-
-        if (job.end) {
-          job.end.stop();
-        }
-        const daysOfWeek = [];
-        if (context.output.frequency.repeat.weekly) {
-          if (frequency.adjust_weekly.monday) daysOfWeek.push(1);
-          if (frequency.adjust_weekly.tuesday) daysOfWeek.push(2);
-          if (frequency.adjust_weekly.wednesday) daysOfWeek.push(3);
-          if (frequency.adjust_weekly.thursday) daysOfWeek.push(4);
-          if (frequency.adjust_weekly.friday) daysOfWeek.push(5);
-          if (frequency.adjust_weekly.saturday) daysOfWeek.push(6);
-          if (frequency.adjust_weekly.sunday) daysOfWeek.push(0);
-        }
-        const dayString = daysOfWeek.join();
-        console.log("Repeat weekly: ", dayString);
-        job.start = new CronJob(
-          `${startTime.minutes()} ${startTime.hours()} * * ${dayString}`,
-          () => jobLogic(context, true),
-          null,
-          true
-        );
-        job.end = endTime
-          ? new CronJob(
-              `${endTime.minutes()} ${endTime.hours()} * * ${dayString}`,
-              () => jobLogic(context, false),
-              null,
-              true
-            )
-          : null;
-        console.log("Scheduled active_time!");
-      } catch (err) {
-        console.log("Error when create new Job", err);
-      }
+    if (startTime <= currentTime && (!endTime || endTime >= currentTime)) {
+      context.auto_active = true;
+      await context.save();
+      await handleContext(context);
     }
-  } else {
-    context.auto_active = false;
-    await context.save();
+  }
+  context.auto_active = false;
+  await context.save();
+}
+
+async function createJob(context) {
+  try {
+    const { _id, output } = context;
+    const {
+      start_time,
+      end_time,
+      frequency: { repeat },
+    } = output;
+    const currentTime = moment();
+    const startTime = moment(
+      `${currentTime.format("YYYY-MM-DD")} ${start_time}`,
+      "YYYY-MM-DD HH:mm"
+    );
+    const endTime = end_time
+      ? moment(
+          `${currentTime.format("YYYY-MM-DD")} ${end_time}`,
+          "YYYY-MM-DD HH:mm"
+        )
+      : null;
+    const daysOfWeek = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ].filter((day) => repeat.adjust_weekly[day]);
+    const dayString = daysOfWeek.length === 0 ? "*" : daysOfWeek.join();
+    const job = scheduleContext[_id] || {};
+    if (job.start) job.start.stop();
+    if (job.end) job.end.stop();
+    job.start = new CronJob(
+      `${startTime.minutes()} ${startTime.hours()} * * ${dayString}`,
+      () => jobLogic(context, true),
+      null,
+      true
+    );
+    if (endTime) {
+      job.end = new CronJob(
+        `${endTime.minutes()} ${endTime.hours()} * * ${dayString}`,
+        () => jobLogic(context, false),
+        null,
+        true
+      );
+    }
+    console.log("Scheduled active_time!");
+  } catch (err) {
+    console.log("Error when creating new Job", err);
   }
 }
 
 const jobLogic = async (context, auto_active) => {
   try {
-    context.auto_active = auto_active;
-    await context.save();
+    const updatedContext = await Context.findByIdAndUpdate(
+      context._id,
+      { auto_active: auto_active },
+      { new: true }
+    );
     console.log("Update auto active");
     // handle context here
-    await handleContext(context);
+    await handleContext(updatedContext);
   } catch (err) {
     console.log("Error executing jobLogic", err);
   }
@@ -424,7 +453,7 @@ const checkContext = async (context) => {
     const { min, max } = context.input.active_temperature;
     const temps = await Temperature.find({
       status: true,
-      value: { $lt: max, $gt: min },
+      value: { $lte: max, $gte: min },
     });
     if (temps.length === 0) {
       satisfied = false;
@@ -432,10 +461,10 @@ const checkContext = async (context) => {
     }
   }
   if (context.input.active_light.active) {
-    const { min, max } = context.input.active_light;
+    const { min, max, active } = context.input.active_light;
     const lights = await Light.find({
-      status: true,
-      value: { $lt: max, $gt: min },
+      status: active,
+      value: { $lte: max, $gte: min },
     });
     if (lights.length === 0) {
       satisfied = false;
@@ -446,7 +475,7 @@ const checkContext = async (context) => {
     const { min, max } = context.input.active_humidity;
     const humis = await Humidity.find({
       status: true,
-      value: { $lt: max, $gt: min },
+      value: { $lte: max, $gte: min },
     });
     if (humis.length === 0) {
       satisfied = false;
@@ -457,7 +486,7 @@ const checkContext = async (context) => {
     // Add human detection logic here
     const humans = await HumanDetection.find({
       status: true,
-      value: context.input.human_detection,
+      value: context.input.human_detection.value,
     });
     if (humis.length === 0) {
       satisfied = false;
@@ -554,7 +583,7 @@ const handleContext = async (context) => {
       context.active = false;
     await context.save();
   } else {
-    console.log(`Context ${context.name} is not satisfied! or already running`);
+    console.log(`Context ${context.name} is not satisfied!`);
   }
 };
 const trackingContext = async (deviceType, message) => {
