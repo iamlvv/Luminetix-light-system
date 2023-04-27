@@ -10,8 +10,8 @@ from Adafruit_IO import MQTTClient
 
 # Dien cac thong tin de ket noi voi server
 AIO_FEED_IDS = ["w-led", "w-fan", "w-s-temp", "w-s-humi", "w-s-light", "w-alert"]
-AIO_USERNAME = "Tori0802"
-AIO_KEY = "aio_bJma94VSPvF5VMRiDSnSVtSTwNZw"
+AIO_USERNAME = ""
+AIO_KEY = ""
 
 # Publish-subcribed
 def  connected(client):
