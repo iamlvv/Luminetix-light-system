@@ -23,13 +23,7 @@ event_manager.reset()
 aiot_dht20 = DHT20(SoftI2C(scl=Pin(22), sda=Pin(21)))
 
 def on_event_timer_callback_j_i_q_m_M():
-  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_LUX, S_HUMI, RH, LUX, CONTEXT
-  if pin3.read_digital()==1:
-    display.scroll(1)
-    print('!1:HUMAN:1#', end =' ')
-  else:
-    display.scroll(0)
-    print('!1:HUMAN:0#', end =' ')
+  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_HUMI, RH, LUX, S_LUX, CONTEXT
   if S_TEMP == 'ON':
     aiot_dht20.read_dht20()
     RT = aiot_dht20.dht20_temperature()
@@ -85,7 +79,7 @@ def read_terminal_input():
 tiny_rgb = RGBLed(pin0.pin, 4)
 
 def on_event_timer_callback_Y_E_N_A_a():
-  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_LUX, S_HUMI, RH, LUX, CONTEXT
+  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_HUMI, RH, LUX, S_LUX, CONTEXT
   cmd = read_terminal_input()
   if cmd[0] == 'L':
     if cmd == 'L_ON':
@@ -112,10 +106,10 @@ def on_event_timer_callback_Y_E_N_A_a():
   if (int(cmd)) >= 0 and (int(cmd)) <= 100:
     pin10.write_analog(round(translate((int(cmd)), 0, 100, 0, 1023)))
 
-event_manager.add_timer_event(200, on_event_timer_callback_Y_E_N_A_a)
+event_manager.add_timer_event(1, on_event_timer_callback_Y_E_N_A_a)
 
 def on_event_timer_callback_u_W_i_F_N():
-  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_LUX, S_HUMI, RH, LUX, CONTEXT
+  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_HUMI, RH, LUX, S_LUX, CONTEXT
   if cmd == 'AI_ON':
     tiny_rgb.show(0, hex_to_rgb('#ffffff'))
     print('!1:LED:ffffff#', end =' ')
@@ -140,12 +134,12 @@ def on_event_timer_callback_u_W_i_F_N():
   if cmd == 'AI_ALERT':
     music.stop()
 
-event_manager.add_timer_event(200, on_event_timer_callback_u_W_i_F_N)
+event_manager.add_timer_event(1, on_event_timer_callback_u_W_i_F_N)
 
 aiot_ir_rx = IR_RX(Pin(pin1.pin, Pin.IN)); aiot_ir_rx.start();
 
 def on_ir_receive_callback(t_C3_ADn_hi_E1_BB_87u, addr, ext):
-  global cmd, S_TEMP, RT, S_LUX, S_HUMI, RH, LUX, CONTEXT
+  global cmd, S_TEMP, RT, S_HUMI, RH, LUX, S_LUX, CONTEXT
   if aiot_ir_rx.get_code() == IR_REMOTE_A:
     tiny_rgb.show(0, hex_to_rgb('#000000'))
     print('!1:LED:000000#', end =' ')
@@ -170,13 +164,24 @@ def on_ir_receive_callback(t_C3_ADn_hi_E1_BB_87u, addr, ext):
   if aiot_ir_rx.get_code() == IR_REMOTE_B:
     music.stop()
   aiot_ir_rx.clear_code()
-  time.sleep_ms(1000)
+  time.sleep_ms(100)
 
 aiot_ir_rx.on_received(on_ir_receive_callback)
 
+def on_event_timer_callback_F_k_F_u_G():
+  global t_C3_ADn_hi_E1_BB_87u, cmd, S_TEMP, RT, S_HUMI, RH, LUX, S_LUX, CONTEXT
+  if pin16.read_digital()==1:
+    display.scroll(1)
+    print('!1:HUMAN:1#', end =' ')
+  else:
+    display.scroll(0)
+    print('!1:HUMAN:0#', end =' ')
+
+event_manager.add_timer_event(10000, on_event_timer_callback_F_k_F_u_G)
+
 if True:
   display.scroll('SETUP')
-  mqtt.connect_wifi('kfViwN', '0782075575')
+  mqtt.connect_wifi('Tori', 'dua320ngan')
   ntptime.settime()
   (year, month, mday, week_of_year, hour, minute, second, milisecond) = RTC().datetime()
   RTC().init((year, month, mday, week_of_year, hour+7, minute, second, milisecond))

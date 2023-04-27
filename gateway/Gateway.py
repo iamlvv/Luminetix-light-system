@@ -11,7 +11,7 @@ from Adafruit_IO import MQTTClient
 # Dien cac thong tin de ket noi voi server
 AIO_FEED_IDS = ["w-led", "w-fan", "w-s-temp", "w-s-humi", "w-s-light", "w-alert"]
 AIO_USERNAME = "Tori0802"
-AIO_KEY = "aio_cIuj686CteXKup6dz0WwPKcaYjB3"
+AIO_KEY = "aio_bJma94VSPvF5VMRiDSnSVtSTwNZw"
 
 # Publish-subcribed
 def  connected(client):
@@ -77,6 +77,8 @@ def processData(data):
                 client.publish("w-fan", splitData[2])
             elif splitData[1] == "HUMAN":
                 client.publish("w-human", splitData[2])
+            elif splitData[1] == "ALERT":
+                client.publish("w-alert", splitData[2])
             elif splitData[1] == "LED":
                 splitData[2] = '#' + splitData[2]
                 client.publish("w-led", splitData[2])
