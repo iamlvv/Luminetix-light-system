@@ -16,6 +16,7 @@ like sending an email to users when the contexts happen, and create notification
 - Both apps use MQTT to get real time data from server Adafruit, which collects data from gateway, without frequently call API to get data, which may cause Error 429 and
 heavy network traffic.
 # How to run this project:
+- Before running this project, you must setup all nececessary feeds in Adafruit IO Server; get APIs feed and get API key and fill them in codes so that programs can call APIs method to run.
 - Clone this repo
 - Connect hardware devices according to the connection diagram presented in the "Node Implementation" in the report. Connect Yolo:Bit to the computer using the USB port.
 - Go to ```www.app.ohstem.vn``` website, in "Lap trinh Yolo:Bit" section, import project ```yolobit.json``` which is in the folder ```Yolobit```. Identify and select the USB Serial port before downloading the program to Yolo:Bit.
