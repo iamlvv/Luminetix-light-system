@@ -351,3 +351,16 @@ export const LEDStateFirstReducer = (state = { LEDStateFirst: false }, action) =
             return state
     }
 }
+
+export const HumanDetectionFirstReducer = (state = { HumanDetectionFirst: "0" }, action) => {
+    switch (action.type) {
+        case deviceConstants.HUMAN_FOUND_STATE_REQUEST_FIRST:
+            return { loading: true };
+        case deviceConstants.HUMAN_FOUND_STATE_VALID_FIRST:
+            return { loading: false, HumanDetectionFirst: action.payload }
+        case deviceConstants.HUMAN_FOUND_STATE_INVALID_FIRST:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}

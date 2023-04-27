@@ -71,6 +71,13 @@ client.subscribe('Tori0802/feeds/w-s-humi', (err) => {
     console.log('Subscribed to topic w-s-hmi');
   }
 });
+client.subscribe('Tori0802/feeds/w-human', (err) => {
+  if (err) {
+    console.error(`Failed to subscribe to topic: ${err}`);
+  } else {
+    console.log('Subscribed to topic w-human');
+  }
+});
 
 client.on('message', (topic, message) => {
   console.log(`Received message on topic ${topic}: ${message.toString()}`);

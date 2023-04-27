@@ -62,7 +62,9 @@ const reducer = combineReducers({
     lightStatFirst: deviceReducers.lightStatFirstReducer,
     fanStatFirst: deviceReducers.fanStatFirstReducer,
     humidityStatFirst: deviceReducers.humidityStatFirstReducer,
-    temperatureStatFirst: deviceReducers.temperatureStatFirstReducer
+    temperatureStatFirst: deviceReducers.temperatureStatFirstReducer,
+    humanFoundStateFirst: deviceReducers.HumanDetectionFirstReducer,
+
 })
 const store = configureStore({
     reducer,

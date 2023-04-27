@@ -33,7 +33,7 @@ function DeviceList() {
         <p>Devices</p>
       </div>
 
-      {devices.map((device) => (
+      {devices? devices.map((device) => (
         <div
           key={device._id}
           className="grid grid-cols-4 m-3 border rounded-3xl bg-purple-200"
@@ -63,7 +63,7 @@ function DeviceList() {
             )}
           </div>
         </div>
-      ))}
+      )): <p>Loading...</p>}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { View, Text, Switch, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Switch, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -78,6 +78,33 @@ function ContextHome() {
     }
     ))
   }
+  const handleDeleteAllContexts = () => {
+    Alert.alert('Delete all contexts', 'Are you sure you want to delete all contexts?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      },
+      {
+        text: 'Delete',
+        onPress: async () => {
+          try {
+            const config = {
+              headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+              },
+            };
+            const response = await axios.delete(`${url}/contexts`, config);
+            const { data } = response;
+            dispatch(listOfContexts());
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+    ], { cancelable: false });
+
+  }
   const handleDeleteContext = async (id) => {
     try {
       const config = {
@@ -117,13 +144,18 @@ function ContextHome() {
         </View>
 
         {/* Context create button */}
-        <View className='my-5 ml-auto px-3'>
+        <View className='my-5 ml-auto flex flex-row justify-center gap-9 mt-0'>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("ContextCreate")
             }}
           >
-            <Text className='text-green-700 font-bold shadow-xl bg-green-200 py-3 px-10 rounded-lg text-center'>Add new context</Text>
+            <Text className='text-white font-bold shadow-xl bg-green-500 py-3 px-2 rounded-lg text-center'>Add new context</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleDeleteAllContexts}
+          >
+            <Text className='text-white font-bold shadow-xl bg-red-500 py-3 px-2 rounded-lg text-center'>Delete all contexts</Text>
           </TouchableOpacity>
         </View>
 

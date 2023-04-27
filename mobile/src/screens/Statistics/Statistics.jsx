@@ -5,7 +5,7 @@ import client from '../../mqtt/mqtt';
 import axios from 'axios';
 import ChartStats from './components/ChartStats';
 import { useSelector, useDispatch } from "react-redux";
-import { getHumanFoundState, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../../redux/actions/deviceActions';
+import { getHumanFoundState, getHumanFoundStateFirst, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../../redux/actions/deviceActions';
 const solveDataDay = (startTime, endTime, dataNeedSolving) => {
   let dataSolved = [];
   for (let i = 0; i < dataNeedSolving.length; i++) {
@@ -74,6 +74,15 @@ const getLightStatistics = (handleget) => {
     }
   });
 }
+const getHumanDectectionStat = (handleget) => {
+  client.subscribe("Tori0802/feeds/w-human");
+  client.on("message", function (topic, message) {
+      if (topic === "Tori0802/feeds/w-human") {
+          const value = (message.toString());
+          handleget(value);
+      }
+  });
+}
 const Statistics = () => {
   const dispatch = useDispatch();
   const styles = {
@@ -87,14 +96,14 @@ const Statistics = () => {
       backgroundColor: '#DFDAFF',
     },
   }
-  const HumanFoundStat = useSelector((state) => state.humanDetectionState);
 
-  const { humanFoundState } = HumanFoundStat;
   // Get Real time Stat using MQTT
   const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
   const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
   const LightStatFirst = useSelector((state) => state.lightStatFirst);
+  const HumanFoundStat = useSelector((state) => state.humanFoundStateFirst);
 
+  const { HumanDetectionFirst } = HumanFoundStat;
   const { temperatureStatFirst } = TempStatFirst;
   const { humidityStatFirst } = HumidStatFirst;
   const { lightStatFirst } = LightStatFirst;
@@ -102,16 +111,18 @@ const Statistics = () => {
   const [lStat, setLStat] = React.useState(lightStatFirst);
   const [tStat, setTStat] = React.useState(temperatureStatFirst);
   const [hStat, setHStat] = React.useState(humidityStatFirst);
+  const [humanState, setHumanState] = React.useState(HumanDetectionFirst);
   useEffect(() => {
 
     dispatch(getTemperatureStatFirst());
     dispatch(getHumidityStatFirst());
     dispatch(getLightStatFirst());
+    dispatch(getHumanFoundStateFirst())
     // Get Stat and State using MQTT
     getHumidityStatistics(setHStat);
     getTemperatureStatistics(setTStat);
     getLightStatistics(setLStat);
-    dispatch(getHumanFoundState())
+    getHumanDectectionStat(setHumanState);
   }, []);
   // Get average figures
   const [tempAverage, setTempAverage] = React.useState(0);
@@ -496,6 +507,10 @@ const Statistics = () => {
               <View className='flex flex-row justify-between mt-2 items-center'>
                 <Text className='text-md'>Light</Text>
                 <Text className='text-md font-bold' style={styles.maincolorTXT}>{lStat === "0" ? lightStatFirst : lStat}</Text>
+              </View>
+              <View className='flex flex-row justify-between mt-2 items-center'>
+                <Text className='text-md'>Human Detection</Text>
+                <Text className='text-md font-bold' style={styles.maincolorTXT}>{humanState === '0' ? HumanDetectionFirst === "0" ? "No" : "Yes" : humanState === "0" ? "No" : "Yes"}</Text>
               </View>
             </View>
           </View>

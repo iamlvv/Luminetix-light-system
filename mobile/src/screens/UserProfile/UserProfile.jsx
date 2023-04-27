@@ -46,7 +46,8 @@ const UserProfile = () => {
     }
   }, [dispatch2, user]);
   const handleLogout = () => {
-    dispatch(logout({ navigation }));
+    dispatch(logout());
+    navigation.navigate('Login');
   }
   const handleUpdateInfo = () => {
     dispatch(updateUserProfile({ id: user._id, fullname, username, email, phone }));

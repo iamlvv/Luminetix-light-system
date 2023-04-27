@@ -39,7 +39,7 @@ function ContextCreatePage() {
   const [endtime, setEndTime] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [ledColor, setLEDColor] = React.useState("");
+  const [ledColor, setLEDColor] = React.useState("#000000");
   const [fanSpeed, setFanSpeed] = React.useState("");
   const [fanstatus, setFanStatus] = React.useState(false);
   const [light_status, setLightStatus] = React.useState(false);
@@ -49,6 +49,7 @@ function ContextCreatePage() {
   const { userInfo } = userLogin;
   const navigate = useNavigate();
   const url = process.env.REACT_APP_API_URL;
+  console.log(ledColor)
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email, message)

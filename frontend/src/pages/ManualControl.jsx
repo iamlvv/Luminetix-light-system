@@ -142,7 +142,7 @@ function ManualControl() {
   return (
     <div>
       <NavBar />
-      <div className="grid grid-cols-4 ml-28">
+      <div className="grid grid-cols-4 ml-28 h-min">
         <div className="col-span-3 rounded-2xl grid grid-cols-3">
           {/* <LightControl/> OR <FanControl/> */}
           {

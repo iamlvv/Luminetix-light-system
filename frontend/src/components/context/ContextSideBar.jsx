@@ -73,7 +73,6 @@ function ContextSideBar() {
       }
     })
   }
-  console.log(userInfo.token)
   return (
     <div className='mt-5 mr-9'>
       <div className='flex justify-between flex-row'>
@@ -129,12 +128,6 @@ function ContextSideBar() {
           ))
         )}
       </div>
-      <div>
-        <NavLink to='/contextsetup/createnew'>
-          <button className='mt-5 border-dashed border-violet-500 border-2 rounded-2xl py-2 px-3 hover:bg-violet-100 transition ease-in leading-8'>Create new scene <AiOutlinePlus className='inline' /></button>
-        </NavLink>
-      </div>
-
     </div>
   )
 }
