@@ -1,4 +1,3 @@
-// import mqtt from  'mqtt/dist/mqtt';
 import mqtt from 'mqtt';
 
 const options = {
@@ -70,6 +69,13 @@ client.subscribe('Tori0802/feeds/w-s-humi', (err) => {
     console.error(`Failed to subscribe to topic: ${err}`);
   } else {
     console.log('Subscribed to topic w-s-hmi');
+  }
+});
+client.subscribe('Tori0802/feeds/w-human', (err) => {
+  if (err) {
+    console.error(`Failed to subscribe to topic: ${err}`);
+  } else {
+    console.log('Subscribed to topic w-human');
   }
 });
 

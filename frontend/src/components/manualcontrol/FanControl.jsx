@@ -166,10 +166,9 @@ function LightControl() {
         }
     }
     return (
-        <div className='col-span-2 grid grid-rows-5 p-10 '>
-            <div className='row-span-3'>
+        <div className='col-span-2 flex flex-col p-10 h-full'>
+            <div className='row-span-2'>
                 <h1 className='text-3xl font-semibold'>Fan</h1>
-
                 {
                     fanStat === null ? (
                         fanStatFirst !== 0 ? (
@@ -207,17 +206,16 @@ function LightControl() {
                 }
             </div>
             {/* Schedule */}
-
-
             <div className='row-span-1 border rounded-3xl px-8 py-5'>
                 <div className='grid grid-rows-3'>
                     <div className='row-span-1 grid grid-cols-2'>
                         <p className='col-span-1 text-xl font-bold'>Schedule</p>
                         <button className='w-20 pr-3 pl-2 mb-2 border border-red-500 rounded-lg col-span-1 justify-self-end' onClick={handleSchedule}><span className='text-red-500 font-bold text-mono'>ADD</span></button>
                     </div>
-                    <div className='row-span-2 grid grid-cols-4'>
+                    <div className='row-span-2 grid grid-cols-2'>
                         <div className='col-span-1 m-1'>
                             <p className='text-sm font-bold text-gray-400'>Start time</p>
+                            <div>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
                                     <TimePicker
@@ -225,14 +223,12 @@ function LightControl() {
                                         value={starttime || null}
                                         ampm={false}
                                         defaultValue={starttime}
-                                        className=''
+                                        className='w-20'
                                         onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
                                     />
                                 </DemoContainer>
                             </LocalizationProvider>
-                        </div>
-                        <div className='col-span-2'>
-                            <img src={arrow} alt="" className='pt-2 px-2' />
+                            </div>
                         </div>
                         <div className='col-span-1 m-1'>
                             <p className='text-sm font-bold text-gray-400'>End time</p>
@@ -256,7 +252,7 @@ function LightControl() {
 
             {/* Control button */}
             <div className='row-span-1 grid grid-cols-4'>
-                <div className='col-span-3 bg-purple-50 m-10 rounded-full p-3'>
+                <div className='col-span-3 bg-purple-50 m-10 rounded-full p-3 items-center'>
                     <Slider
                         value={fanStat === null ? fanStatFirst : fanStat}
                         onChange={handleFanOnChange}
@@ -265,7 +261,7 @@ function LightControl() {
                         step={10}
                         min={0}
                         max={100}
-                        className="w-3/4 mt-2 slider"
+                        className="w-3/4 slider"
                     />
                 </div>
                 <div className='col-span-1 py-10'>

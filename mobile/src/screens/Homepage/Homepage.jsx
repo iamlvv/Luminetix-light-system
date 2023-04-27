@@ -28,9 +28,13 @@ function HomepageHome() {
   const userDetails = useSelector((state) => state.userDetails);
   const { user } = userDetails;
   const dispatch2 = useDispatch();
+  console.log(userInfo)
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserDetails("profile"));
+    }
+    else {
+      navigation.navigate('Login');
     }
   }, [userInfo, dispatch]);
   useEffect(() => {

@@ -5,7 +5,7 @@ import lighticon from "../images/lighticon.png";
 import humidityicon from "../images/humidityicon.png";
 import temperatureicon from "../images/temperatureicon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { getHumanFoundState, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../redux/actions/deviceActions';
+import { getHumanFoundState, getHumanFoundStateFirst, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../redux/actions/deviceActions';
 import client from '../../mqtt/mqtt';
 
 const getHumidityStatistics = (handleget) => {
@@ -30,6 +30,15 @@ const getLightStatistics = (handleget) => {
     client.subscribe("Tori0802/feeds/w-light");
     client.on("message", function (topic, message) {
         if (topic === "Tori0802/feeds/w-light") {
+            const value = JSON.parse(message.toString());
+            handleget(value);
+        }
+    });
+}
+const getHumanDetection = (handleget) => {
+    client.subscribe("Tori0802/feeds/w-human");
+    client.on("message", function (topic, message) {
+        if (topic === "Tori0802/feeds/w-human") {
             const value = JSON.parse(message.toString());
             handleget(value);
         }
@@ -83,9 +92,10 @@ export default function RealtimeStatus() {
     today = mm + ", " + dd + ", " + yyyy;
     const dispatch = useDispatch();
     //get data from sensors through redux
-    const HumanFoundStat = useSelector((state) => state.humanDetectionState);
+    const HumanFoundStat = useSelector((state) => state.humanFoundStateFirst);
 
-    const { humanFoundState } = HumanFoundStat;
+    const { HumanDetectionFirst } = HumanFoundStat;
+
     const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
     const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
     const LightStatFirst = useSelector((state) => state.lightStatFirst);
@@ -97,16 +107,20 @@ export default function RealtimeStatus() {
     const [lStat, setLStat] = React.useState(lightStatFirst);
   const [tStat, setTStat] = React.useState(temperatureStatFirst);
   const [hStat, setHStat] = React.useState(humidityStatFirst);
+  const [humanState, setHumanState] = React.useState(HumanDetectionFirst);
+
+    console.log("humanState", HumanDetectionFirst);
     useEffect(() => {
 
     dispatch(getTemperatureStatFirst());
     dispatch(getHumidityStatFirst());
     dispatch(getLightStatFirst());
+    dispatch(getHumanFoundStateFirst());
     // Get Stat and State using MQTT
     getHumidityStatistics(setHStat);
     getTemperatureStatistics(setTStat);
     getLightStatistics(setLStat);
-    dispatch(getHumanFoundState())
+    getHumanDetection(setHumanState);
     }, []);
 
     return (
@@ -163,7 +177,7 @@ export default function RealtimeStatus() {
                         <h1>{today}</h1>
                     </div>
                     <div>
-                        <h1 className="text-2xl text-violet-500 font-bold">{humanFoundState === "0" ? "No" : "Yes"}</h1>
+                        <h1 className="text-2xl text-violet-500 font-bold">{humanState === "0" ? "No" : "Yes"}</h1>
                     </div>
                 </div>
             </div>

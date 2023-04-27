@@ -12,45 +12,41 @@ import { getUserDetails } from "../redux/actions/userActions";
 import clockicon from "../images/clock.png";
 
 import client from '../mqtt/mqtt';
-import { getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../redux/actions/deviceActions';
+import { getHumanFoundStateFirst, getHumidityStatFirst, getLightStatFirst, getTemperatureStatFirst } from '../redux/actions/deviceActions';
 
 const getHumidityStatistics = (handleget) => {
-  client.subscribe("Tori0802/feeds/w-humi");
-  client.on("message", function (topic, message) {
-    if (topic === "Tori0802/feeds/w-humi") {
-      const value = JSON.parse(message.toString());
-      handleget(value);
-    }
-  });
+    client.subscribe("Tori0802/feeds/w-humi");
+    client.on("message", function (topic, message) {
+        if (topic === "Tori0802/feeds/w-humi") {
+            const value = JSON.parse(message.toString());
+            handleget(value);
+        }
+    });
 }
 const getTemperatureStatistics = (handleget) => {
-  client.subscribe("Tori0802/feeds/w-temp");
-  client.on("message", function (topic, message) {
-    if (topic === "Tori0802/feeds/w-temp") {
-      const value = JSON.parse(message.toString());
-      handleget(value);
-    }
-  });
+    client.subscribe("Tori0802/feeds/w-temp");
+    client.on("message", function (topic, message) {
+        if (topic === "Tori0802/feeds/w-temp") {
+            const value = JSON.parse(message.toString());
+            handleget(value);
+        }
+    });
 }
 const getLightStatistics = (handleget) => {
-  client.subscribe("Tori0802/feeds/w-light");
-  client.on("message", function (topic, message) {
-    if (topic === "Tori0802/feeds/w-light") {
-      const value = JSON.parse(message.toString());
-      handleget(value);
-    }
-  });
+    client.subscribe("Tori0802/feeds/w-light");
+    client.on("message", function (topic, message) {
+        if (topic === "Tori0802/feeds/w-light") {
+            const value = JSON.parse(message.toString());
+            handleget(value);
+        }
+    });
 }
-
 const getHumanDectectionStat = (handleget) => {
     client.subscribe("Tori0802/feeds/w-human");
     client.on("message", function (topic, message) {
         if (topic === "Tori0802/feeds/w-human") {
-        const value = (message.toString());
-        if (value === "0") {
-            handleget(false);
-        }
-        else handleget(true)
+            const value = (message.toString());
+            handleget(value);
         }
     });
 }
@@ -65,13 +61,17 @@ export default function Header() {
     const TempStatFirst = useSelector((state) => state.temperatureStatFirst);
     const HumidStatFirst = useSelector((state) => state.humidityStatFirst);
     const LightStatFirst = useSelector((state) => state.lightStatFirst);
-    //const HumanFoundFirst = useSelector((state) => state.humanFoundFirst);
-  const { temperatureStatFirst } = TempStatFirst;
-  const { humidityStatFirst } = HumidStatFirst;
-  const { lightStatFirst } = LightStatFirst;
-  const [lStat, setLStat] = React.useState(lightStatFirst);
-  const [tStat, setTStat] = React.useState(temperatureStatFirst);
-  const [hStat, setHStat] = React.useState(humidityStatFirst);
+    const HumanFoundStat = useSelector((state) => state.humanFoundStateFirst);
+
+    const { HumanDetectionFirst } = HumanFoundStat;
+    const { temperatureStatFirst } = TempStatFirst;
+    const { humidityStatFirst } = HumidStatFirst;
+    const { lightStatFirst } = LightStatFirst;
+    const [lStat, setLStat] = React.useState(lightStatFirst);
+    const [tStat, setTStat] = React.useState(temperatureStatFirst);
+    const [hStat, setHStat] = React.useState(humidityStatFirst);
+    const [humanState, setHumanState] = React.useState(HumanDetectionFirst);
+
     useEffect(() => {
         if (userInfo) {
             dispatch(getUserDetails("profile"));
@@ -89,11 +89,14 @@ export default function Header() {
         dispatch(getTemperatureStatFirst());
         dispatch(getHumidityStatFirst());
         dispatch(getLightStatFirst());
+        dispatch(getHumanFoundStateFirst());
+
         // Get Stat and State using MQTT
         getHumidityStatistics(setHStat);
         getTemperatureStatistics(setTStat);
         getLightStatistics(setLStat);
-      }, []);
+        getHumanDectectionStat(setHumanState);
+    }, []);
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -140,6 +143,7 @@ export default function Header() {
             mm = "Jan";
     }
     today = mm + ", " + dd + ", " + yyyy;
+    console.log(HumanDetectionFirst, humanState)
     return (
         <div className="grid grid-cols-3 gap-9">
             <div className="grid grid-cols-2 bg-white rounded-2xl shadow-sm">
@@ -150,16 +154,16 @@ export default function Header() {
             <div className='grid grid-cols-4 bg-white rounded-xl p-2'>
                 <div className="col-span-1 grid grid-cols-1 justify-between">
                     <div className="m-auto">
-                        <img src={temperatureicon} alt="tempicon" className='w-8 p-1'/>
+                        <img src={temperatureicon} alt="tempicon" className='w-8 p-1' />
                     </div>
                     <div className='mx-auto'>
-                        <h1 className="text-md text-red-500 font-bold">{tStat === "0" ? temperatureStatFirst : tStat }°C</h1>
+                        <h1 className="text-md text-red-500 font-bold">{tStat === "0" ? temperatureStatFirst : tStat}°C</h1>
                     </div>
                 </div>
 
                 <div className="col-span-1 grid grid-cols-1 justify-between">
                     <div className="m-auto">
-                        <img src={humidityicon} alt="humidicon" className='w-8 p-1'/>
+                        <img src={humidityicon} alt="humidicon" className='w-8 p-1' />
                     </div>
                     <div className='mx-auto'>
                         <h1 className="text-md text-blue-500 font-bold">{hStat === "0" ? humidityStatFirst : hStat}%</h1>
@@ -168,7 +172,7 @@ export default function Header() {
 
                 <div className="col-span-1 grid grid-cols-1 justify-between">
                     <div className="m-auto">
-                        <img src={lighticon} alt="lighticon" className='w-8 p-1'/>
+                        <img src={lighticon} alt="lighticon" className='w-8 p-1' />
                     </div>
                     <div className='mx-auto'>
                         <h1 className="text-md text-yellow-500 font-bold mx-auto">{lStat === "0" ? lightStatFirst : lStat}%</h1>
@@ -177,14 +181,13 @@ export default function Header() {
 
                 <div className="col-span-1 grid grid-cols-1 justify-between">
                     <div className="m-auto">
-                        <img src={viewicon} alt="viewicon" className='w-8'/>
+                        <img src={viewicon} alt="viewicon" className='w-8' />
                     </div>
                     <div className='mx-auto'>
-                        <h1 className="text-md text-violet-500 font-bold">{"No"}</h1>
+                        <h1 className="text-md text-violet-500 font-bold">{humanState === '0' ? (HumanDetectionFirst === "0" ? "No" : "Yes") : (humanState === "0" ? "No" : "Yes")}</h1>
                     </div>
                 </div>
             </div>
-
             <div className="bg-white rounded-2xl shadow-sm grid grid-cols-2 px-3 py-5">
                 <img src={clockicon} alt="clockicon" className="w-1/2 mx-auto my-auto h-auto col-span-1" />
                 <div className="grid grid-cols-1 text-violet-700 font-bold">

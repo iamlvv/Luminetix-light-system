@@ -222,8 +222,8 @@ function LightControl() {
 
     };
     return (
-        <div className="col-span-2 grid grid-rows-5 p-10 h-screen">
-            <div className="row-span-3">
+        <div className="col-span-2 flex flex-col p-10 h-screen">
+            <div className="row-span-4">
                 <h1 className="text-3xl font-semibold">Light</h1>
                 {isLightOn && isRedLight ? (
                     <div className="bg-red-100 w-64 h-64 mx-auto my-10 rounded-full grid grid-rows-2 gap-10">
@@ -275,7 +275,7 @@ function LightControl() {
                 )}
             </div>
             {/* Schedule */}
-            <div className="row-span-1 border rounded-3xl px-8 py-5">
+            <div className="row-span-2 border rounded-3xl px-8 py-5">
                 <div className="grid grid-rows-3">
                     <div className="row-span-1 grid grid-cols-2">
                         <p className="col-span-1 text-xl font-bold">Schedule</p>
@@ -288,11 +288,12 @@ function LightControl() {
                             </span>
                         </button>
                     </div>
-                    <div className="row-span-2 grid grid-cols-4">
+                    <div className="row-span-2 grid grid-cols-2">
                         <div className="col-span-1 m-1">
                             <p className="text-sm font-bold text-gray-400">
                                 Start time
                             </p>
+                            <div>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
                                     <TimePicker
@@ -300,19 +301,18 @@ function LightControl() {
                                         value={starttime || null}
                                         ampm={false}
                                         defaultValue={starttime}
-                                        className=''
+                                        className='block'
                                         onChange={(newValue) => setStartTime(dayjs(newValue).format('HH:mm'))}
                                     />
                                 </DemoContainer>
                             </LocalizationProvider>
-                        </div>
-                        <div className="col-span-2">
-                            <img src={arrow} alt="" className="pt-2 px-2" />
+                            </div>
                         </div>
                         <div className="col-span-1 m-1">
                             <p className="text-sm font-bold text-gray-400">
                                 End time
                             </p>
+                            <div>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
                                     <TimePicker
@@ -320,11 +320,12 @@ function LightControl() {
                                         value={endtime || null}
                                         ampm={false}
                                         defaultValue={endtime}
-                                        className=''
+                                        className='block'
                                         onChange={(newValue) => setEndTime(dayjs(newValue).format('HH:mm'))}
                                     />
                                 </DemoContainer>
                             </LocalizationProvider>
+                            </div>
                         </div>
                     </div>
                 </div>
