@@ -9,3 +9,4 @@ SENSOR_HUMI:	https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-humi
 SENSOR_LIGHT:	https://io.adafruit.com/api/v2/Tori0802/feeds/w-s-light
 
 Link Dashboard: https://io.adafruit.com/Tori0802/dashboards/wednesday-dashboard
+Link setup MQTT for ReactJS and React Native: https://iot4beginners.com/getting-started-with-reactjs-and-mqtt-iot-dashboard/
